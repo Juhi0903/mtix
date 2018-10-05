@@ -1,0 +1,82 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<!-- <div class="card-header">
+				<h6 class="card-title" id="striped-row-layout-basic">Create Offer</h6>
+			</div> -->
+			<form [formGroup]="createTicketForm" (ngSubmit)="submitNewTicket()" class="form form-horizontal striped-rows form-bordered" novalidate>
+					<div formGroupName="ticketInformation">
+						<div class="card-body">
+							<!-- <div class="px-3"> -->
+								<div class="form-body">
+									<h4 class="form-section"><i class="ft-file-text"></i>Ticket Information</h4>
+										<div class="form-group row">
+											<label class="col-md-3 label-control" for="projectinput7">Problem Statememt</label>
+												<div class="col-md-9">
+													<input formControlName="title" class="form-control" placeholder="Problem Statememt" name="title" id="title" required>
+													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.title').valid && (createTicketForm.get('ticketInformation.title').dirty || createTicketForm.get('ticketInformation.title').touched)">
+														Title is required!
+													</small>
+												</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-md-3 label-control" for="projectinput7">Problem Type</label>
+												<div class="col-md-9">
+													<div class="input-group">
+														<input formControlName="problemType" type="text" class="form-control" placeholder="Problem Type"  name="problemType" required>
+													</div>
+													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.problemType').valid && (createTicketForm.get('ticketInformation.problemType').dirty || createTicketForm.get('ticketInformation.problemType').touched)">
+                            Problem Type is required!
+													</small>
+												</div>
+                    </div>
+                    <div class="form-group row">
+											<label class="col-md-3 label-control" for="projectinput7">Priority Level</label>
+												<div class="col-md-9">
+													<div class="input-group">
+														<input formControlName="priorityLevel" type="text" class="form-control" placeholder="Problem Type"  name="priorityLevel" required>
+													</div>
+													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.priorityLevel').valid && (createTicketForm.get('ticketInformation.priorityLevel').dirty || createTicketForm.get('ticketInformation.priorityLevel').touched)">
+                            Priority Level is required!
+													</small>
+												</div>
+                    </div>
+                    <div class="form-group row">
+											<label class="col-md-3 label-control" for="projectinput7">Assign To</label>
+												<div class="col-md-9">
+													<div class="input-group">
+														<input formControlName="assignTo" type="text" class="form-control" placeholder="Problem Type"  name="assignTo" required>
+													</div>
+													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.assignTo').valid && (createTicketForm.get('ticketInformation.assignTo').dirty || createTicketForm.get('ticketInformation.assignTo').touched)">
+                            This Field is required!
+													</small>
+												</div>
+                    </div>
+                    <div class="form-group row">
+											<label class="col-md-3 label-control" for="projectinput9">Description</label>
+											<div class="col-md-9">
+												<textarea formControlName="details" rows="3" class="form-control" name="details" placeholder="About Ticket"></textarea>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-md-3 label-control" for="projectinput9">Add Files</label>
+											<div class="col-md-9">
+
+												<button [disabled]="uploading || uploadSuccessful"  class="add-files-btn" (click)="addFiles()">
+													Choose Files
+												  </button>										
+													</div>
+										</div>								
+
+                </div>
+                <div class="form-actions my-button">
+                  <button type="button" class="btn btn-raised btn-warning mr-1" (click)="resetTicketForm()"> Cancel</button>
+				           <button type="submit" class="btn btn-raised btn-primary" [disabled]="!createTicketForm.valid"><i class="fa fa-check-square-o"></i> Submit</button>
+                </div>
+							<!-- </div> -->
+						</div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
