@@ -20,7 +20,7 @@ const routes: Routes = [
     },
   },
   {
-    path: 'all',
+    path: 'ticket',
      component: AllTicketsComponent,
     data: {
       title: 'Ticket Page'

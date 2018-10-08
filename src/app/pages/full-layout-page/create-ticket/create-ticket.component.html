@@ -4,79 +4,140 @@
 			<!-- <div class="card-header">
 				<h6 class="card-title" id="striped-row-layout-basic">Create Offer</h6>
 			</div> -->
-			<form [formGroup]="createTicketForm" (ngSubmit)="submitNewTicket()" class="form form-horizontal striped-rows form-bordered" novalidate>
-					<div formGroupName="ticketInformation">
-						<div class="card-body">
-							<!-- <div class="px-3"> -->
-								<div class="form-body">
-									<h4 class="form-section"><i class="ft-file-text"></i>Ticket Information</h4>
-										<div class="form-group row">
-											<label class="col-md-3 label-control" for="projectinput7">Problem Statememt</label>
-												<div class="col-md-9">
-													<input formControlName="title" class="form-control" placeholder="Problem Statememt" name="title" id="title" required>
-													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.title').valid && (createTicketForm.get('ticketInformation.title').dirty || createTicketForm.get('ticketInformation.title').touched)">
-														Title is required!
-													</small>
-												</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-md-3 label-control" for="projectinput7">Problem Type</label>
-												<div class="col-md-9">
-													<div class="input-group">
-														<input formControlName="problemType" type="text" class="form-control" placeholder="Problem Type"  name="problemType" required>
-													</div>
-													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.problemType').valid && (createTicketForm.get('ticketInformation.problemType').dirty || createTicketForm.get('ticketInformation.problemType').touched)">
-                            Problem Type is required!
-													</small>
-												</div>
-                    </div>
-                    <div class="form-group row">
-											<label class="col-md-3 label-control" for="projectinput7">Priority Level</label>
-												<div class="col-md-9">
-													<div class="input-group">
-														<input formControlName="priorityLevel" type="text" class="form-control" placeholder="Problem Type"  name="priorityLevel" required>
-													</div>
-													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.priorityLevel').valid && (createTicketForm.get('ticketInformation.priorityLevel').dirty || createTicketForm.get('ticketInformation.priorityLevel').touched)">
-                            Priority Level is required!
-													</small>
-												</div>
-                    </div>
-                    <div class="form-group row">
-											<label class="col-md-3 label-control" for="projectinput7">Assign To</label>
-												<div class="col-md-9">
-													<div class="input-group">
-														<input formControlName="assignTo" type="text" class="form-control" placeholder="Problem Type"  name="assignTo" required>
-													</div>
-													<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.assignTo').valid && (createTicketForm.get('ticketInformation.assignTo').dirty || createTicketForm.get('ticketInformation.assignTo').touched)">
-                            This Field is required!
-													</small>
-												</div>
-                    </div>
-                    <div class="form-group row">
-											<label class="col-md-3 label-control" for="projectinput9">Description</label>
-											<div class="col-md-9">
-												<textarea formControlName="details" rows="3" class="form-control" name="details" placeholder="About Ticket"></textarea>
-											</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-md-3 label-control" for="projectinput9">Add Files</label>
-											<div class="col-md-9">
+			<form [formGroup]="createTicketForm" (ngSubmit)="submitNewTicket()" class="form form-horizontal striped-rows form-bordered"
+			 novalidate>
+				<div formGroupName="ticketInformation">
+					<div class="card-body">
+						<!-- <div class="px-3"> -->
+						<div class="form-body">
+							<h4 class="form-section"><i class="ft-file-text"></i>Ticket Information</h4>
+							<div class="form-group row">
+								<label class="col-md-3 label-control" for="projectinput7">Problem Statememt</label>
+								<div class="col-md-9">
+									<input formControlName="title" class="form-control" placeholder="Problem Statememt" name="title" id="title" required>
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.title').valid && (createTicketForm.get('ticketInformation.title').dirty || createTicketForm.get('ticketInformation.title').touched)">
+										Title is required!
+									</small>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-md-3 label-control" for="projectinput7">Platform</label>
+								<div class="col-md-9">
+									<select  formControlName="platform" name="platform"  class="form-control"  >
+										<option value="" selected="" disabled="true">Select Priority</option>
+										<option *ngFor="let obj of platform" [value]='obj.id'>{{obj.name}}</option>
+									</select>
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.platform').valid && (createTicketForm.get('ticketInformation.platform').dirty || createTicketForm.get('ticketInformation.platform').touched)">
+										Platform is required!
+									</small>
+								</div>
+							</div>
+							
+							<div class="form-group row">
+								<label class="col-md-3 label-control" for="projectinput7">Priority Level</label>
+								<div class="col-md-9">
+									<!-- <div class="input-group">
+										<input formControlName="priorityLevel" type="text" class="form-control" placeholder="Problem Type" name="priorityLevel" required>
+									</div> -->
+									<select  formControlName="priorityLevel" name="priorityLevel"  class="form-control"  >
+										<option value="" selected="" disabled="true">Select Priority</option>
+										<option *ngFor="let obj of priority" [value]='obj.id'>{{obj.name}}</option>
+									</select>
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.priorityLevel').valid && (createTicketForm.get('ticketInformation.priorityLevel').dirty || createTicketForm.get('ticketInformation.priorityLevel').touched)">
+										Priority Level is required!
+									</small>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-md-3 label-control" for="projectinput7">Problem Type</label>
+								<div class="col-md-9">
+									
+										<!-- <input formControlName="problemType" type="text" class="form-control" placeholder="Problem Type" name="problemType" required> -->
+										<select  formControlName="problemType" name="problemType"  class="form-control" (change) ="CheckProblemType($event)">
+											<option value="" selected="" disabled="true">Select Problem Type</option>
+											<option *ngFor="let problem of problemType" [value]='problem.id'>{{problem.name}}</option>
+										</select>
+									
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.problemType').valid && (createTicketForm.get('ticketInformation.problemType').dirty || createTicketForm.get('ticketInformation.problemType').touched)">
+										Problem Type is required!
+									</small>
+								</div>
+							</div>
+							<div class="form-group row" *ngIf="showColumn">
+								<label class="col-md-3 label-control" for="projectinput7">Country</label>
+								<div class="col-md-9">
+									<div class="input-group">
+										<input formControlName="country" type="text" class="form-control" placeholder="Enter Country Name" name="country" >
+									</div>
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.country').valid && (createTicketForm.get('ticketInformation.country').dirty || createTicketForm.get('ticketInformation.country').touched)">
+										Country Name is required!
+									</small>
+								</div>
+							</div>
+							<div class="form-group row" *ngIf="showColumn">
+								<label class="col-md-3 label-control" for="projectinput7">Operator</label>
+								<div class="col-md-9">
+									<div class="input-group">
+										<input formControlName="operator" type="text" class="form-control" placeholder="Enter Operator Name" name="operator">
+									</div>
+	
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.operator').valid && (createTicketForm.get('ticketInformation.operator').dirty || createTicketForm.get('ticketInformation.operator').touched)">
+										Operator Name is required!
+									</small>
+								</div>
+							</div>
+							<div class="form-group row" *ngIf="showColumn">
+								<label class="col-md-3 label-control" for="projectinput7">Biller</label>
+								<div class="col-md-9">
+									<div class="input-group">
+										<input formControlName="biller" type="text" class="form-control" placeholder="Enter Biller Name" name="biller">
+									</div>
+	
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.biller').valid && (createTicketForm.get('ticketInformation.biller').dirty || createTicketForm.get('ticketInformation.biller').touched)">
+										Biller Name is required!
+									</small>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-md-3 label-control" for="projectinput7">Assign To</label>
+								<div class="col-md-9">
+									<!-- <div class="input-group">
+										<input formControlName="assignTo" type="text" class="form-control" placeholder="Problem Type" name="assignTo" required>
+									</div> -->
+									<select  formControlName="assignTo" name="assignTo"  class="form-control" (click)="getTickets()">
+										<option value="" selected="" disabled="true">Select Person</option>
+										<option *ngFor="let user of users" [value]='user.emailid'>{{user.emailid}}</option>
+									</select>
+									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.assignTo').valid && (createTicketForm.get('ticketInformation.assignTo').dirty || createTicketForm.get('ticketInformation.assignTo').touched)">
+										This Field is required!
+									</small>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-md-3 label-control" for="projectinput9">Description</label>
+								<div class="col-md-9">
+									<textarea formControlName="details" rows="3" class="form-control" name="details" placeholder="About Ticket"></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-md-3 label-control" for="projectinput9">Add Files</label>
+								<div class="col-md-9">
 
-												<button [disabled]="uploading || uploadSuccessful"  class="add-files-btn" (click)="addFiles()">
-													Choose Files
-												  </button>										
-													</div>
-										</div>								
+									<button [disabled]="uploading || uploadSuccessful" class="add-files-btn" (click)="addFiles()">
+										Choose Files
+									</button>
+								</div>
+							</div>
 
-                </div>
-                <div class="form-actions my-button">
-                  <button type="button" class="btn btn-raised btn-warning mr-1" (click)="resetTicketForm()"> Cancel</button>
-				           <button type="submit" class="btn btn-raised btn-primary" [disabled]="!createTicketForm.valid"><i class="fa fa-check-square-o"></i> Submit</button>
-                </div>
-							<!-- </div> -->
 						</div>
-          </div>
-      </form>
-    </div>
-  </div>
+						<div class="form-actions my-button">
+							<button type="button" class="btn btn-raised btn-warning mr-1" (click)="resetTicketForm()"> Cancel</button>
+							<button type="submit" class="btn btn-raised btn-primary" [disabled]="!createTicketForm.valid">Submit</button>
+						</div>
+						<!-- </div> -->
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>

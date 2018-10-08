@@ -4,7 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from "./shared/shared.module";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { ContentLayoutComponent } from "./layouts/content/content-layout.component";
 import { FullLayoutComponent } from "./layouts/full/full-layout.component";
@@ -22,11 +23,13 @@ import { AuthGuard } from './shared/auth/auth-guard.service';
         BrowserAnimationsModule,
         AppRoutingModule,
         SharedModule,
-        NgbModule.forRoot()
+        NgbModule.forRoot(),
+        HttpModule
     ],
     providers: [
         AuthService,
-        AuthGuard
+        AuthGuard,
+        HttpClientModule
     ],
     bootstrap: [AppComponent]
 })

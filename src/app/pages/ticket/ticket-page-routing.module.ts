@@ -6,7 +6,7 @@ import { MyTicketComponent } from './my-ticket/my-ticket.component';
 
 const routes: Routes = [
   {
-    path: 'alltickets',
+    path: 'mytickets',
     component: MyTicketComponent,
     data: { title: 'Ticket Page' },    
   },

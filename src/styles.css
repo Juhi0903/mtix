@@ -14,3 +14,15 @@
 @import url("../src/assets/css/data-table/icons.css");
 @import url("../src/assets/css/demo.css"); */
 
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+
+.rag-red {
+    background-color: lightcoral;
+}
+.rag-green {
+    background-color: lightgreen;
+}
+.rag-amber {
+    background-color: lightsalmon;
+}
