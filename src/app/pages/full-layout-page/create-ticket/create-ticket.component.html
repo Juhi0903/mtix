@@ -25,7 +25,7 @@
 								<div class="col-md-9">
 									<select  formControlName="platform" name="platform"  class="form-control"  >
 										<option value="" selected="" disabled="true">Select Priority</option>
-										<option *ngFor="let obj of platform" [value]='obj.id'>{{obj.name}}</option>
+										<option *ngFor="let obj of platform" [value]='obj.name'>{{obj.name}}</option>
 									</select>
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.platform').valid && (createTicketForm.get('ticketInformation.platform').dirty || createTicketForm.get('ticketInformation.platform').touched)">
 										Platform is required!
@@ -41,7 +41,7 @@
 									</div> -->
 									<select  formControlName="priorityLevel" name="priorityLevel"  class="form-control"  >
 										<option value="" selected="" disabled="true">Select Priority</option>
-										<option *ngFor="let obj of priority" [value]='obj.id'>{{obj.name}}</option>
+										<option *ngFor="let obj of priority" [value]='obj.name'>{{obj.name}}</option>
 									</select>
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.priorityLevel').valid && (createTicketForm.get('ticketInformation.priorityLevel').dirty || createTicketForm.get('ticketInformation.priorityLevel').touched)">
 										Priority Level is required!
@@ -55,7 +55,7 @@
 										<!-- <input formControlName="problemType" type="text" class="form-control" placeholder="Problem Type" name="problemType" required> -->
 										<select  formControlName="problemType" name="problemType"  class="form-control" (change) ="CheckProblemType($event)">
 											<option value="" selected="" disabled="true">Select Problem Type</option>
-											<option *ngFor="let problem of problemType" [value]='problem.id'>{{problem.name}}</option>
+											<option *ngFor="let problem of problemType" [value]='problem.name'>{{problem.name}}</option>
 										</select>
 									
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.problemType').valid && (createTicketForm.get('ticketInformation.problemType').dirty || createTicketForm.get('ticketInformation.problemType').touched)">

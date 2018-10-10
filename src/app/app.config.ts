@@ -6,6 +6,11 @@ export const urls = {
     updatestatus : 'ticket/updatestatus',
     updatepriority : 'ticket/updatepriority',
     updateassignto : 'ticket/updateassignto',
+    closeTicket : 'ticket/complete',
+    pendingTicket : 'ticket/pending',
+    personalTicket : 'ticket/personal',
+    remarks : 'remarks',
+    auth : 'user/auth?token=eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJqdWhpLnNpbmdoQGdsb2JvY29tLmluZm8iLCJpc3MiOiJqdWhpIiwiaWF0IjoxNTM5MTYwOTU1fQ.nA6eYTIFddB6Uxo1kSATUtb3jqOUtYYhHpNXyFGfmu8'
 }
 
 
@@ -59,3 +64,7 @@ export const status = [
     // We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag.`},
 
   ]
+
+  export const pending_url = "/ticket/pending" ;
+  export const personal_url = "/ticket/personal" ;
+  export const closed_url = "/ticket/closed" ;

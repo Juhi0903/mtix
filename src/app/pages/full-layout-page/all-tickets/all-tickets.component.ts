@@ -13,14 +13,14 @@ import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticke
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a title="Optimise Offer" (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{offerId}}</a>'
+  template: '<a title="Optimise Offer" (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{status}}</a>'
 })
 
 export class EditStatus implements ICellRendererAngularComp {
   params: any;
   url: string;
-  public orgDomain:string;
-  offerId : any;
+  public id: any;
+  status : any;
 
   constructor(private route: ActivatedRoute,private modalService: NgbModal) {
   }
@@ -37,27 +37,28 @@ export class EditStatus implements ICellRendererAngularComp {
 
   private setStatus(params) {
     // this.url = "/" + this.orgDomain + "/" + urls.editOffer + "/" + params.node.data.offerId;
-    this.offerId = params.node.data.status;
+    this.status = params.node.data.status;
+    this.id = params.node.data.id;
   }
 
   onClick() {
     const modalRef = this.modalService.open(StatusComponent);
     modalRef.componentInstance.clickevent.subscribe(($e) => {
-      // this.params.node.data.rotationValues = $e;
+      this.params.node.data.status = $e;
       // this.percentage = $e;
     });
-    // modalRef.componentInstance.offerId = this.offerId;
-    // modalRef.componentInstance.percentage = this.percentage;
+    modalRef.componentInstance.status = this.status;
+    modalRef.componentInstance.percentage = this.id;
     // modalRef.componentInstance.randomValue = 1001;
   }
 
-  public showModal (){
-    this.openOffer(this.offerId);
-  }
-  openOffer(offerId){
-    const modalRef = this.modalService.open(StatusComponent);
-    modalRef.componentInstance.offerId = offerId;
-  }
+  // public showModal (){
+  //   this.openOffer(this.offerId);
+  // }
+  // openOffer(offerId){
+  //   const modalRef = this.modalService.open(StatusComponent);
+  //   modalRef.componentInstance.offerId = offerId;
+  // }
 
 }
 
@@ -152,7 +153,7 @@ export class EditAssignTo implements ICellRendererAngularComp {
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a title="Optimise Offer" (click)="onClick()">{{ticketid}}</a>'
+  template: '<a (click)="onClick()">{{ticketid}}</a>'
 })
 
 export class EditAndViewDetails implements ICellRendererAngularComp {
@@ -251,7 +252,7 @@ export class AllTicketsComponent implements OnInit {
   }
 
   todayDate(dateparam){
-    return dateparam.toISOString().substring(0,10);
+    return dateparam.toString().substring(0,10);
   }
  
 
@@ -304,6 +305,9 @@ export class AllTicketsComponent implements OnInit {
         if(res['priorityLevel']==data['id'])
           res['priorityLevel']=data['name']
      });
+
+     res['addedOn'] = this.todayDate(res['addedOn']);
+
 
     });
 

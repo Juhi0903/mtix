@@ -1,4 +1,6 @@
 import { Component , OnInit} from '@angular/core';
+import { TicketService} from "../../shared/services/ticket.service";
+
 
 @Component({
   selector: 'app-full-layout-page',
@@ -7,8 +9,12 @@ import { Component , OnInit} from '@angular/core';
 })
 export class FullLayoutPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _ticketService : TicketService) { }
 
   ngOnInit() {
+    this.login();
+  }
+  login = async() =>{
+    await this._ticketService.login();
   }
 }

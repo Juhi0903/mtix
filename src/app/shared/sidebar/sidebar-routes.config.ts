@@ -14,9 +14,9 @@ export const ROUTES: RouteInfo[] = [
     {
         path: '', title: 'My Tickets', icon: 'ft-align-left', class: 'has-sub', badge: '', badgeClass: 'badge badge-pill badge-danger float-right mr-1 mt-1', isExternalLink: false,
         submenu: [
-            { path: '/ticket/mytickets', title: 'All Tickets', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
+            { path: '/ticket/personal', title: 'All Tickets', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
             { path: '/ticket/pending', title: 'Pending', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
-            { path: '/ticket/open', title: 'Working', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
+            // { path: '/ticket/open', title: 'Working', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
             { path: '/ticket/closed', title: 'Completed', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
         ]
     }

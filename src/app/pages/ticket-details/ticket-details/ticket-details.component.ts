@@ -14,14 +14,30 @@ export class TicketDetailsComponent {
   @Input() title;
   @Input() raiseOn ;
   details : any =[];
+  date = new Date();
   
   @Output() clickevent = new EventEmitter<string>();
 
-  constructor(public activeModal: NgbActiveModal) {
-    this.details = details;
+  constructor(public activeModal: NgbActiveModal, private _ticketService : TicketService) {
+    // this.details = details;
+    // this.today = this.todayDate(this.raiseOn);
    }
 
   ngOnInit() {
+    this.getTicketRemarks();
+  }
+
+  getTicketRemarks = async()=>{
+    this.details = await this._ticketService.getDetails(this.ticketid);
+    this.details.forEach((res , index) => {
+      res['addedOn'] = this.todayDate(res['addedOn']);
+      console.log(res['addedOn']);
+    });
+    console.log(this.details);
+  }
+
+  todayDate(dateparam){
+    return dateparam.toString().substring(0,10);
   }
 
 }

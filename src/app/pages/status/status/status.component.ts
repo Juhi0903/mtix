@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TicketService} from "../../../shared/services/ticket.service";
+import { status} from "../../../app.config";
 
 @Component({
   selector: 'ngbd-modal-content',
@@ -19,10 +20,20 @@ import { TicketService} from "../../../shared/services/ticket.service";
             <label class="col-md-3 label-control">Status</label>
             <div class="col-md-9">
                 <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                    <input type="number" class="form-control" [(ngModel)]="bidrate" placeholder="Bidrate" name="bidrate">
+                  <select  [(ngModel)]="status" name="status"  class="form-control">
+                    <option value="" selected="" disabled="true">Select Priority Level</option>
+                    <option *ngFor="let obj of statusList" [value]='obj.name'>{{obj.name}}</option>
+                  </select>
                 </div>
             </div>
+        </div>
+        <div class="row">
+        <label class="col-md-3 label-control">Remarks</label>
+          <div class="col-md-9">
+              <div class="input-group">
+                <textarea rows="8" class="form-control" [(ngModel)]="remarks" placeholder="Recent Update" name="remarks"></textarea>
+              </div>
+          </div>
         </div>
        </div>
       </form>
@@ -43,9 +54,14 @@ export class StatusComponent {
   @Input() eventId;
   @Input() status;
 
+  statusList : any =[];
+  remarks : any;
+
   @Output() clickevent = new EventEmitter<string>();
 
-  constructor(public activeModal: NgbActiveModal, private _ticketService: TicketService) { }
+  constructor(public activeModal: NgbActiveModal, private _ticketService: TicketService) { 
+    this.statusList = status;
+  }
 
   
 
@@ -53,9 +69,10 @@ export class StatusComponent {
     // this.eventId = this.eventId!=null? this.eventId: 0
     let data : any = {
       id : this.id,
-      status : this.status
+      status : this.status,
+      // remarks : this.remarks
     }
-      await this._ticketService.updateAssigned(data)
+      await this._ticketService.updateStatus(data);
       
           this.clickevent.emit(this.status);
           this.activeModal.close('Close click');

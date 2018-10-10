@@ -46,12 +46,12 @@ export class CreateTicketComponent implements OnInit {
     this.createTicketForm = this._formBuilder.group({
       ticketInformation : this._formBuilder.group({
         title : new FormControl(null),
-        problemType : new FormControl(1001,[Validators.required]),
-        priorityLevel : new FormControl(1002,[Validators.required]),
+        problemType : new FormControl('',[Validators.required]),
+        priorityLevel : new FormControl('',[Validators.required]),
         country : new FormControl(''),
         operator : new FormControl(''),
         biller : new FormControl(''),
-        platform : new FormControl(1002,[Validators.required]),
+        platform : new FormControl('',[Validators.required]),
         assignTo : new FormControl(''),
         details : new FormControl(null, [Validators.required]),
 
