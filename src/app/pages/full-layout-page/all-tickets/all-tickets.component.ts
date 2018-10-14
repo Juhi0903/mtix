@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 // import {GridOptions} from 'ag-grid-angular/main';
+import {GridOptions} from 'ag-grid-community';
 import {ICellRendererAngularComp, ICellEditorAngularComp} from "ag-grid-angular";
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -13,66 +14,16 @@ import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticke
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a title="Optimise Offer" (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{status}}</a>'
-})
-
-export class EditStatus implements ICellRendererAngularComp {
-  params: any;
-  url: string;
-  public id: any;
-  status : any;
-
-  constructor(private route: ActivatedRoute,private modalService: NgbModal) {
-  }
-  agInit(params: any): void {
-    this.params = params;
-    this.setStatus(params);
-  }
-
-  refresh(params: any): boolean {
-    this.params = params;
-    this.setStatus(params);
-    return true;
-  }
-
-  private setStatus(params) {
-    // this.url = "/" + this.orgDomain + "/" + urls.editOffer + "/" + params.node.data.offerId;
-    this.status = params.node.data.status;
-    this.id = params.node.data.id;
-  }
-
-  onClick() {
-    const modalRef = this.modalService.open(StatusComponent);
-    modalRef.componentInstance.clickevent.subscribe(($e) => {
-      this.params.node.data.status = $e;
-      // this.percentage = $e;
-    });
-    modalRef.componentInstance.status = this.status;
-    modalRef.componentInstance.percentage = this.id;
-    // modalRef.componentInstance.randomValue = 1001;
-  }
-
-  // public showModal (){
-  //   this.openOffer(this.offerId);
-  // }
-  // openOffer(offerId){
-  //   const modalRef = this.modalService.open(StatusComponent);
-  //   modalRef.componentInstance.offerId = offerId;
-  // }
-
-}
-
-@Component({
-  selector: 'status-edit-url',
-  template: '<a title="Optimise Offer" (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{offerId}}</a>'
+  template: '<a (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{priorityLevel}}</a>'
 })
 
 export class EditPriority implements ICellRendererAngularComp {
   params: any;
   url: string;
   public orgDomain:string;
-  offerId : any;
+  priorityLevel : any;
   id;
+  
 
   constructor(private route: ActivatedRoute,private modalService: NgbModal) {
   }
@@ -89,7 +40,7 @@ export class EditPriority implements ICellRendererAngularComp {
 
   private setStatus(params) {
     // this.url = "/" + this.orgDomain + "/" + urls.editOffer + "/" + params.node.data.offerId;
-    this.offerId = params.node.data.priorityLevel;
+    this.priorityLevel = params.node.data.priorityLevel;
     this.id = params.node.data.id;
   }
 
@@ -97,9 +48,9 @@ export class EditPriority implements ICellRendererAngularComp {
     const modalRef = this.modalService.open(PriorityComponent);
     modalRef.componentInstance.clickevent.subscribe(($e) => {
       this.params.node.data.priorityLevel = $e;
-      // this.percentage = $e;
+      this.priorityLevel = $e;
     });
-    modalRef.componentInstance.priority = this.offerId;
+    modalRef.componentInstance.priority = this.priorityLevel;
     modalRef.componentInstance.id = this.id;
     // modalRef.componentInstance.randomValue = 1001;
   }
@@ -179,7 +130,6 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
   }
 
   private setStatus(params) {
-    // this.url = "/" + this.orgDomain + "/" + urls.editOffer + "/" + params.node.data.offerId;
     this.ticketid = params.node.data.ticketId;
     this.title = params.node.data.title;
     this.raiseOn = params.node.data.addedOn;
@@ -188,14 +138,13 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
   onClick() {
     const modalRef = this.modalService.open(TicketDetailsComponent , {size : 'lg'});
     modalRef.componentInstance.clickevent.subscribe(($e) => {
-      // this.params.node.data.assignedTo = $e;
+      this.params.node.data.assignedTo = $e;
       // this.ticketid = $e;
       // console.log($e);
     });
     modalRef.componentInstance.ticketid = this.ticketid;
     modalRef.componentInstance.title = this.title;
     modalRef.componentInstance.raiseOn = this.raiseOn;
-    // modalRef.componentInstance.title = this.title;
   }
 
 }
@@ -209,7 +158,7 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
 export class AllTicketsComponent implements OnInit {
 
   allTicketForm : FormGroup;
-  date = new Date();
+  date : any = new Date();
   today : any;
   columnDefs : any;
   rowdata : any;
@@ -221,20 +170,26 @@ export class AllTicketsComponent implements OnInit {
   gridApi : any;
   frameworkComponents;
   rowSelection;
+  gridOptions: GridOptions = {
+    enableFilter: true,
+    columnDefs : this.columnDefs,
+    rowData : this.rowdata,
+  };
   
 
   constructor(private _formBuilder: FormBuilder,private _ticketService : TicketService) { 
     this.today = this.todayDate(this.date);
+    console.log(this.today);
     this.priority = priorityLevel;
      this.problemType = problemType;
      this.setColumnDefs();
     this.frameworkComponents = {
-      editStatus: EditStatus,
       editPriority: EditPriority,
       editAssignto:EditAssignTo,
       ticketdetails : EditAndViewDetails
 
     };
+
   }
 
   ngOnInit() {
@@ -258,30 +213,31 @@ export class AllTicketsComponent implements OnInit {
 
   setColumnDefs(){
     this.columnDefs = [
-      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 100, suppressSizeToFit: true},
-      {headerName: "Raised On", field: 'addedOn' , width: 120, suppressSizeToFit: true},
-      {headerName: "Status", field: 'status' ,cellRenderer: "editStatus", width: 130, editable: true,
-      suppressSizeToFit: true },
+      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 90, suppressSizeToFit: true},
+      {headerName: "Raised On", field: 'addedOn' , width: 100, suppressSizeToFit: true},
+      {headerName: "Status", field: 'status' , width: 100, editable: true,suppressSizeToFit: true },
+      {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true,valueParser: this.numberParser,
+      cellClassRules: {
+        "rag-yellow": "x <'50'",
+        "rag-red": "x >= '20'"
+      }},
       {headerName: "Subject", field: 'title' , width: 240, suppressSizeToFit: true },
-      {headerName: "Category", field: 'problemType' , width: 130, suppressSizeToFit: true},
-      {headerName: 'Priority', field: 'priorityLevel', cellRenderer: "editPriority" , width: 130, suppressSizeToFit: true,valueParser: this.numberParser,
+      {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
+      {headerName: "Category", field: 'problemType' , width: 100, suppressSizeToFit: true},
+      {headerName: 'Priority', field: 'priorityLevel', cellRenderer: "editPriority" , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
         "rag-green": "x =='Low'",
         "rag-amber": "x == 'Medium'",
         "rag-red": "x == 'High'"
       }},
       {headerName : "Assisgn To" ,field:'assignedTo', cellRenderer: "editAssignto", width: 130, suppressSizeToFit: true },
-      {headerName: "Country", field: 'country' ,width: 130, suppressSizeToFit: true },
+      {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
       {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
-      {headerName: "Raised By", field: 'raiseby', width: 100, suppressSizeToFit: true},
+      {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
+      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
     ];
 
-    this.rowSelection = "multiple";
-
-    // this.defaultColDef = { editable: true };
-    // this.getRowNodeId = function(data) {
-    //   return data.id;
-    // };
+    // this.rowSelection = "multiple";
   }
 
   getAllTickets = async()=>{
@@ -297,18 +253,12 @@ export class AllTicketsComponent implements OnInit {
     };
      this.rowdata = await this._ticketService.getAllTickets();
      this.rowdata.forEach((res , index) => {
-       this.problemType.forEach((data)=>{
-          if(res['problemType']==data['id'])
-            res['problemType']=data['name']
-       });
-       this.priority.forEach((data)=>{
-        if(res['priorityLevel']==data['id'])
-          res['priorityLevel']=data['name']
-     });
-
-     res['addedOn'] = this.todayDate(res['addedOn']);
-
-
+       let addedOn = new Date(res['addedOn']).getTime();
+       let todate = new Date().getTime();
+       let diff = todate - addedOn;
+       res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
+       res['addedOn'] = this.todayDate(res['addedOn']);
+     
     });
 
     
@@ -330,6 +280,27 @@ export class AllTicketsComponent implements OnInit {
     this.gridColumnApi = params.columnApi;
     console.log(this.gridApi);
     console.log(this.gridColumnApi);
+  }
+
+  exportToExcel(){
+    let exportOnlySelected = false;
+    let dt = new Date();
+    let day = dt.getDate();
+    let month = dt.getMonth() + 1;
+    let year = dt.getFullYear();
+    let hour = dt.getHours();
+    let mins = dt.getMinutes();
+    let postfix = day + "." + month + "." + year + "_" + hour + "." + mins;
+    let params = {
+      skipHeader: false,
+      skipFooters: true,
+      skipGroups: true,
+      onlySelected: exportOnlySelected,
+      columnKeys: ['ticketId' ,'addedOn','status','days','title','platform','problemType',
+                    'priorityLevel' , 'assignedTo' , 'country','operator','billerName','raisedBy'],
+      fileName: "Ticket_" + postfix +".xls"
+    };
+    this.gridOptions.api.exportDataAsCsv(params);
   }
 
 }

@@ -106,7 +106,7 @@
 									</div> -->
 									<select  formControlName="assignTo" name="assignTo"  class="form-control" (click)="getTickets()">
 										<option value="" selected="" disabled="true">Select Person</option>
-										<option *ngFor="let user of users" [value]='user.emailid'>{{user.emailid}}</option>
+										<option *ngFor="let user of users" [value]='user.emailId'>{{user.emailId}}</option>
 									</select>
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.assignTo').valid && (createTicketForm.get('ticketInformation.assignTo').dirty || createTicketForm.get('ticketInformation.assignTo').touched)">
 										This Field is required!
@@ -122,8 +122,7 @@
 							<div class="form-group row">
 								<label class="col-md-3 label-control" for="projectinput9">Add Files</label>
 								<div class="col-md-9">
-
-									<button [disabled]="uploading || uploadSuccessful" class="add-files-btn" (click)="addFiles()">
+									<button class="add-files-btn" (click)="addFiles()">
 										Choose Files
 									</button>
 								</div>

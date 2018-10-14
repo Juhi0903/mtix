@@ -12,6 +12,10 @@ import { FullLayoutComponent } from "./layouts/full/full-layout.component";
 
 import { AuthService } from './shared/auth/auth.service';
 import { AuthGuard } from './shared/auth/auth-guard.service';
+import {BrowserModule} from '@angular/platform-browser';
+import {ToastModule} from 'ng2-toastr/ng2-toastr';
+import {ToasterService} from "./shared/services/toaster.service";
+
 
 @NgModule({
     declarations: [
@@ -24,12 +28,15 @@ import { AuthGuard } from './shared/auth/auth-guard.service';
         AppRoutingModule,
         SharedModule,
         NgbModule.forRoot(),
-        HttpModule
+        HttpModule,
+        ToastModule.forRoot(),
+        BrowserModule
     ],
     providers: [
         AuthService,
         AuthGuard,
-        HttpClientModule
+        HttpClientModule,
+        ToasterService
     ],
     bootstrap: [AppComponent]
 })

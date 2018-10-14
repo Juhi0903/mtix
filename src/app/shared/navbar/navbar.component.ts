@@ -1,4 +1,5 @@
-import { Component, AfterViewChecked } from '@angular/core';
+import { Component, AfterViewChecked , Inject} from '@angular/core';
+import { SESSION_STORAGE, StorageService  } from 'angular-webstorage-service';
 
 @Component({
     selector: 'app-navbar',
@@ -11,6 +12,10 @@ export class NavbarComponent implements AfterViewChecked{
     toggleClass = 'ft-maximize';
     placement = 'bottom-right'
     public isCollapsed = true;
+
+    constructor(@Inject(SESSION_STORAGE) private storage: StorageService) {
+      
+       }
 
     ngAfterViewChecked() {
 
@@ -34,5 +39,10 @@ export class NavbarComponent implements AfterViewChecked{
         }
         else
             this.toggleClass = 'ft-maximize'
+    }
+
+    Logout(){
+        this.storage.remove('token');
+        
     }
 }

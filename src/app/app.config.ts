@@ -1,6 +1,8 @@
+import {environment }  from '../environments/environment'
+
 export const urls = {
-    BASE_URL: 'http://localhost:3000/v1/',
-    allUsers : 'user',
+    BASE_URL : environment.BASE_URL,
+    allUsers : 'user/allusers',
     saveTicket : 'ticket',
     ticket : 'ticket',
     updatestatus : 'ticket/updatestatus',
@@ -10,7 +12,8 @@ export const urls = {
     pendingTicket : 'ticket/pending',
     personalTicket : 'ticket/personal',
     remarks : 'remarks',
-    auth : 'user/auth?token=eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJqdWhpLnNpbmdoQGdsb2JvY29tLmluZm8iLCJpc3MiOiJqdWhpIiwiaWF0IjoxNTM5MTYwOTU1fQ.nA6eYTIFddB6Uxo1kSATUtb3jqOUtYYhHpNXyFGfmu8'
+    auth : 'user/auth',
+    tickets : 'ticket/ticket'
 }
 
 
@@ -22,7 +25,8 @@ export const status = [
     {id: 1005, name: 'Testing'},
     {id: 1006, name: 'Hold'},
     {id: 1007, name: 'Closed'},
-    {id: 1008, name: 'Pending From Biller'}
+    {id: 1008, name: 'Pending From Biller'},
+    {id: 1009, name: 'Re-Open'}
   
   ]
 

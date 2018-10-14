@@ -22,7 +22,7 @@ import { AsyncAction } from 'rxjs/internal/scheduler/AsyncAction';
                 <div class="input-group">
                 <select  [(ngModel)]="assignedTo" name="assignedTo"  class="form-control">
                 <option value="" selected="" disabled="true">Select Team Member</option>
-                <option *ngFor="let obj of users" [value]='obj.emailid'>{{obj.emailid}}</option>
+                <option *ngFor="let obj of users" [value]='obj.emailId'>{{obj.emailId}}</option>
               </select>
                 </div>
             </div>

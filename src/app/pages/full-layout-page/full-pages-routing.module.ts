@@ -6,7 +6,7 @@ import { AllTicketsComponent } from './all-tickets/all-tickets.component';
 
 const routes: Routes = [
   {
-    path: 'full-layout',
+    path: 'dashboard',
      component: FullLayoutPageComponent,
     data: {
       title: 'Full Layout Page'

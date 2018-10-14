@@ -9,17 +9,17 @@
           <div *ngFor="let obj of details" class="form-group details">
               <span style="text-align:justify;">{{obj.remarks}}
                 <span style="color: rgb(94, 201, 243);">
-                  - {{obj.updateBy}} ({{obj.addedOn}})
+                  - {{obj.addedBy}} ({{obj.addedOn}})
                 </span>
               </span>
           </div>
           <div class="col-md-12" style="padding-top:20px;">
-            <textarea  rows="8" class="form-control" name="details" placeholder="Max 500 words" autofocus="true"></textarea>
+            <textarea  rows="8" class="form-control" name="remarks" placeholder="Max 500 words" [(ngModel)]="remarks" required></textarea>
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn btn-raised btn-warning mr-1" (click)="resetTicketForm()"> Cancel</button>
-            <button type="submit" class="btn btn-raised btn-primary">Submit</button>
+            <button type="button" class="btn btn-raised btn-warning mr-1"  (click)="activeModal.close('Close click')"> Cancel</button>
+            <button type="submit" class="btn btn-raised btn-primary" (click)="submitRemarks()">Submit</button>
           </div>
       </div>
     </form>

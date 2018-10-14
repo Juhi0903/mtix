@@ -20,7 +20,7 @@ import { status} from "../../../app.config";
             <label class="col-md-3 label-control">Status</label>
             <div class="col-md-9">
                 <div class="input-group">
-                  <select  [(ngModel)]="status" name="status"  class="form-control">
+                  <select  [(ngModel)]="status" name="status"  class="form-control" required>
                     <option value="" selected="" disabled="true">Select Priority Level</option>
                     <option *ngFor="let obj of statusList" [value]='obj.name'>{{obj.name}}</option>
                   </select>
@@ -31,7 +31,7 @@ import { status} from "../../../app.config";
         <label class="col-md-3 label-control">Remarks</label>
           <div class="col-md-9">
               <div class="input-group">
-                <textarea rows="8" class="form-control" [(ngModel)]="remarks" placeholder="Recent Update" name="remarks"></textarea>
+                <textarea rows="8" class="form-control" [(ngModel)]="remarks" placeholder="Recent Update" name="remarks" required></textarea>
               </div>
           </div>
         </div>
@@ -42,7 +42,7 @@ import { status} from "../../../app.config";
     <div class="modal-footer">
      <div class="form-actions">
       <button type="button" class="btn btn-raised btn-warning" (click)="activeModal.close('Close click')"> Close</button>
-      <button type="button" class="btn btn-raised btn-primary" (click)="saveChangesBidrate()">Save</button>
+      <button type="button" class="btn btn-raised btn-primary" (click)="saveChangesStatus()">Save</button>
      </div>
     </div>
   `
@@ -50,7 +50,7 @@ import { status} from "../../../app.config";
 
 export class StatusComponent {
 
-  @Input() id;
+  @Input() ticketId;
   @Input() eventId;
   @Input() status;
 
@@ -63,19 +63,15 @@ export class StatusComponent {
     this.statusList = status;
   }
 
-  
-
-  saveChangesBidrate = async()=>{
-    // this.eventId = this.eventId!=null? this.eventId: 0
+  saveChangesStatus = async()=>{
     let data : any = {
-      id : this.id,
+      ticketId : this.ticketId,
       status : this.status,
-      // remarks : this.remarks
+      remarks : this.remarks
     }
       await this._ticketService.updateStatus(data);
-      
-          this.clickevent.emit(this.status);
-          this.activeModal.close('Close click');
+      this.clickevent.emit(this.status);
+      this.activeModal.close('Close click');
   }
 
 }

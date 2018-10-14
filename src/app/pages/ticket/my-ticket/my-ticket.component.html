@@ -3,20 +3,20 @@
       <div class="card">
         <div class="card-header">
             <h4 class="card-title">LIST OF TICKETS</h4>
-            <span id ="viewoption">
-              <button type="button" class="btn btn-raised btn-primary" (click)="exportToExcel(ussdkey)">Export </button>
-            </span>
+            <!-- <span id ="viewoption">
+              <button type="button" class="btn btn-raised btn-primary">Export </button>
+            </span> -->
         </div>
         <div class="card-body">
           <ag-grid-angular   
           style="width: 100%; height: 900px; padding: 20px; " 
           class="ag-theme-balham"
           [columnDefs]="columnDefs"
-          [rowSelection]="rowSelection"
           [enableSorting]="true"
           [enableFilter]="true"
           [enableColResize]="true"
-          [rowData]="rowdata" 
+          [rowData]="rowdata"
+          [frameworkComponents]="frameworkComponents" 
           >
           </ag-grid-angular>
         </div>

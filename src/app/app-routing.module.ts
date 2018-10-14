@@ -14,7 +14,7 @@ import {Ticket_ROUTES} from "./shared/routes/ticket.routes";
 const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'full-layout',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
   },
   { path: '',

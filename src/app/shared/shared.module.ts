@@ -6,6 +6,9 @@ import { FooterComponent } from "./footer/footer.component";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
 import { ToggleFullscreenDirective } from "./directives/toggle-fullscreen.directive";
+import { StorageServiceModule } from 'angular-webstorage-service';
+
+
 
 @NgModule({
     exports: [
@@ -14,7 +17,9 @@ import { ToggleFullscreenDirective } from "./directives/toggle-fullscreen.direct
         NavbarComponent,
         SidebarComponent,
         ToggleFullscreenDirective,
-        NgbModule
+        NgbModule,
+        StorageServiceModule,
+        
     ],
     imports:[
         RouterModule,

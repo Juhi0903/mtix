@@ -22,7 +22,7 @@ import {status, priorityLevel,problemType } from '../../../app.config';
                 <div class="input-group">
                 <select  [(ngModel)]="priority" name="priority"  class="form-control">
                   <option value="" selected="" disabled="true">Select Priority Level</option>
-                  <option *ngFor="let obj of priorities" [value]='obj.id'>{{obj.name}}</option>
+                  <option *ngFor="let obj of priorities" [value]='obj.name'>{{obj.name}}</option>
                 </select>
                 </div>
             </div>
@@ -55,15 +55,14 @@ export class PriorityComponent {
 
   saveChangesPriority = async() =>{
     // this.eventId = this.eventId!=null? this.eventId: 0;
-    this.priority = 1001;
+  console.log(this.priority);
     let data : any = {
       id : this.id,
       priorityLevel : this.priority
     }
     const d = await this._ticketService.updatePriority(data);
-    
-        this.clickevent.emit(this.priority);
-        this.activeModal.close('Close click');
+      this.clickevent.emit(this.priority);
+      this.activeModal.close('Close click');
   }
 
 }

@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { ActivatedRoute ,Router , Params } from '@angular/router';
 import {status, priorityLevel,problemType , platform} from '../../../app.config';
 import { TicketService} from "../../../shared/services/ticket.service";
+import { ToasterService } from "../../../shared/services/toaster.service";
+
 
 
 @Component({
@@ -25,7 +27,8 @@ export class CreateTicketComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private _ticketService : TicketService )
+    private _ticketService : TicketService ,
+    private toaster : ToasterService)
    {
      this.status = status;
      this.priority = priorityLevel;
@@ -61,12 +64,12 @@ export class CreateTicketComponent implements OnInit {
   }
 
 
-  private getTickets = async () =>{
+  public getTickets = async () =>{
     const data = await this._ticketService.getAllTickets();
     console.log(data);
   }
 
-  private getUsers = async () =>{
+  public getUsers = async () =>{
    this.users = await this._ticketService.getAllUsers();
     // console.log(data);
   }
@@ -78,29 +81,46 @@ export class CreateTicketComponent implements OnInit {
 
   submitNewTicket = async () => {
     let problemType = this.createTicketForm.value.ticketInformation.problemType;
+    console.log(problemType);
     
     let data : any = {
       title : this.createTicketForm.value.ticketInformation.title,
       problemType : this.createTicketForm.value.ticketInformation.problemType,
       priorityLevel : this.createTicketForm.value.ticketInformation.priorityLevel,
       details : this.createTicketForm.value.ticketInformation.details,
-      assignTo : 21,
-      raiseBy : 76,
-      status : 'yet To start' // need to change
+      status : 'Yet To start', // need to change,
+      platform : this.createTicketForm.value.ticketInformation.platform,
+      assignTo : this.createTicketForm.value.ticketInformation.assignTo
     }
-    if(problemType==1002){
+    if(problemType==='Integration'){
       data.country = this.createTicketForm.value.ticketInformation.country,
-      data.operator = this.createTicketForm.value.ticketInformation.operator
+      data.operator = this.createTicketForm.value.ticketInformation.operator,
+      data.biller = this.createTicketForm.value.ticketInformation.biller
     }
 
     console.log(data);
-    const re = await this._ticketService.saveTicket(data);
-    console.log(re);
+    await this._ticketService.saveTicket(data).then(data =>{
+      this.toaster.typeSuccess('New Ticket Created Successfully!');
+        this.createTicketForm.patchValue({
+          ticketInformation:{
+            title : '',
+            problemType : '',
+            priorityLevel: '',
+            details: '',
+            platform: '',
+            assignTo: '',
+            country: '',
+            operator: '',
+            biller : '',
+          }
+        });
+    });
+    // console.log(re);
   }
 
   CheckProblemType = async(event?) => {
     let problemType = this.createTicketForm.value.ticketInformation.problemType;
-    if(problemType==1002)
+    if(problemType==='Integration')
       this.showColumn = true;
     else
       this.showColumn = false;

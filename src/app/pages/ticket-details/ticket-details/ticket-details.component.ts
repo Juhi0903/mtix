@@ -15,6 +15,7 @@ export class TicketDetailsComponent {
   @Input() raiseOn ;
   details : any =[];
   date = new Date();
+  remarks : any;
   
   @Output() clickevent = new EventEmitter<string>();
 
@@ -38,6 +39,17 @@ export class TicketDetailsComponent {
 
   todayDate(dateparam){
     return dateparam.toString().substring(0,10);
+  }
+
+  submitRemarks = async () => {
+    let data = {
+      remarks : this.remarks,
+      ticketId : this.ticketid,
+    }
+    console.log(data);
+    let result = await this._ticketService.saveRemaks(data);
+    console.log(result);
+    this.activeModal.close('Close click');
   }
 
 }
