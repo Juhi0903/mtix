@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 export const CONTENT_ROUTES: Routes = [
     {
-        path: 'content-layout',
-        loadChildren: './pages/content-layout-page/content-pages.module#ContentPagesModule'
-      }
+        path: '',
+        loadChildren:'../../pages/content-layout-page/content-pages.module#ContentPagesModule'
+    }
 ];

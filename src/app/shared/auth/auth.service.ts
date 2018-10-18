@@ -1,30 +1,30 @@
 import { Router } from '@angular/router';
-import { Injectable } from '@angular/core';
+import { Injectable ,Inject } from '@angular/core';
+import { urls } from '../../app.config';
+import { SESSION_STORAGE, StorageService , LOCAL_STORAGE } from 'angular-webstorage-service';
+
+
 
 @Injectable()
 export class AuthService {
   token: string;
 
-  constructor() {}
+  constructor(private router: Router,@Inject(LOCAL_STORAGE) private storage: StorageService) {}
 
-  signupUser(email: string, password: string) {
-    //your code for signing up the new user
+  getToken() {
+    return this.storage.get("token");
   }
-
-  signinUser(email: string, password: string) {
-    //your code for checking credentials and getting tokens for for signing in user
-  }
-
-  logout() {   
-    this.token = null;
-  }
-
-  getToken() {    
-    return this.token;
+  logout() {
+    this.storage.remove('token');
+    this.router.navigate(['/login']);
   }
 
   isAuthenticated() {
-    // here you can check if user is authenticated or not through his token 
+    const token = this.storage.get('token');
+    if(token===null)
+      return false;
+    else
     return true;
+   
   }
 }

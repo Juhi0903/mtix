@@ -13,8 +13,10 @@ import { FullLayoutComponent } from "./layouts/full/full-layout.component";
 import { AuthService } from './shared/auth/auth.service';
 import { AuthGuard } from './shared/auth/auth-guard.service';
 import {BrowserModule} from '@angular/platform-browser';
-import {ToastModule} from 'ng2-toastr/ng2-toastr';
+import {ToastModule} from 'ng6-toastr/ng2-toastr';
 import {ToasterService} from "./shared/services/toaster.service";
+import { TicketService} from "./shared/services/ticket.service";
+
 
 
 @NgModule({
@@ -30,13 +32,14 @@ import {ToasterService} from "./shared/services/toaster.service";
         NgbModule.forRoot(),
         HttpModule,
         ToastModule.forRoot(),
-        BrowserModule
+        BrowserModule,
+        HttpClientModule
     ],
     providers: [
         AuthService,
         AuthGuard,
-        HttpClientModule,
-        ToasterService
+        ToasterService,
+        TicketService
     ],
     bootstrap: [AppComponent]
 })

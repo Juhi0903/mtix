@@ -5,7 +5,7 @@ import {ICellRendererAngularComp, ICellEditorAngularComp} from "ag-grid-angular"
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { pending_url, personal_url, closed_url, priorityLevel,problemType } from "../../../app.config"
 import { TicketService } from "../../../shared/services/ticket.service";
-import { SESSION_STORAGE, StorageService  } from 'angular-webstorage-service';
+import { SESSION_STORAGE, StorageService , LOCAL_STORAGE } from 'angular-webstorage-service';
 import {StatusComponent} from '../../status/status/status.component';
 import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticket-details.component';
 
@@ -118,13 +118,15 @@ export class MyTicketComponent implements OnInit {
   createTicketForm: FormGroup;
   session : any;
   frameworkComponents : any;
+  date : any = new Date();
+  today : any;
 
   constructor(
     private _formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private _ticketService: TicketService,
-    @Inject(SESSION_STORAGE) private storage: StorageService) {
+    @Inject(LOCAL_STORAGE) private storage: StorageService) {
     
     this.url = router.url;
     this.closed_url = closed_url;
@@ -137,6 +139,7 @@ export class MyTicketComponent implements OnInit {
       editStatus: EditStatus,
       ticketdetails : EditAndViewDetails
     };
+    this.today = this.todayDate(this.date);
 
   }
 
@@ -156,6 +159,11 @@ export class MyTicketComponent implements OnInit {
       {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 100, suppressSizeToFit: true},
       {headerName: "Raised On", field: 'addedOn' , width: 120, suppressSizeToFit: true},
       {headerName: "Status", field: 'status' ,cellRenderer: "editStatus", width: 130, editable: true,suppressSizeToFit: true },
+      {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true,valueParser: this.numberParser,
+      cellClassRules: {
+        "rag-yellow": "x <'50'",
+        "rag-red": "x >= '20'"
+      }},
       {headerName: "Subject", field: 'title' , width: 240, suppressSizeToFit: true },
       {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
       {headerName: "Category", field: 'problemType' , width: 130, suppressSizeToFit: true},
@@ -169,7 +177,7 @@ export class MyTicketComponent implements OnInit {
       {headerName: "Country", field: 'country' ,width: 130, suppressSizeToFit: true },
       {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
       {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
-      {headerName: "Raised By", field: 'raiseby', width: 100, suppressSizeToFit: true},
+      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
     ];
   }
 
@@ -177,22 +185,37 @@ export class MyTicketComponent implements OnInit {
   getClosedTicktes = async () => {
     this.rowdata = await this._ticketService.getClosedTicktes();
     this.rowdata.forEach((res , index) => {
+      let addedOn = new Date(res['addedOn']).getTime();
+      let todate = new Date().getTime();
+      let diff = todate - addedOn;
+      res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
       res['addedOn'] = this.todayDate(res['addedOn']);
-     });
+    
+   });
   }
 
   getPendingTicktes = async () => {
     this.rowdata = await this._ticketService.getPendingTicktes();
     this.rowdata.forEach((res , index) => {
+      let addedOn = new Date(res['addedOn']).getTime();
+      let todate = new Date().getTime();
+      let diff = todate - addedOn;
+      res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
       res['addedOn'] = this.todayDate(res['addedOn']);
-     });
+    
+   });
   }
 
   getPersonalTicktes = async () => {
     this.rowdata = await this._ticketService.getPersonalTicktes();
     this.rowdata.forEach((res , index) => {
+      let addedOn = new Date(res['addedOn']).getTime();
+      let todate = new Date().getTime();
+      let diff = todate - addedOn;
+      res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
       res['addedOn'] = this.todayDate(res['addedOn']);
-     });
+    
+   });
   }
 
   numberParser(params) {

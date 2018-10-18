@@ -30,11 +30,12 @@ export class TicketDetailsComponent {
 
   getTicketRemarks = async()=>{
     this.details = await this._ticketService.getDetails(this.ticketid);
+    console.log(">>>>>>>>>>" ,this.details);
     this.details.forEach((res , index) => {
       res['addedOn'] = this.todayDate(res['addedOn']);
       console.log(res['addedOn']);
     });
-    console.log(this.details);
+   
   }
 
   todayDate(dateparam){

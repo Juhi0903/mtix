@@ -12,8 +12,9 @@ export const urls = {
     pendingTicket : 'ticket/pending',
     personalTicket : 'ticket/personal',
     remarks : 'remarks',
-    auth : 'user/auth',
-    tickets : 'ticket/ticket'
+    auth : 'user/',
+    tickets : 'ticket/ticket',
+    dashboard :'dashboard'
 }
 
 

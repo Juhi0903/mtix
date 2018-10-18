@@ -1,9 +1,10 @@
 import { Component , OnInit, Inject} from '@angular/core';
 import { TicketService} from "../../shared/services/ticket.service";
-import { SESSION_STORAGE, StorageService  } from 'angular-webstorage-service';
+import { SESSION_STORAGE, StorageService ,LOCAL_STORAGE } from 'angular-webstorage-service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { barChartmulti} from '../../shared/data/ngxChart';
 import * as chartsData from '../../shared/config/ngx-charts.config';
+import { ActivatedRoute ,Router , Params } from '@angular/router';
 
 
 @Component({
@@ -36,23 +37,23 @@ export class FullLayoutPageComponent implements OnInit {
     barChartYAxisLabel = chartsData.barChartYAxisLabel;
     barChartColorScheme = chartsData.barChartColorScheme;
 
-  constructor(private _ticketService : TicketService,@Inject(SESSION_STORAGE) private storage: StorageService) {
-    Object.assign(this, { barChartmulti })
-   }
+  constructor(private _ticketService : TicketService,@Inject(LOCAL_STORAGE) private storage: StorageService, private router: Router, private route : ActivatedRoute) {
+    Object.assign(this, { barChartmulti });
+    this.getStatusCount();
+    this.token = this.storage.get('token');
+    if(this.token===null){
+    const token = this.route.snapshot.queryParamMap.get('auth');
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(token);
+    this.storage.set('token', decodedToken['jti']);
+    }
+     
+}
 
   ngOnInit() {
-    this.login();
-    this.getStatusCount();
+    
   }
-  login = async () =>{
-   await this._ticketService.login().then(data => {
-     this.token = data;
-      const helper = new JwtHelperService();
-      const decodedToken = helper.decodeToken(this.token);
-      this.storage.set('token', decodedToken['jti']);
-      console.log(this.storage.get('token'));
-    });
-  }
+
   getStatusCount = async () => {
     let count = 0;
     await this._ticketService.getStatusCount().then (data =>{

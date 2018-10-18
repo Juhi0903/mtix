@@ -24,7 +24,7 @@
 								<label class="col-md-3 label-control" for="projectinput7">Platform</label>
 								<div class="col-md-9">
 									<select  formControlName="platform" name="platform"  class="form-control"  >
-										<option value="" selected="" disabled="true">Select Priority</option>
+										<option value="" selected="" disabled="true">Select Platform</option>
 										<option *ngFor="let obj of platform" [value]='obj.name'>{{obj.name}}</option>
 									</select>
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.platform').valid && (createTicketForm.get('ticketInformation.platform').dirty || createTicketForm.get('ticketInformation.platform').touched)">
@@ -34,7 +34,7 @@
 							</div>
 							
 							<div class="form-group row">
-								<label class="col-md-3 label-control" for="projectinput7">Priority Level</label>
+								<label class="col-md-3 label-control" for="projectinput7">Priority</label>
 								<div class="col-md-9">
 									<!-- <div class="input-group">
 										<input formControlName="priorityLevel" type="text" class="form-control" placeholder="Problem Type" name="priorityLevel" required>
@@ -49,17 +49,17 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-md-3 label-control" for="projectinput7">Problem Type</label>
+								<label class="col-md-3 label-control" for="projectinput7">Category</label>
 								<div class="col-md-9">
 									
 										<!-- <input formControlName="problemType" type="text" class="form-control" placeholder="Problem Type" name="problemType" required> -->
 										<select  formControlName="problemType" name="problemType"  class="form-control" (change) ="CheckProblemType($event)">
-											<option value="" selected="" disabled="true">Select Problem Type</option>
+											<option value="" selected="" disabled="true">Select Category </option>
 											<option *ngFor="let problem of problemType" [value]='problem.name'>{{problem.name}}</option>
 										</select>
 									
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.problemType').valid && (createTicketForm.get('ticketInformation.problemType').dirty || createTicketForm.get('ticketInformation.problemType').touched)">
-										Problem Type is required!
+										Category is required!
 									</small>
 								</div>
 							</div>

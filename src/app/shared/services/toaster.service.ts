@@ -1,14 +1,18 @@
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { ToastsManager } from 'ng6-toastr/ng2-toastr';
+import {ViewContainerRef }from '@angular/core';
 // import { ToastrModule } from 'ngx-toastr';
 
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ToasterService {
-    constructor(public toastr: ToastsManager) { }
+    constructor(public toastr: ToastsManager, vcr: ViewContainerRef) {
+        this.toastr.setRootViewContainerRef(vcr); 
+    }
 
     // Success Type
     typeSuccess(message) {
+        console.log("toaster service");
         this.toastr.success(message, 'Success!', { "toastLife": 4000 });
     }
 

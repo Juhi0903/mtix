@@ -4,7 +4,8 @@ import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { urls } from '../../app.config';
 import { catchError, map, tap } from 'rxjs/operators';
-import { SESSION_STORAGE, StorageService } from 'angular-webstorage-service';
+import { SESSION_STORAGE, StorageService, LOCAL_STORAGE } from 'angular-webstorage-service';
+import { text } from '@angular/core/src/render3/instructions';
 
 
 @Injectable()
@@ -12,7 +13,7 @@ export class TicketService {
 
   httpOptions: any;
 
-  constructor(private _httpService: HttpClient, @Inject(SESSION_STORAGE) private storage: StorageService ) {
+  constructor(private _httpService: HttpClient, @Inject(LOCAL_STORAGE) private storage: StorageService ) {
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -96,8 +97,8 @@ export class TicketService {
     }).toPromise() as any;
   }
 
-  public login = async (): Promise<any[]> => {
-    return this._httpService.get(urls.BASE_URL + urls.auth + "?token=", { responseType: 'text' }).toPromise() as any;
+  public login() {
+     this._httpService.get(urls.BASE_URL + urls.auth + "?token=" ,{responseType : 'text'}).toPromise() as any;  //
   }
 
   public getDetails(id) {

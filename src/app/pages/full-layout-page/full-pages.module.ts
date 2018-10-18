@@ -21,6 +21,7 @@ import {StatusComponent} from '../status/status/status.component';
 import { TicketDetailsComponent} from '../ticket-details/ticket-details/ticket-details.component';
 import { TicketDetailsModule} from '../ticket-details/ticket-details.module';
 import { StorageServiceModule } from 'angular-webstorage-service';
+import { ToastsManager } from 'ng6-toastr/ng2-toastr';
  
 @NgModule({
   imports: [
@@ -37,7 +38,7 @@ import { StorageServiceModule } from 'angular-webstorage-service';
     NgbModule,
     TicketDetailsModule,
     StorageServiceModule,
-    NgxChartsModule,
+    NgxChartsModule
     
   ],
     entryComponents: [

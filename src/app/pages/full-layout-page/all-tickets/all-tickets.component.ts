@@ -242,15 +242,15 @@ export class AllTicketsComponent implements OnInit {
 
   getAllTickets = async()=>{
 
-    let toarray = this.allTicketForm.value.basicInformation.toDate.split("-"); //yyyy-MM-dd
-    let fromarray = this.allTicketForm.value.basicInformation.fromDate .split("-");
-    let toDate = toarray[1] + "/" + toarray[2] + "/" + toarray[0]; //MM/dd/yyyy
-    let fromDate = fromarray[1] + "/" + fromarray[2] + "/" + fromarray[0];
+    // let toarray = this.allTicketForm.value.basicInformation.toDate.split("-"); //yyyy-MM-dd
+    // let fromarray = this.allTicketForm.value.basicInformation.fromDate .split("-");
+    // let toDate = toarray[1] + "/" + toarray[2] + "/" + toarray[0]; //MM/dd/yyyy
+    // let fromDate = fromarray[1] + "/" + fromarray[2] + "/" + fromarray[0];
 
-    let report : any = {
-      todate : toDate,
-      fromdate : fromDate
-    };
+    // let report : any = {
+    //   todate : toDate,
+    //   fromdate : fromDate
+    // };
      this.rowdata = await this._ticketService.getAllTickets();
      this.rowdata.forEach((res , index) => {
        let addedOn = new Date(res['addedOn']).getTime();

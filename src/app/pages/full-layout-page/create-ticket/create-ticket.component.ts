@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute ,Router , Params } from '@angular/router';
-import {status, priorityLevel,problemType , platform} from '../../../app.config';
+import {urls,status, priorityLevel,problemType , platform} from '../../../app.config';
 import { TicketService} from "../../../shared/services/ticket.service";
 import { ToasterService } from "../../../shared/services/toaster.service";
+import { ToastsManager } from 'ng6-toastr/ng2-toastr';
 
 
 
@@ -28,13 +29,13 @@ export class CreateTicketComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _ticketService : TicketService ,
-    private toaster : ToasterService)
+    private toaster : ToastsManager, vcr: ViewContainerRef)
    {
      this.status = status;
      this.priority = priorityLevel;
      this.problemType = problemType;
      this.platform = platform;
-     
+    this.toaster.setRootViewContainerRef(vcr); 
 
     }
 
@@ -88,7 +89,7 @@ export class CreateTicketComponent implements OnInit {
       problemType : this.createTicketForm.value.ticketInformation.problemType,
       priorityLevel : this.createTicketForm.value.ticketInformation.priorityLevel,
       details : this.createTicketForm.value.ticketInformation.details,
-      status : 'Yet To start', // need to change,
+      status : 'Yet To Start', // need to change,
       platform : this.createTicketForm.value.ticketInformation.platform,
       assignTo : this.createTicketForm.value.ticketInformation.assignTo
     }
@@ -100,20 +101,24 @@ export class CreateTicketComponent implements OnInit {
 
     console.log(data);
     await this._ticketService.saveTicket(data).then(data =>{
-      this.toaster.typeSuccess('New Ticket Created Successfully!');
-        this.createTicketForm.patchValue({
-          ticketInformation:{
-            title : '',
-            problemType : '',
-            priorityLevel: '',
-            details: '',
-            platform: '',
-            assignTo: '',
-            country: '',
-            operator: '',
-            biller : '',
-          }
-        });
+      this.typeSuccess('New Ticket Created Successfully!');
+        // this.createTicketForm.patchValue({
+        //   ticketInformation:{
+        //     title : '',
+        //     problemType : '',
+        //     priorityLevel: '',
+        //     details: '',
+        //     platform: '',
+        //     assignTo: '',
+        //     country: '',
+        //     operator: '',
+        //     biller : '',
+        //   }
+        // });
+       
+  
+
+        this.router.navigate([ '/' +  urls.ticket], { relativeTo: this.route.parent });
     });
     // console.log(re);
   }
@@ -130,5 +135,10 @@ export class CreateTicketComponent implements OnInit {
   addFiles(){
 
   }
+
+  typeSuccess(message) {
+    console.log("toaster service");
+    this.toaster.success(message, 'Success!', { "toastLife": 4000 });
+}
 
 }

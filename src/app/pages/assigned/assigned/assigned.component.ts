@@ -34,7 +34,7 @@ import { AsyncAction } from 'rxjs/internal/scheduler/AsyncAction';
     <div class="modal-footer">
      <div class="form-actions">
       <button type="button" class="btn btn-raised btn-warning" (click)="activeModal.close('Close click')"> Close</button>
-      <button type="button" class="btn btn-raised btn-primary" (click)="saveChangesBidrate()">Save</button>
+      <button type="button" class="btn btn-raised btn-primary" (click)="saveChangesAssignedTo()">Save</button>
      </div>
     </div>
   `
@@ -53,7 +53,7 @@ export class AssignedComponent  {
     this.getAllUsers();
    }
 
-  saveChangesBidrate= async()=>{
+  saveChangesAssignedTo= async()=>{
     let data : any = {
       id : this.id,
       assignedTo : this.assignedTo

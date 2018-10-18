@@ -1,5 +1,6 @@
 import { Component, AfterViewChecked , Inject} from '@angular/core';
-import { SESSION_STORAGE, StorageService  } from 'angular-webstorage-service';
+import { SESSION_STORAGE, StorageService , LOCAL_STORAGE } from 'angular-webstorage-service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-navbar',
@@ -13,7 +14,7 @@ export class NavbarComponent implements AfterViewChecked{
     placement = 'bottom-right'
     public isCollapsed = true;
 
-    constructor(@Inject(SESSION_STORAGE) private storage: StorageService) {
+    constructor(@Inject(LOCAL_STORAGE) private storage: StorageService, private router: Router) {
       
        }
 
@@ -43,6 +44,6 @@ export class NavbarComponent implements AfterViewChecked{
 
     Logout(){
         this.storage.remove('token');
-        
+        this.router.navigate(['/login']);
     }
 }

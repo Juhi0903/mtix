@@ -6,11 +6,11 @@ import { ContentLayoutPageComponent } from './content-layout-page.component';
 
 const routes: Routes = [
   {
-    path: '',
-     component: ContentLayoutPageComponent,
+    path: 'login',
+    component: ContentLayoutPageComponent,
     data: {
-      title: 'Content Layout page'
-    },    
+      title: 'login page'
+    }
   }
 ];
 

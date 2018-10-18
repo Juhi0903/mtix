@@ -25,11 +25,11 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 32
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 17
       },
       {
         "name": "Done",
@@ -42,15 +42,15 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 21
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 15
       },
       {
         "name": "Done",
-        "value": 15
+        "value": 6
       }
     ]
   },
@@ -59,15 +59,15 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 19
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 6
       },
       {
         "name": "Done",
-        "value": 15
+        "value": 13
       }
     ]
   },
@@ -76,15 +76,15 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 8
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 5
       },
       {
         "name": "Done",
-        "value": 15
+        "value": 3
       }
     ]
   },
@@ -93,15 +93,15 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 4
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 2
       },
       {
         "name": "Done",
-        "value": 15
+        "value": 2
       }
     ]
   },
@@ -110,15 +110,15 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 22
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 10
       },
       {
         "name": "Done",
-        "value": 15
+        "value": 12
       }
     ]
   },
@@ -127,15 +127,15 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 26
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 10
       },
       {
         "name": "Done",
-        "value": 15
+        "value": 16
       }
     ]
   },
@@ -144,15 +144,15 @@ export var barChartmulti = [
     "series": [
       {
         "name": "Total",
-        "value": 40
+        "value": 15
       },
       {
         "name": "Pending",
-        "value": 25
+        "value": 10
       },
       {
         "name": "Done",
-        "value": 15
+        "value": 5
       }
     ]
   }
