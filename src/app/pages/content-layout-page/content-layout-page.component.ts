@@ -23,8 +23,8 @@ export class ContentLayoutPageComponent {
   }
 
   login(){
-    // window.location.href = 'http://43.231.124.147:8080/v1/user/';
-    window.location.href = 'http://localhost:3000/v1/user/auth?token=hbjnkm'
+    window.location.href = 'http://43.231.124.147:8080/v1/user/';
+    // window.location.href = 'http://localhost:3000/v1/user/auth?token=hbjnkm'
   }
 
 }

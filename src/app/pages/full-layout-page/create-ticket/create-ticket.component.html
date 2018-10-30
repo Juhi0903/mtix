@@ -1,16 +1,54 @@
+<div class="row" *ngIf="showIdCoulmn">
+		<div class="col-md-12">
+		  <div class="card">
+				<div class="card-header">
+						<span class="card-title">Create Sub Ticket for - {{title}}</span>
+					</div>
+				<div class="card-body">
+					<div id ="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
+							<table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" style="padding:0 20px">
+									<!-- <thead>
+										<tr><th style="padding: 5px;">Ticket Id</th></tr>
+										<tr><th style="padding: 5px;">Assign To </th></tr>
+										<tr><th style="padding: 5px;">Subject</th></tr>
+										<tr><th style="padding: 5px;">Raise On</th></tr>
+									</thead> -->
+									<tbody>
+										<tr class="col-md-12" *ngFor="let obj of ticketDetails">
+											<td class="hidden-phone col-md-04"><b>Ticket Id : </b>{{obj.ticketId}}</td>
+											<td class="hidden-phone col-md-04"><b>Assign To : </b>{{obj.assignedTo}}</td>
+											<td class="hidden-phone col-md-04"><b>Raise On : </b>{{obj.addedOn}}</td>
+										</tr>
+										<tr class="col-md-12" *ngFor="let obj of ticketDetails">
+												<td class="hidden-phone col-md-04"><b>Status : </b>{{obj.status}}</td>
+												<td class="hidden-phone col-md-04"><b>Raise By : </b>{{obj.raisedBy}}</td>
+												<td class="hidden-phone col-md-04"><b>Priority : </b>{{obj.priorityLevel}}</td>
+										</tr>
+										<tr class="col-md-12" *ngFor="let obj of ticketDetails">
+											<td class="hidden-phone col-md-04"><b>Category : </b>{{obj.problemType}}</td>
+											<td class="hidden-phone col-md-04"><b>Platform : </b>{{obj.platform}}</td>
+											<td class="hidden-phone col-md-04"><b>Description : </b>{{obj.description}}</td>
+										</tr>
+									</tbody>
+								</table>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="card">
-			<!-- <div class="card-header">
-				<h6 class="card-title" id="striped-row-layout-basic">Create Offer</h6>
-			</div> -->
-			<form [formGroup]="createTicketForm" (ngSubmit)="submitNewTicket()" class="form form-horizontal striped-rows form-bordered"
-			 novalidate>
+			<div class="card-header">
+				<span class="card-title"><i class="ft-file-text"></i>Ticket Information</span>
+			</div>
+			<form [formGroup]="createTicketForm" (ngSubmit)="submitNewTicket()" class="form form-horizontal striped-rows form-bordered" novalidate>
 				<div formGroupName="ticketInformation">
 					<div class="card-body">
-						<!-- <div class="px-3"> -->
 						<div class="form-body">
-							<h4 class="form-section"><i class="ft-file-text"></i>Ticket Information</h4>
+							<!-- <h4 class="form-section"><i class="ft-file-text"></i>Ticket Information</h4> -->
 							<div class="form-group row">
 								<label class="col-md-3 label-control" for="projectinput7">Problem Statememt</label>
 								<div class="col-md-9">

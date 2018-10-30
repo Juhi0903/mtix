@@ -6,7 +6,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { FullPagesRoutingModule } from "./full-pages-routing.module";
 import { FullLayoutPageComponent } from './full-layout-page.component';
 import { CreateTicketComponent } from 'app/pages/full-layout-page/create-ticket/create-ticket.component';
-import { AllTicketsComponent, EditPriority, EditAssignTo, EditAndViewDetails} from './all-tickets/all-tickets.component';
+import { AllTicketsComponent, EditPriority, EditAssignTo, EditAndViewDetails, CreateSubTicket} from './all-tickets/all-tickets.component';
 import { TicketService} from "../../shared/services/ticket.service";
 import { ToasterService } from "../../shared/services/toaster.service";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -22,6 +22,8 @@ import { TicketDetailsComponent} from '../ticket-details/ticket-details/ticket-d
 import { TicketDetailsModule} from '../ticket-details/ticket-details.module';
 import { StorageServiceModule } from 'angular-webstorage-service';
 import { ToastsManager } from 'ng6-toastr/ng2-toastr';
+// import {StatusDetailsModule} from '../status-details/status-details.module';
+// import {StatusDetailsComponent } from '../status-details/status-details/status-details.component';
  
 @NgModule({
   imports: [
@@ -31,7 +33,7 @@ import { ToastsManager } from 'ng6-toastr/ng2-toastr';
     FullPagesRoutingModule,
     HttpModule,
     HttpClientModule,
-    AgGridModule.withComponents([EditPriority, EditAssignTo, EditAndViewDetails]),
+    AgGridModule.withComponents([EditPriority, EditAssignTo, EditAndViewDetails, CreateSubTicket]),
     StatusModule,
     AssignedModule,
     PriorityModule,
@@ -46,7 +48,6 @@ import { ToastsManager } from 'ng6-toastr/ng2-toastr';
       AssignedComponent,
       StatusComponent,
       TicketDetailsComponent
-
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA],
     declarations: [       
@@ -55,7 +56,8 @@ import { ToastsManager } from 'ng6-toastr/ng2-toastr';
         AllTicketsComponent,
         EditPriority,
         EditAssignTo,
-        EditAndViewDetails
+        EditAndViewDetails,
+        CreateSubTicket
     ],
     providers: [
       TicketService,

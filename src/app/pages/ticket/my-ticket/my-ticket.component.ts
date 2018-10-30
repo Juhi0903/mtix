@@ -23,6 +23,8 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
   title : any;
   raiseOn : any;
   id : any;
+  status : any;
+  lastUpdatedOn : any;
 
   constructor(private route: ActivatedRoute,private modalService: NgbModal) {
   }
@@ -41,6 +43,8 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
     this.ticketid = params.node.data.ticketId;
     this.title = params.node.data.title;
     this.raiseOn = params.node.data.addedOn;
+    this.status = params.node.data.status;
+    this.lastUpdatedOn = params.node.data.updatedOn;
   }
 
   onClick() {
@@ -53,6 +57,8 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
     modalRef.componentInstance.ticketid = this.ticketid;
     modalRef.componentInstance.title = this.title;
     modalRef.componentInstance.raiseOn = this.raiseOn;
+    modalRef.componentInstance.status = this.status;
+    modalRef.componentInstance.lastUpdatedOn = this.lastUpdatedOn;
   }
 
 }
@@ -88,7 +94,7 @@ export class EditStatus implements ICellRendererAngularComp {
   }
 
   onClick() {
-    const modalRef = this.modalService.open(StatusComponent);
+    const modalRef = this.modalService.open(StatusComponent, {size:'lg'});
     modalRef.componentInstance.clickevent.subscribe(($e) => {
       this.params.node.data.status = $e;
       this.status = $e;
@@ -158,7 +164,7 @@ export class MyTicketComponent implements OnInit {
     this.columnDefs = [
       {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 100, suppressSizeToFit: true},
       {headerName: "Raised On", field: 'addedOn' , width: 120, suppressSizeToFit: true},
-      {headerName: "Status", field: 'status' ,cellRenderer: "editStatus", width: 130, editable: true,suppressSizeToFit: true },
+      {headerName: "Status", field: 'status' ,cellRenderer: "editStatus", width: 130, suppressSizeToFit: true },
       {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
         "rag-yellow": "x <'50'",
@@ -184,10 +190,17 @@ export class MyTicketComponent implements OnInit {
 
   getClosedTicktes = async () => {
     this.rowdata = await this._ticketService.getClosedTicktes();
+    let diff;
     this.rowdata.forEach((res , index) => {
       let addedOn = new Date(res['addedOn']).getTime();
+      if(res['status']=='Closed'){
+        let closedOn = new Date(res['updatedOn']).getTime();
+         diff = closedOn - addedOn;
+      }
+      else{
       let todate = new Date().getTime();
-      let diff = todate - addedOn;
+        diff = todate - addedOn;
+      }
       res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
       res['addedOn'] = this.todayDate(res['addedOn']);
     
@@ -196,10 +209,17 @@ export class MyTicketComponent implements OnInit {
 
   getPendingTicktes = async () => {
     this.rowdata = await this._ticketService.getPendingTicktes();
+    let diff;
     this.rowdata.forEach((res , index) => {
       let addedOn = new Date(res['addedOn']).getTime();
+      if(res['status']=='Closed'){
+        let closedOn = new Date(res['updatedOn']).getTime();
+         diff = closedOn - addedOn;
+      }
+      else{
       let todate = new Date().getTime();
-      let diff = todate - addedOn;
+        diff = todate - addedOn;
+      }
       res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
       res['addedOn'] = this.todayDate(res['addedOn']);
     
@@ -208,10 +228,17 @@ export class MyTicketComponent implements OnInit {
 
   getPersonalTicktes = async () => {
     this.rowdata = await this._ticketService.getPersonalTicktes();
+    let diff;
     this.rowdata.forEach((res , index) => {
       let addedOn = new Date(res['addedOn']).getTime();
+      if(res['status']=='Closed'){
+        let closedOn = new Date(res['updatedOn']).getTime();
+         diff = closedOn - addedOn;
+      }
+      else{
       let todate = new Date().getTime();
-      let diff = todate - addedOn;
+        diff = todate - addedOn;
+      }
       res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
       res['addedOn'] = this.todayDate(res['addedOn']);
     

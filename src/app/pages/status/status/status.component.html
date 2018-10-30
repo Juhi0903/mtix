@@ -1,3 +1,68 @@
-<p>
-  status works!
-</p>
+<div class="modal-header" style="background-color: gainsboro ; color: black; font-weight: 500;">
+  <h5 class="modal-title">Change Status</h5>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+ <div class="px-3">
+  <form  [formGroup]="StatusForm" (ngSubmit)="saveChangedStatus()" class="form form-horizontal striped-rows form-bordered" novalidate>
+    <div class="form-body"  formGroupName="formInformation">
+      <div class="row">  
+          <label class="col-md-3 label-control">Status</label>
+          <div class="col-md-9">
+              <div class="input-group">
+                <select   formControlName="status" name="status"  class="form-control" required (click)="checkStatus()">
+                  <option value="" selected="">Select Priority Level</option>
+                  <option *ngFor="let obj of statusList" [value]='obj.name'>{{obj.name}}</option>
+                </select>
+              </div>
+          </div>
+      </div>
+      <div class="row"  *ngIf="enableStage">
+      <label class="col-md-3 label-control">Integration Stage</label>
+        <div class="col-md-6">
+        <div class="input-group">
+          <select formControlName="stage" name="stage"  class="form-control" (click)="checkStage()">
+            <option value="" selected="">Select Integration Stage </option>
+            <option *ngFor="let obj of stageList" [value]='obj.stage'>{{obj.stage}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-3">
+      <button type="button" class="btn btn-raised btn-primary" (click)="createNewStage()">Create Stage</button>
+      </div>
+      </div>
+      <div class="row"  *ngIf="enableSubStage">
+      <label class="col-md-3 label-control">Sub Stage</label>
+        <div class="col-md-6">
+        <div class="input-group">
+          <select formControlName="substage" name="substage"  class="form-control" >
+            <option value="" selected="" disabled="true">Select Sub Stage </option>
+            <option *ngFor="let obj of substageList" [value]='obj.subStage'>{{obj.subStage}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-raised btn-primary" (click)="createNewSubStage()">Create SubStage</button>
+      </div>
+      </div>
+      <div class="row">
+      <label class="col-md-3 label-control">Remarks</label>
+        <div class="col-md-9">
+            <div class="input-group">
+              <textarea formControlName="remarks" rows="8" class="form-control" placeholder="Recent Update" name="remarks" required></textarea>
+            </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+</div>
+
+<div class="modal-footer">
+    <div class="form-actions">
+      <button type="button" class="btn btn-raised btn-warning" (click)="activeModal.close('Close click')"> Close</button>
+      <button type="button" class="btn btn-raised btn-primary" [disabled]="!StatusForm.valid" (click)="saveChangedStatus()">Save</button>
+    </div>
+  </div>

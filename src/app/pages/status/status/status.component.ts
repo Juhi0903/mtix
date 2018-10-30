@@ -1,77 +1,118 @@
 import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TicketService} from "../../../shared/services/ticket.service";
-import { status} from "../../../app.config";
+import {status} from "../../../app.config";
+import {StageComponent } from '../../stage-substage/stage/stage.component';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
-  selector: 'ngbd-modal-content',
-  template: `
-    <div class="modal-header" style="background-color: gainsboro ; color: black; font-weight: 500;">
-      <h5 class="modal-title">Change Status</h5>
-      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-     <div class="px-3">
-      <form class="form">
-       <div class="form-body">
-        <div class="row">  
-            <label class="col-md-3 label-control">Status</label>
-            <div class="col-md-9">
-                <div class="input-group">
-                  <select  [(ngModel)]="status" name="status"  class="form-control" required>
-                    <option value="" selected="" disabled="true">Select Priority Level</option>
-                    <option *ngFor="let obj of statusList" [value]='obj.name'>{{obj.name}}</option>
-                  </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-        <label class="col-md-3 label-control">Remarks</label>
-          <div class="col-md-9">
-              <div class="input-group">
-                <textarea rows="8" class="form-control" [(ngModel)]="remarks" placeholder="Recent Update" name="remarks" required></textarea>
-              </div>
-          </div>
-        </div>
-       </div>
-      </form>
-     </div>
-   </div>
-    <div class="modal-footer">
-     <div class="form-actions">
-      <button type="button" class="btn btn-raised btn-warning" (click)="activeModal.close('Close click')"> Close</button>
-      <button type="button" class="btn btn-raised btn-primary" (click)="saveChangesStatus()">Save</button>
-     </div>
-    </div>
-  `
+  selector: 'app-status',
+  templateUrl: './status.component.html',
+  styleUrls: ['./status.component.scss']
 })
 
-export class StatusComponent {
+export class StatusComponent  implements OnInit{
 
   @Input() ticketId;
   @Input() eventId;
   @Input() status;
-
+  StatusForm : FormGroup;
   statusList : any =[];
-  remarks : any;
+  enableStage = false;
+  enableSubStage = false
+  stageList = [];
+  substageList = [];
 
   @Output() clickevent = new EventEmitter<string>();
 
-  constructor(public activeModal: NgbActiveModal, private _ticketService: TicketService) { 
+  constructor(public activeModal: NgbActiveModal, private _ticketService: TicketService, private modalService: NgbModal,private _formBuilder: FormBuilder) { 
     this.statusList = status;
   }
 
-  saveChangesStatus = async()=>{
+  ngOnInit() {
+    this.StatusForm = this._formBuilder.group({
+      formInformation : this._formBuilder.group({
+        status : new FormControl(this.status,[Validators.required]),
+        stage : new FormControl(''),
+        substage : new FormControl(''),
+        remarks : new FormControl('',[Validators.required]),
+      })
+  });
+}
+
+  saveChangedStatus = async()=>{
+    let status = this.StatusForm.value.formInformation.status;
     let data : any = {
       ticketId : this.ticketId,
-      status : this.status,
-      remarks : this.remarks
+      status : status,
+      remarks : this.StatusForm.value.formInformation.remarks,
+    }
+    if(status == 'Integration'){
+      data.stage = this.StatusForm.value.formInformation.stage,
+      data.subStage = this.StatusForm.value.formInformation.substage
     }
       await this._ticketService.updateStatus(data);
+      console.log(data);
       this.clickevent.emit(this.status);
       this.activeModal.close('Close click');
+  }
+
+  checkStatus= async() =>{
+    let status = this.StatusForm.value.formInformation.status;
+    if(status=='Integration'){
+      this.StatusForm.get('formInformation.stage').setValidators([Validators.required]);
+      this.StatusForm.get('formInformation.substage').setValidators([Validators.required]);
+      this.stageList = await this._ticketService.getStage();
+      this.enableStage = true;
+    }
+    else{
+    this.enableStage= false;
+    this.enableSubStage= false;
+    this.StatusForm.get('formInformation.stage').setValidators(null);
+    this.StatusForm.get('formInformation.substage').setValidators(null);
+    this.StatusForm.patchValue({
+      formInformation:{
+        stage: '',
+        substage :'',
+      },
+    });
+    }
+    this.StatusForm.get('formInformation.stage').updateValueAndValidity();
+    this.StatusForm.get('formInformation.substage').updateValueAndValidity();
+  }
+
+  checkStage= async() =>{
+    let status = this.StatusForm.value.formInformation.status;
+    if(status=='Integration'){
+    let data = {
+      stage  : this.StatusForm.value.formInformation.stage
+    }
+    this.substageList = await this._ticketService.getSubStage(data);
+    this.enableSubStage= true;
+    }
+    else{
+      this.enableSubStage= false;
+    }
+    
+  }
+
+  createNewStage = async() =>{
+    const modalRef = this.modalService.open(StageComponent);
+    modalRef.componentInstance.clickevent.subscribe(($e) => {
+     this.stageList = $e;
+    });
+    
+  }
+
+  createNewSubStage = async() =>{
+    const modalRef = this.modalService.open(StageComponent);
+    modalRef.componentInstance.clickevent2.subscribe(($e) => {
+      this.substageList = $e;
+     });
+     modalRef.componentInstance.clickevent.subscribe(($e) => {
+      this.stageList = $e;
+     });
+     modalRef.componentInstance.stage = this.StatusForm.value.formInformation.stage;
   }
 
 }

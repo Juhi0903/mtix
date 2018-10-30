@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { urls } from '../../app.config';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -122,5 +121,37 @@ export class TicketService {
 
   public getStatusCount = async (): Promise<any[]> => {
     return this._httpService.get(urls.BASE_URL + urls.tickets, this.httpOptions).toPromise() as any;
+  }
+
+  public getStage = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.stage, this.httpOptions).toPromise() as any;
+  }
+
+  public getSubStage = async (data): Promise<any[]> => {
+    return this._httpService.post(urls.BASE_URL + urls.subStage, data , this.httpOptions).toPromise() as any;
+  }
+
+  public createNewStage = async (data): Promise<any[]> => {
+    return this._httpService.post(urls.BASE_URL + urls.stage, data , this.httpOptions).toPromise() as any;
+  }
+
+  public saveSubTicket = async (data): Promise<any[]> => {
+    return this._httpService.post(urls.BASE_URL + urls.childTicket, data , this.httpOptions).toPromise() as any;
+  }
+
+  public getTicketDetails(id) {
+    return this._httpService.get(urls.BASE_URL + urls.ticketdetails + "?ticketId=" + id, {
+      headers: {
+        'Authorization': this.storage.get('token')
+      }
+    }).toPromise() as any;
+  }
+
+  public getSubTicket = async (id): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.childTicket + "?ticketId=" + id, {
+      headers: {
+        'Authorization': this.storage.get('token')
+      }
+    }).toPromise() as any;
   }
 }

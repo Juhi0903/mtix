@@ -11,7 +11,38 @@ import {PriorityComponent } from '../../priority/priority/priority.component';
 import {AssignedComponent} from '../../assigned/assigned/assigned.component';
 import {StatusComponent} from '../../status/status/status.component';
 import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticket-details.component';
+import { CreateTicketComponent } from 'app/pages/full-layout-page/create-ticket/create-ticket.component';
+// import {StatusDetailsComponent } from '../../status-details/status-details/status-details.component';
 
+@Component({
+  selector: 'status-edit-url',
+  template: '<a title="{{url}}" [routerLink]="url"><i class="ft-edit-2 info font-medium-1 mr-1"></i>create</a>'
+})
+
+export class CreateSubTicket implements ICellRendererAngularComp {
+  params: any;
+  ticketId : any;
+  url : any;
+
+  constructor(private route: ActivatedRoute,private modalService: NgbModal) {
+    this.route.parent.paramMap.subscribe(params => {
+    });
+  }
+  agInit(params: any): void {
+    this.params = params;
+    this.setUrl(params);
+  }
+
+  refresh(params: any): boolean {
+    this.params = params;
+    this.setUrl(params);
+    return true;
+  }
+
+  private setUrl(params) {
+    this.url = "/subticket" + "/" + params.node.data.ticketId;
+  }
+}
 @Component({
   selector: 'status-edit-url',
   template: '<a (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{priorityLevel}}</a>'
@@ -23,6 +54,8 @@ export class EditPriority implements ICellRendererAngularComp {
   public orgDomain:string;
   priorityLevel : any;
   id;
+  ticketId : any;
+  title : any;
   
 
   constructor(private route: ActivatedRoute,private modalService: NgbModal) {
@@ -42,6 +75,8 @@ export class EditPriority implements ICellRendererAngularComp {
     // this.url = "/" + this.orgDomain + "/" + urls.editOffer + "/" + params.node.data.offerId;
     this.priorityLevel = params.node.data.priorityLevel;
     this.id = params.node.data.id;
+    this.ticketId = params.node.data.ticketId;
+    this.title = params.node.data.title;
   }
 
   onClick() {
@@ -52,14 +87,15 @@ export class EditPriority implements ICellRendererAngularComp {
     });
     modalRef.componentInstance.priority = this.priorityLevel;
     modalRef.componentInstance.id = this.id;
-    // modalRef.componentInstance.randomValue = 1001;
+    modalRef.componentInstance.ticketId = this.ticketId;
+    modalRef.componentInstance.title = this.title;
   }
 
 }
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a title="Optimise Offer" (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{assignedTo}}</a>'
+  template: '<a (click)="onClick()"><i class="ft-edit-2 info font-medium-1 mr-1"></i>{{assignedTo}}</a>'
 })
 
 export class EditAssignTo implements ICellRendererAngularComp {
@@ -68,6 +104,8 @@ export class EditAssignTo implements ICellRendererAngularComp {
   public orgDomain:string;
   assignedTo : any;
   id;
+  ticketId : any;
+  title : any;
 
   constructor(private route: ActivatedRoute,private modalService: NgbModal) {
   }
@@ -86,6 +124,8 @@ export class EditAssignTo implements ICellRendererAngularComp {
     // this.url = "/" + this.orgDomain + "/" + urls.editOffer + "/" + params.node.data.offerId;
     this.assignedTo = params.node.data.assignedTo;
     this.id = params.node.data.id;
+    this.ticketId = params.node.data.ticketId;
+    this.title = params.node.data.title;
   }
 
   onClick() {
@@ -97,14 +137,15 @@ export class EditAssignTo implements ICellRendererAngularComp {
     });
     modalRef.componentInstance.assignedTo = this.assignedTo;
     modalRef.componentInstance.id = this.id;
-    // modalRef.componentInstance.randomValue = 1001;
+    modalRef.componentInstance.ticketId = this.ticketId;
+    modalRef.componentInstance.title = this.title;
   }
 
 }
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a (click)="onClick()">{{ticketid}}</a>'
+  template: '<a title="{{url}}" [routerLink]="url">{{ticketid}}</a>'
 })
 
 export class EditAndViewDetails implements ICellRendererAngularComp {
@@ -115,37 +156,45 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
   title : any;
   raiseOn : any;
   id : any;
+  status : any;
+  lastUpdatedOn : any;
 
   constructor(private route: ActivatedRoute,private modalService: NgbModal) {
   }
   agInit(params: any): void {
     this.params = params;
-    this.setStatus(params);
+    this.setUrl(params);
   }
 
   refresh(params: any): boolean {
     this.params = params;
-    this.setStatus(params);
+    this.setUrl(params);
     return true;
   }
 
-  private setStatus(params) {
+  private setUrl(params) {
     this.ticketid = params.node.data.ticketId;
-    this.title = params.node.data.title;
-    this.raiseOn = params.node.data.addedOn;
+    this.url = "/ticketdetails" + "/" + params.node.data.ticketId + "/" + params.node.data.updatedOn;
+    // this.ticketid = params.node.data.ticketId;
+    // this.title = params.node.data.title;
+    // this.raiseOn = params.node.data.addedOn;
+    // this.status = params.node.data.status;
+    // this.lastUpdatedOn = params.node.data.updatedOn;
   }
 
-  onClick() {
-    const modalRef = this.modalService.open(TicketDetailsComponent , {size : 'lg'});
-    modalRef.componentInstance.clickevent.subscribe(($e) => {
-      this.params.node.data.assignedTo = $e;
-      // this.ticketid = $e;
-      // console.log($e);
-    });
-    modalRef.componentInstance.ticketid = this.ticketid;
-    modalRef.componentInstance.title = this.title;
-    modalRef.componentInstance.raiseOn = this.raiseOn;
-  }
+  // onClick() {
+  //   const modalRef = this.modalService.open(TicketDetailsComponent , {size : 'lg'});
+  //   modalRef.componentInstance.clickevent.subscribe(($e) => {
+  //     this.params.node.data.assignedTo = $e;
+  //     // this.ticketid = $e;
+  //     // console.log($e);
+  //   });
+  //   modalRef.componentInstance.ticketid = this.ticketid;
+  //   modalRef.componentInstance.title = this.title;
+  //   modalRef.componentInstance.raiseOn = this.raiseOn;
+  //   modalRef.componentInstance.status = this.status;
+  //   modalRef.componentInstance.lastUpdatedOn = this.lastUpdatedOn;
+  // }
 
 }
 
@@ -171,7 +220,6 @@ export class AllTicketsComponent implements OnInit {
   frameworkComponents;
   rowSelection;
   gridOptions: GridOptions = {
-    enableFilter: true,
     columnDefs : this.columnDefs,
     rowData : this.rowdata,
   };
@@ -186,7 +234,8 @@ export class AllTicketsComponent implements OnInit {
     this.frameworkComponents = {
       editPriority: EditPriority,
       editAssignto:EditAssignTo,
-      ticketdetails : EditAndViewDetails
+      ticketdetails : EditAndViewDetails,
+      createSubTicket : CreateSubTicket
 
     };
 
@@ -213,15 +262,22 @@ export class AllTicketsComponent implements OnInit {
 
   setColumnDefs(){
     this.columnDefs = [
-      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 90, suppressSizeToFit: true},
-      {headerName: "Raised On", field: 'addedOn' , width: 100, suppressSizeToFit: true},
-      {headerName: "Status", field: 'status' , width: 100, editable: true,suppressSizeToFit: true },
-      {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true,valueParser: this.numberParser,
+      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 120, suppressSizeToFit: true, pinned: "left"},
+      // {headerName: "Parent", field: 'parentTicket' , width: 90, suppressSizeToFit: true, pinned: "left"},
+      
+      {headerName: "Raised On", field: 'addedOn' , width: 100, suppressSizeToFit: true, pinned: "left"},
+      {headerName: "Subject", field: 'title' , width: 240, suppressSizeToFit: true,pinned: "left" },
+      {headerName: "Status", field: 'status' , width: 100, suppressSizeToFit: true,pinned: "left" ,valueParser: this.numberParser,
+      cellClassRules: {
+        "rag-green": "x == 'Closed'",
+        "rag-red": "x == 'Yet To Start'"
+      }},
+      
+      {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true, valueParser: this.numberParser,
       cellClassRules: {
         "rag-yellow": "x <'50'",
         "rag-red": "x >= '20'"
       }},
-      {headerName: "Subject", field: 'title' , width: 240, suppressSizeToFit: true },
       {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
       {headerName: "Category", field: 'problemType' , width: 100, suppressSizeToFit: true},
       {headerName: 'Priority', field: 'priorityLevel', cellRenderer: "editPriority" , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
@@ -231,12 +287,14 @@ export class AllTicketsComponent implements OnInit {
         "rag-red": "x == 'High'"
       }},
       {headerName : "Assisgn To" ,field:'assignedTo', cellRenderer: "editAssignto", width: 130, suppressSizeToFit: true },
+      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
       {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
       {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
       {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
-      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
+      {headerName: "Sub Ticket", field: '' , cellRenderer: "createSubTicket", width: 100, suppressSizeToFit: true },
+      
     ];
-
+    this.defaultColDef = { width: 100 };
     // this.rowSelection = "multiple";
   }
 
@@ -251,13 +309,24 @@ export class AllTicketsComponent implements OnInit {
     //   todate : toDate,
     //   fromdate : fromDate
     // };
+    let diff;
      this.rowdata = await this._ticketService.getAllTickets();
      this.rowdata.forEach((res , index) => {
        let addedOn = new Date(res['addedOn']).getTime();
+       if(res['status']=='Closed'){
+         let closedOn = new Date(res['updatedOn']).getTime();
+          diff = closedOn - addedOn;
+       }
+       else{
        let todate = new Date().getTime();
-       let diff = todate - addedOn;
+         diff = todate - addedOn;
+       }
+       if(res['parentTicket']==null){
+         res['parentTicket'] = res['ticketId'];
+       }
        res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
        res['addedOn'] = this.todayDate(res['addedOn']);
+       res['updatedOn'] = this.todayDate(res['updatedOn']);
      
     });
 
@@ -275,12 +344,12 @@ export class AllTicketsComponent implements OnInit {
     return valueAsNumber;
   }
   
-  onGridReady(params) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    console.log(this.gridApi);
-    console.log(this.gridColumnApi);
-  }
+  // onGridReady(params) {
+  //   this.gridApi = params.api;
+  //   this.gridColumnApi = params.columnApi;
+  //   console.log(this.gridApi);
+  //   console.log(this.gridColumnApi);
+  // }
 
   exportToExcel(){
     let exportOnlySelected = false;

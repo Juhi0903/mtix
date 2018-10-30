@@ -1,27 +1,112 @@
-<div class="col-md-12">
-  <div class="card">
-    <div class="modal-header" style="background-color: gainsboro ; color: black;">
-      <span style="float: left; font-weight: bold;">{{title}}</span>
-      <span style="float:right;">{{raiseOn}}</span>
-    </div>
-    <form class="form form-horizontal striped-rows form-bordered">
-      <div class="form-body">
-          <div *ngFor="let obj of details" class="form-group details">
-              <span style="text-align:justify;">{{obj.remarks}}
-                <span style="color: rgb(94, 201, 243);">
-                  - {{obj.addedBy}} ({{obj.addedOn}})
-                </span>
-              </span>
-          </div>
-          <div class="col-md-12" style="padding-top:20px;">
-            <textarea  rows="8" class="form-control" name="remarks" placeholder="Max 500 words" [(ngModel)]="remarks" required></textarea>
-          </div>
+<div class="row">
+    <div class="col-md-12 ">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">{{title}}</span>
+            </div>
+            <div class="card-body">
+                <div id="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
+                    <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" *ngFor="let obj of ticketDetails">
+                            <tbody>
+                                <tr>
+                                    <td class="hidden-phone col-md-04"><b>Ticket Id : </b>{{obj.ticketId}}</td>
+                                    <td class="hidden-phone col-md-04" (click)="changeAssignedTo()"><b>Assign To : </b>{{obj.assignedTo}}
+                                        <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
+                                    <td class="hidden-phone col-md-04"><b>Raise On : </b>{{obj.addedOn}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="hidden-phone col-md-04" (click)="changeStatus()"><b>Status : </b>{{obj.status}}
+                                        <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
+                                    <td class="hidden-phone col-md-04"><b>Raise By : </b>{{obj.raisedBy}}</td>
+                                    <td class="hidden-phone col-md-04"><b>Priority : </b>{{obj.priorityLevel}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="hidden-phone col-md-04"><b>Category : </b>{{obj.problemType}}</td>
+                                    <td class="hidden-phone col-md-04"><b>Platform : </b>{{obj.platform}}</td>
+                                    <td class="hidden-phone col-md-04"><b>Description : </b>{{obj.description}}</td>
+                                </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-body">
+                    <div id="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
+                        <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" *ngFor="let obj of subTicketList let i=index">
+                            <thead  class="card-header">
+                                <th (click)="expandDetails(obj.ticketId, i)">
+                                   Sub-{{i+1}} - {{obj.title}}
+                                </th>
+                                <th></th>
+                                <th></th>
+                            </thead>
+                                <tbody *ngIf="Open==i">
+                                    <tr>
+                                        <td class="hidden-phone col-md-04"><b>Ticket Id : </b><a title="" [routerLink]="[ '/subticket/details/' + obj.ticketId +'/' +obj.addedOn]">{{obj.ticketId}}</a></td>
+                                        <!-- [routerLink]="['/'+ticketdetails/ + obj.ticketId +'/' +obj.raisedBy]" -->
+                                        <td class="hidden-phone col-md-04" (click)="changeAssignedTo()"><b>Assign To : </b>{{obj.assignedTo}}
+                                        <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
+                                        <td class="hidden-phone col-md-04"><b>Raise On : </b>{{obj.addedOn}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="hidden-phone col-md-04" (click)="changeStatus()"><b>Status : </b>{{obj.status}}
+                                            <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
+                                        <td class="hidden-phone col-md-04"><b>Raise By : </b>{{obj.raisedBy}}</td>
+                                        <td class="hidden-phone col-md-04"><b>Priority : </b>{{obj.priorityLevel}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="hidden-phone col-md-04"><b>Category : </b>{{obj.problemType}}</td>
+                                        <td class="hidden-phone col-md-04"><b>Platform : </b>{{obj.platform}}</td>
+                                        <td class="hidden-phone col-md-04"><b>Description : </b>{{obj.description}}</td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
 
-          <div class="form-actions">
-            <button type="button" class="btn btn-raised btn-warning mr-1"  (click)="activeModal.close('Close click')"> Cancel</button>
-            <button type="submit" class="btn btn-raised btn-primary" (click)="submitRemarks()">Submit</button>
-          </div>
-      </div>
-    </form>
-  </div>
+            <div id="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
+                <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" style="padding:0 20px">
+                    <!-- <span style="padding:20px; " (click)="showCommentsTab()"><b>Comments  </b></span> -->
+                    <button type="submit" class="btn" style="margin:0 10px; " (click)="getTicketRemarks()"><b>Status Log
+                        </b></button>
+                    <button type="submit" class="btn" style="margin:0 10px; " (click)="showAnalysisTab()"><b>Analyse </b></button>
+                    <button type="submit" class="btn" style="margin:0 10px; " (click)="showChartTab()"><b>Chart </b></button>
+                    <!-- <tbody *ngIf="showComments">                  
+                      <tr class="col-md-12" *ngFor="let obj of details">
+                        <td class="hidden-phone col-md-04">
+                            <span style="text-align:justify;">{{obj.remarks}}
+                                <span style="color: rgb(94, 201, 243);">
+                                  - {{obj.addedBy}} ({{obj.addedOn}})
+                                </span>
+                              </span>
+                        </td>
+                    </tr>
+                </tbody> -->
+                    <tbody *ngIf="showStatus">
+
+                        <ag-grid-angular style="width: 100%; height: 500px; padding: 5px 10px;" class="ag-theme-balham" [columnDefs]="columnDefs"
+                            [enableSorting]="true" [enableFilter]="true" [enableColResize]="true" [rowData]="rowdata" [frameworkComponents]="frameworkComponents">
+                        </ag-grid-angular>
+
+                    </tbody>
+                </table>
+            </div>
+            <form class="form form-horizontal striped-rows form-bordered">
+                <div class="col-md-12" style="padding-top:10px;">
+                    <textarea rows="5" class="form-control" name="remarks" placeholder="Max 120 characters" [(ngModel)]="remarks" maxlength="120"
+                        required></textarea>
+                    <!-- <span *ngIf="remarks.touched">
+                        User Name is required
+                      </span> -->
+                </div>
+                <div class="form-actions">
+                    <!-- <button type="button" class="btn btn-raised btn-warning mr-1"  (click)="activeModal.close('Close click')"> Cancel</button> -->
+                    <button type="submit" class="btn btn-raised btn-primary" (click)="submitRemarks()">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+
+<!-- </div>
+</div> -->

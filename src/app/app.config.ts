@@ -14,7 +14,11 @@ export const urls = {
     remarks : 'remarks',
     auth : 'user/',
     tickets : 'ticket/ticket',
-    dashboard :'dashboard'
+    dashboard :'dashboard',
+    stage : 'stage',
+    subStage : 'stage/subStage',
+    childTicket : 'childticket',
+    ticketdetails : 'ticket/ticketdetails'
 }
 
 
@@ -53,6 +57,15 @@ export const status = [
     {id: 1006, name: 'Other'}
 
   ]
+
+  export interface detailsArray {
+    addedOn : string,
+    remarks: string,
+    assignedTo : string, 
+    status : string,
+    type : string,
+    ticketId : string,
+  }
 
   export const details = [
     {id: 1001, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag

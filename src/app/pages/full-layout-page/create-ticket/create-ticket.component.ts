@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, ViewContainerRef, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute ,Router , Params } from '@angular/router';
 import {urls,status, priorityLevel,problemType , platform} from '../../../app.config';
@@ -22,7 +22,12 @@ export class CreateTicketComponent implements OnInit {
   problemType : any =[];
   platform : any = [];
   users : any = [];
+  ticketList : any = [];
   showColumn : any = false;
+  ticketId : any;
+  title : any;
+  showIdCoulmn = false;
+  ticketDetails = [];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -31,12 +36,17 @@ export class CreateTicketComponent implements OnInit {
     private _ticketService : TicketService ,
     private toaster : ToastsManager, vcr: ViewContainerRef)
    {
+    this.ticketId= this.route.snapshot.paramMap.get('id');
+    if(this.ticketId!=null){
+      this.showIdCoulmn = true;
+      this.getParentTicketInfo();
+    }
+    console.log(this.ticketId);
      this.status = status;
      this.priority = priorityLevel;
      this.problemType = problemType;
      this.platform = platform;
-    this.toaster.setRootViewContainerRef(vcr); 
-
+     this.toaster.setRootViewContainerRef(vcr);
     }
 
   ngOnInit() {
@@ -49,6 +59,7 @@ export class CreateTicketComponent implements OnInit {
   _initForm = ():void => {
     this.createTicketForm = this._formBuilder.group({
       ticketInformation : this._formBuilder.group({
+        ticketId : new FormControl(this.ticketId),
         title : new FormControl(null),
         problemType : new FormControl('',[Validators.required]),
         priorityLevel : new FormControl('',[Validators.required]),
@@ -67,7 +78,7 @@ export class CreateTicketComponent implements OnInit {
 
   public getTickets = async () =>{
     const data = await this._ticketService.getAllTickets();
-    console.log(data);
+    // console.log(data);
   }
 
   public getUsers = async () =>{
@@ -98,29 +109,15 @@ export class CreateTicketComponent implements OnInit {
       data.operator = this.createTicketForm.value.ticketInformation.operator,
       data.biller = this.createTicketForm.value.ticketInformation.biller
     }
-
-    console.log(data);
-    await this._ticketService.saveTicket(data).then(data =>{
-      this.typeSuccess('New Ticket Created Successfully!');
-        // this.createTicketForm.patchValue({
-        //   ticketInformation:{
-        //     title : '',
-        //     problemType : '',
-        //     priorityLevel: '',
-        //     details: '',
-        //     platform: '',
-        //     assignTo: '',
-        //     country: '',
-        //     operator: '',
-        //     biller : '',
-        //   }
-        // });
-       
-  
-
-        this.router.navigate([ '/' +  urls.ticket], { relativeTo: this.route.parent });
-    });
-    // console.log(re);
+    if(this.ticketId!=null){
+      data.parentTicket = this.createTicketForm.value.ticketInformation.ticketId;
+       await this._ticketService.saveSubTicket(data);
+     }
+     else{
+      data.parentTicket = 'Null'
+      await this._ticketService.saveTicket(data);
+     }
+     this.router.navigate([ '/' +  urls.ticket], { relativeTo: this.route.parent });
   }
 
   CheckProblemType = async(event?) => {
@@ -140,5 +137,16 @@ export class CreateTicketComponent implements OnInit {
     console.log("toaster service");
     this.toaster.success(message, 'Success!', { "toastLife": 4000 });
 }
+
+  getParentTicketInfo = async () =>{
+    this.ticketDetails = await this._ticketService.getTicketDetails(this.ticketId);
+    this.ticketDetails.forEach((res , index) => {
+      res['addedOn'] = this.todayDate(res['addedOn']);
+      this.title = res['title'];
+   });
+  }
+  todayDate(dateparam){
+    return dateparam.toString().substring(0,10);
+  }
 
 }

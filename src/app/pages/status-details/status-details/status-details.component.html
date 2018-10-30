@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+          <span class="card-title">{{title}} -- Main Ticket</span>
+        </div>
+      <div class="card-body">
+        <div id ="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
+            <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table">
+                <tbody >
+                  <tr *ngFor="let obj of ticketDetails">
+                    <td class="hidden-phone col-md-04"><b>Ticket Id : </b>{{obj.ticketId}}</td>
+                    <td class="hidden-phone col-md-04"><b>Assign To : </b>{{obj.assignedTo}}</td>
+                    <td class="hidden-phone col-md-04"><b>Raise On : </b>{{obj.addedOn}}</td>
+                  </tr>
+                  <tr *ngFor="let obj of ticketDetails">
+                      <td class="hidden-phone col-md-04"><b>Status : </b>{{obj.status}}</td>
+                      <td class="hidden-phone col-md-04"><b>Raise By : </b>{{obj.raisedBy}}</td>
+                      <td class="hidden-phone col-md-04"><b>Priority : </b>{{obj.priorityLevel}}</td>
+                  </tr>
+                  <tr *ngFor="let obj of ticketDetails">
+                    <td class="hidden-phone col-md-04"><b>Category : </b>{{obj.problemType}}</td>
+                    <td class="hidden-phone col-md-04"><b>Platform : </b>{{obj.platform}}</td>
+                    <td class="hidden-phone col-md-04"><b>Description : </b>{{obj.description}}</td>
+                  </tr>
+                  </tbody>
+            </table>
+        </div>
+      </div>
+
+      <div class="card-body" *ngIf="showRemarks">
+        <ag-grid-angular   
+        style="width: 100%; height: 500px; padding: 20px;" 
+        class="ag-theme-balham"
+        [columnDefs]="columnDefs"
+        [enableSorting]="true"
+        [enableFilter]="true"
+        [enableColResize]="true"
+        [rowData]="rowdata"
+        [gridOptions]="gridOptions" 
+        >
+        </ag-grid-angular>
+        </div>
+      </div>
+    </div>
+</div>

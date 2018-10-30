@@ -1,0 +1,36 @@
+<div class="modal-header" style="background-color: gainsboro ; color: black; font-weight: 500;">
+  <h5 class="modal-title">New Stage/Sub Stage For Integration</h5>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+ <div class="px-3">
+  <form  [formGroup]="StageForm" (ngSubmit)="submitNewStage()" class="form form-horizontal striped-rows form-bordered">
+   <div class="form-body" formGroupName="stageInformation">
+    <div class="row">
+    <label class="col-md-3 label-control">Stage</label>
+      <div class="col-md-9">
+      <div class="input-group">
+        <input formControlName="stage" class="form-control"  placeholder="Create New Stage" name="stage" required>
+      </div>
+    </div>
+    </div>
+    <div class="row">
+    <label class="col-md-3 label-control">SubStage</label>
+      <div class="col-md-9">
+      <div class="input-group">
+        <input  formControlName="subStage" class="form-control"  placeholder="Create New SubStage"  name="subStage" required>
+      </div>
+    </div>
+    </div>
+   </div>
+  </form>
+ </div>
+</div>
+<div class="modal-footer">
+ <div class="form-actions">
+  <button type="button" class="btn btn-raised btn-warning" (click)="activeModal.close('Close click')"> Close</button>
+  <button type="button" class="btn btn-raised btn-primary" [disabled]="!StageForm.valid" (click)="submitNewStage()">Save</button>
+ </div>
+</div>
