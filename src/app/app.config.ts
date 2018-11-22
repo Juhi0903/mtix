@@ -18,7 +18,11 @@ export const urls = {
     stage : 'stage',
     subStage : 'stage/subStage',
     childTicket : 'childticket',
-    ticketdetails : 'ticket/ticketdetails'
+    ticketdetails : 'ticket/ticketdetails',
+    download : 'user/download',
+    upload : 'user/upload',
+    emailId : 'user/emailId',
+    statusorperson : 'ticket/statusorperson'
 }
 
 
@@ -36,16 +40,25 @@ export const status = [
   ]
 
   export const priorityLevel = [
-    {id: 1001, name: 'High'},
-    {id: 1002, name: 'Medium'},
-    {id: 1003, name: 'Low'}
+    {id: 1001, name: 'Immediate'},
+    {id: 1002, name: 'High'},
+    {id: 1003, name: 'Moderate'},
+    {id: 1004, name: 'Low'},
+    {id: 1005, name: 'None'}
   ]
 
   export const problemType = [
-    {id: 1001, name: 'Support'},
-    {id: 1002, name: 'Integration'},
-    {id: 1003, name: 'Internal'},
-    {id: 1004, name: 'Other'}
+    {id: 1001, name: 'Finance'},
+    {id: 1002, name: 'HR'},
+    {id: 1003, name: 'Marketing'},
+    {id: 1004, name: 'Technical'},
+    {id: 1005, name: 'Aliance'},
+    {id: 1006, name: 'Media Buying'},
+    {id: 1007, name: 'Advertising'}, 
+    {id: 1008, name: 'Billing'},
+    {id: 1008, name: 'Application'},
+    {id: 1008, name: 'Content'},
+    {id: 1009, name: 'Analytics'}
   ]
 
   export const platform = [
@@ -54,8 +67,16 @@ export const status = [
     {id: 1003, name: 'GloboBill'},
     {id: 1004, name: 'Ginger'},
     {id: 1005, name: 'CMS'},
-    {id: 1006, name: 'Other'}
+    {id: 1006, name: 'App'},
+    {id: 1007, name: 'Other'}
 
+  ]
+
+  export const techSubProblem = [
+    {id: 1001, name: 'Support'},
+    {id: 1002, name: 'Internal'},
+    {id: 1003, name: 'Integration'},
+    {id: 1004, name: 'Other'},
   ]
 
   export interface detailsArray {
@@ -65,8 +86,16 @@ export const status = [
     status : string,
     type : string,
     ticketId : string,
+    stage : string,
+    subStage : string,
+    id : string,
+    filename : string,
+    filepath : string,
   }
 
+  export interface email{
+    email : string
+  }
   export const details = [
     {id: 1001, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag
     We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag.`},

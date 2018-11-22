@@ -1,62 +1,61 @@
-  <!-- <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <form [formGroup]="allTicketForm" (ngSubmit)="getAllTickets()" class="form form-horizontal striped-rows form-bordered">
-          <div formGroupName="basicInformation">
-              <div class="card-body">
-               
-                    <div class="form-body">
-                        <h4 class="form-section"><i class="ft-user"></i>Date Range</h4>
-                        <div class="row">
-                          <div class="col-md-4">
-                            <div class="form-group from-date">
-                              <label for="timesheetinput3"> From</label>
-                                <input type="date" formControlName="fromDate" class="form-control" name="fromDate">
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group from-date">
-                              <label for="timesheetinput4"> To</label>
-                                <input type="date" formControlName="toDate" class="form-control" name="toDate">
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                      <div class="form-actions">
-                        <button type="submit" class="btn btn-raised btn-raised btn-primary" [disabled]="!allTicketForm.valid">Search</button>
-                      </div>
-                    
-              </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div> -->
-
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">LIST OF TICKETS</h4>
-            <span id ="viewoption">
-              <button type="button" class="btn btn-raised btn-primary" (click)="exportToExcel()">Export </button>
-            </span>
-        </div>
+<!-- <div class="row">
+  <div class="col-md-12">
+  <div class="card">
+    <form [formGroup]="allTicketForm" (ngSubmit)="getAllTickets()" class="form form-horizontal striped-rows form-bordered">
+      <div formGroupName="basicInformation">
         <div class="card-body">
-          <ag-grid-angular   
-          style="width: 100%; height: 900px; padding: 20px; " 
-          class="ag-theme-balham"
-          [columnDefs]="columnDefs"
-          [enableSorting]="true"
-          [enableFilter]="true"
-          [enableColResize]="true"
-          [defaultColDef]="defaultColDef"
-          [rowData]="rowdata" 
-          [gridOptions]="gridOptions"
-          [frameworkComponents]="frameworkComponents"
-          >
-          </ag-grid-angular>
+
+          <div class="form-body">
+            <h4 class="form-section"><i class="ft-user"></i>Basic Information</h4>
+            <div class="row" style="margin: 10px;">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="timesheetinput3">Status</label>
+                  <select  formControlName="status" name="status"  class="form-control">
+                      <option value="" selected="" disabled="true">Select Status</option>
+                      <option *ngFor="let status of status" [value]='status.name'>{{status.name}}</option>
+                    </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="timesheetinput4">Person</label>
+                  <select  formControlName="assignTo" name="assignTo"  class="form-control">
+                      <option value="" selected="" disabled="true">Select Person</option>
+                      <option *ngFor="let user of users" [value]='user.emailId'>{{user.emailId}}</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-raised btn-raised btn-primary mr-1" [disabled]="!allTicketForm.valid">Search</button>
+            <button type="button" class="btn btn-raised btn-warning mr-1" (click)="removeRestrictions()">Clear</button>
+          </div>
+
         </div>
+      </div>
+    </form>
+  </div>
+</div>
+</div> -->
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">LIST OF TICKETS</h4>
+        <span id="viewoption">
+          <button type="button" class="btn btn-raised btn-primary" (click)="exportToExcel()">Export </button>
+        </span>
+      </div>
+      <div class="card-body">
+        <ag-grid-angular style="width: 100%; height: 900px; padding: 20px; " class="ag-theme-balham" [columnDefs]="columnDefs" [enableSorting]="true"
+          [enableFilter]="true" [enableColResize]="true" [defaultColDef]="defaultColDef" [rowData]="rowdata" [gridOptions]="gridOptions"
+          [frameworkComponents]="frameworkComponents">
+        </ag-grid-angular>
       </div>
     </div>
   </div>
+</div>

@@ -32,6 +32,10 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
           <div class="col-md-9">
               <div class="input-group">
                 <textarea rows="8" class="form-control" formControlName="remarks" placeholder="Assigning ticket because " name="remarks" required></textarea>
+                <small class="form-text text-muted danger" *ngIf="!AssignedForm.get('formInformation.remarks').valid && (AssignedForm.get('formInformation.remarks').dirty || AssignedForm.get('formInformation.remarks').touched) && 
+											AssignedForm.get('formInformation.remarks').hasError('maxlength')">
+										Max Length cannot exceed 100 characters.
+							</small>
               </div>
           </div>
         </div>
@@ -69,7 +73,7 @@ export class AssignedComponent implements OnInit  {
     this.AssignedForm = this._formBuilder.group({
       formInformation : this._formBuilder.group({
         assignedTo : new FormControl('',[Validators.required]),
-        remarks : new FormControl('',[Validators.required]),
+        remarks : new FormControl('',[Validators.required,Validators.maxLength(100)]),
       })
   });
 }

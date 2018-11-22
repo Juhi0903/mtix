@@ -64,6 +64,7 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 /* ngx-charts required polyfill ie11 */
 import 'core-js/es7/array';
+(window as any).global = window;
 
 /**
  * Date, currency, decimal and percent pipes.

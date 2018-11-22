@@ -33,6 +33,10 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
           <div class="col-md-9">
               <div class="input-group">
                 <textarea rows="8" class="form-control" formControlName="remarks" placeholder="Changing Priority because" name="remarks" required></textarea>
+                <small class="form-text text-muted danger" *ngIf="!PriorityForm.get('formInformation.remarks').valid && (PriorityForm.get('formInformation.remarks').dirty || PriorityForm.get('formInformation.remarks').touched) && 
+											PriorityForm.get('formInformation.remarks').hasError('maxlength')">
+										Max Length cannot exceed 100 characters.
+								</small>
               </div>
           </div>
         </div>
@@ -68,7 +72,7 @@ export class PriorityComponent {
     this.PriorityForm = this._formBuilder.group({
       formInformation : this._formBuilder.group({
         priority : new FormControl('',[Validators.required]),
-        remarks : new FormControl('',[Validators.required]),
+        remarks : new FormControl('',[Validators.required,Validators.maxLength(100)]),
       })
   });
 }

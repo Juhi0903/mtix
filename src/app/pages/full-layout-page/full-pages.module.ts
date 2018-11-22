@@ -57,7 +57,7 @@ import { ToastsManager } from 'ng6-toastr/ng2-toastr';
         EditPriority,
         EditAssignTo,
         EditAndViewDetails,
-        CreateSubTicket
+        CreateSubTicket,
     ],
     providers: [
       TicketService,

@@ -36,14 +36,14 @@ const routes: Routes = [
     },
   },
   {
-    path: 'ticketdetails/:id/:date',
+    path: 'ticketdetails/:id',
     component: TicketDetailsComponent,
     data: {
       title: 'Create Sub Ticket Page'
     },
   },
   {
-    path: 'subticket/details/:id/:date',
+    path: 'subticket/details/:id',
     component: TicketDetailsComponent,
     data: {
       title: 'Create Sub Ticket Page'

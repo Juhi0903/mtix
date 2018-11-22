@@ -115,7 +115,7 @@
         }
     });
 
-
+    // $('.nav-toggle').trigger( "click" );
     $('.nav-toggle').on('click',function(){
         var $this = $(this),
         toggle_icon= $this.find('.toggle-icon'),
@@ -141,6 +141,7 @@
             }
         }
     });
+    $('.nav-toggle').trigger( "click" );
 
     $sidebar.on('mouseenter', function() {
         if($wrapper.hasClass('nav-collapsed')){

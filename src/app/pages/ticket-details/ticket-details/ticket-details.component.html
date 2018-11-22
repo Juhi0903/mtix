@@ -7,16 +7,30 @@
             <div class="card-body">
                 <div id="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
                     <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" *ngFor="let obj of ticketDetails">
+                            <thead>  
+                                    <th>Ticket</th>
+                                    <th>Assigned</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Raised By</th>
+                                    <th>Priority</th>
+                                    
+                                    <th>Category</th>
+                                    <th>Platform</th>
+                                    <th>Description</th>
+                                    <th *ngIf="obj.fileName!=null" >Attachment</th>
+                                    
+                                </thead> 
                             <tbody>
-                                <tr>
+                                <!-- <tr>
                                     <td class="hidden-phone col-md-04"><b>Ticket Id : </b>{{obj.ticketId}}</td>
-                                    <td class="hidden-phone col-md-04" (click)="changeAssignedTo()"><b>Assign To : </b>{{obj.assignedTo}}
+                                    <td class="hidden-phone col-md-04 head" (click)="changeAssignedTo()"><b>Assign To : </b>{{obj.assignedTo}}
                                         <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
                                     <td class="hidden-phone col-md-04"><b>Raise On : </b>{{obj.addedOn}}</td>
                                 </tr>
                                 <tr>
-                                    <td class="hidden-phone col-md-04" (click)="changeStatus()"><b>Status : </b>{{obj.status}}
-                                        <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
+                                    <td class="hidden-phone col-md-04"><b>Status : </b>{{obj.status}}</td>
+                                       
                                     <td class="hidden-phone col-md-04"><b>Raise By : </b>{{obj.raisedBy}}</td>
                                     <td class="hidden-phone col-md-04"><b>Priority : </b>{{obj.priorityLevel}}</td>
                                 </tr>
@@ -25,30 +39,61 @@
                                     <td class="hidden-phone col-md-04"><b>Platform : </b>{{obj.platform}}</td>
                                     <td class="hidden-phone col-md-04"><b>Description : </b>{{obj.description}}</td>
                                 </tr>
+                                <tr *ngIf="obj.fileName!=null">
+                                    <td class="hidden-phone col-md-04" *ngIf="obj.fileName!=null"><b>Attachment: </b><a title="" href="javascript:;" (click)="downloadFile(obj.filePath,obj.fileName)">{{obj.fileName}}</a></td>
+                                    <td class="hidden-phone col-md-04"></td>
+                                    <td class="hidden-phone col-md-04"></td>
+                                </tr> -->
+                                <tr>
+                                        <td class="hidden-phone col-md-04">{{obj.ticketId}}</td> 
+                                        <td class="hidden-phone col-md-04 head" (click)="changeAssignedTo()">{{obj.assignedTo}}
+                                                <i class="ft-edit-2 info font-medium-1 mr-1"></i>
+                                        </td>   
+                                        <td class="hidden-phone col-md-04" >{{obj.addedOn}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.status}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.raisedBy}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.priorityLevel}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.problemType}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.platform}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.description}}</td>
+                                        <td class="hidden-phone col-md-04" *ngIf="obj.fileName!=null"><a title="" href="javascript:;" (click)="downloadFile(obj.filePath,obj.fileName)">{{obj.fileName}}</a></td>
+                                </tr>
                             </tbody>
                     </table>
                 </div>
             </div>
+            <br>
+            <br>
             <div class="card-body">
-                    <div id="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
-                        <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" *ngFor="let obj of subTicketList let i=index">
-                            <thead  class="card-header">
-                                <th (click)="expandDetails(obj.ticketId, i)">
+                    <div id="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto; background: whitesmoke">
+                         <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" *ngIf="subTicketList.length>0">
+                                <!-- <thead  class="card-header head"> -->
+                            <thead>  
+                                <!-- <th (click)="expandDetails(obj.ticketId, i)" >
                                    Sub-{{i+1}} - {{obj.title}}
-                                </th>
-                                <th></th>
-                                <th></th>
-                            </thead>
-                                <tbody *ngIf="Open==i">
-                                    <tr>
-                                        <td class="hidden-phone col-md-04"><b>Ticket Id : </b><a title="" [routerLink]="[ '/subticket/details/' + obj.ticketId +'/' +obj.addedOn]">{{obj.ticketId}}</a></td>
-                                        <!-- [routerLink]="['/'+ticketdetails/ + obj.ticketId +'/' +obj.raisedBy]" -->
-                                        <td class="hidden-phone col-md-04" (click)="changeAssignedTo()"><b>Assign To : </b>{{obj.assignedTo}}
+                                </th> -->
+                                <th>Sub Ticket</th>
+                                <th>Assigned</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Raised By</th>
+                                <th>Priority</th>
+                                
+                                <th>Category</th>
+                                <th>Platform</th>
+                                <th>Description</th>
+                                <th>Attachment</th>
+                            </thead> 
+                                <!-- <tbody *ngIf="Open==i"> -->
+                                    <!-- <tr>
+                                        <td class="hidden-phone col-md-04"><b>Ticket Id : </b><a title="" [routerLink]="[ '/subticket/details/' + obj.ticketId]">{{obj.ticketId}}</a></td>
+                                        [routerLink]="['/'+ticketdetails/ + obj.ticketId +'/' +obj.raisedBy]"
+                                        <td class="hidden-phone col-md-04 head"><b>Assign To : </b>{{obj.assignedTo}}</td>
                                         <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
                                         <td class="hidden-phone col-md-04"><b>Raise On : </b>{{obj.addedOn}}</td>
                                     </tr>
                                     <tr>
-                                        <td class="hidden-phone col-md-04" (click)="changeStatus()"><b>Status : </b>{{obj.status}}
+                                        <td class="hidden-phone col-md-04" ><b>Status : </b>{{obj.status}}</td>
                                             <i class="ft-edit-2 info font-medium-1 mr-1"></i></td>
                                         <td class="hidden-phone col-md-04"><b>Raise By : </b>{{obj.raisedBy}}</td>
                                         <td class="hidden-phone col-md-04"><b>Priority : </b>{{obj.priorityLevel}}</td>
@@ -57,11 +102,29 @@
                                         <td class="hidden-phone col-md-04"><b>Category : </b>{{obj.problemType}}</td>
                                         <td class="hidden-phone col-md-04"><b>Platform : </b>{{obj.platform}}</td>
                                         <td class="hidden-phone col-md-04"><b>Description : </b>{{obj.description}}</td>
-                                    </tr>
-                                </tbody>
+                                    </tr> -->
+                                        <!-- <ag-grid-angular style="width: 100%; height: 200px; padding: 5px 10px;" class="ag-theme-balham" [columnDefs]="subcolumnDefs"
+                                            [enableSorting]="true" [enableFilter]="true" [enableColResize]="true" [rowData]="ticketDetails" [frameworkComponents]="frameworkComponents">
+                                        </ag-grid-angular> -->
+                                    
+                                <!-- </tbody> -->
+                                <tr  *ngFor="let obj of subTicketList let i=index">
+                                        <td class="hidden-phone col-md-04 head"><a title="" [routerLink]="[ '/subticket/details/' + obj.ticketId]">{{obj.ticketId}}</a></td>
+                                        <td class="hidden-phone col-md-04">{{obj.assignedTo}}</td>   
+                                        <td class="hidden-phone col-md-04" >{{obj.addedOn}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.status}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.raisedBy}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.priorityLevel}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.problemType}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.platform}}</td>
+                                        <td class="hidden-phone col-md-04">{{obj.description}}</td>
+                                        <td class="hidden-phone col-md-04" *ngIf="obj.fileName!=null"><a title="" href="javascript:;" (click)="downloadFile(obj.filePath,obj.fileName)">{{obj.fileName}}</a></td>
+                                        <!-- <td class="hidden-phone col-md-04">{{obj.description}}</td> -->
+                                </tr>
                         </table>
                     </div>
                 </div>
+                <br>
 
             <div id="offersummarydata" style="font-size: 0.8em; overflow-x: auto; overflow-y: auto; height: auto;">
                 <table id="summaryTable" cellpadding="0" cellspacing="0" class="display table" style="padding:0 20px">
@@ -70,6 +133,7 @@
                         </b></button>
                     <button type="submit" class="btn" style="margin:0 10px; " (click)="showAnalysisTab()"><b>Analyse </b></button>
                     <button type="submit" class="btn" style="margin:0 10px; " (click)="showChartTab()"><b>Chart </b></button>
+                    <button type="submit" class="btn" style="margin:0 10px; " (click)="exportData()"><b>Export </b></button>
                     <!-- <tbody *ngIf="showComments">                  
                       <tr class="col-md-12" *ngFor="let obj of details">
                         <td class="hidden-phone col-md-04">
@@ -82,31 +146,26 @@
                     </tr>
                 </tbody> -->
                     <tbody *ngIf="showStatus">
-
                         <ag-grid-angular style="width: 100%; height: 500px; padding: 5px 10px;" class="ag-theme-balham" [columnDefs]="columnDefs"
-                            [enableSorting]="true" [enableFilter]="true" [enableColResize]="true" [rowData]="rowdata" [frameworkComponents]="frameworkComponents">
+                            [enableSorting]="true" [enableFilter]="true" [enableColResize]="true" [rowData]="rowdata" [frameworkComponents]="frameworkComponents" [gridOptions]="gridOptions">
                         </ag-grid-angular>
-
                     </tbody>
                 </table>
             </div>
-            <form class="form form-horizontal striped-rows form-bordered">
+            <div class="form-actions" style="padding-bottom:10px;">
+                <button type="submit" class="btn btn-raised btn-primary" (click)="changeStatus()" style="margin: 0 10px;">Add New Log</button>
+                <button type="submit" class="btn btn-raised btn-primary" (click)="createSubTicket()" style="margin:0 10px;">Create SubTicket</button>
+            </div>
+            <!-- <form class="form form-horizontal striped-rows form-bordered">
                 <div class="col-md-12" style="padding-top:10px;">
                     <textarea rows="5" class="form-control" name="remarks" placeholder="Max 120 characters" [(ngModel)]="remarks" maxlength="120"
                         required></textarea>
-                    <!-- <span *ngIf="remarks.touched">
-                        User Name is required
-                      </span> -->
                 </div>
                 <div class="form-actions">
-                    <!-- <button type="button" class="btn btn-raised btn-warning mr-1"  (click)="activeModal.close('Close click')"> Cancel</button> -->
                     <button type="submit" class="btn btn-raised btn-primary" (click)="submitRemarks()">Submit</button>
                 </div>
-            </form>
+            </form> -->
         </div>
     </div>
 </div>
 
-
-<!-- </div>
-</div> -->

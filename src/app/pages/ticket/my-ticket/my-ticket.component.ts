@@ -12,7 +12,7 @@ import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticke
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a (click)="onClick()">{{ticketid}}</a>'
+  template: '<a title="{{url}}" [routerLink]="url">{{ticketid}}</a>'
 })
 
 export class EditAndViewDetails implements ICellRendererAngularComp {
@@ -30,38 +30,41 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
   }
   agInit(params: any): void {
     this.params = params;
-    this.setStatus(params);
+    this.setUrl(params);
   }
 
   refresh(params: any): boolean {
     this.params = params;
-    this.setStatus(params);
+    this.setUrl(params);
     return true;
   }
 
-  private setStatus(params) {
+  private setUrl(params) {
     this.ticketid = params.node.data.ticketId;
-    this.title = params.node.data.title;
-    this.raiseOn = params.node.data.addedOn;
-    this.status = params.node.data.status;
-    this.lastUpdatedOn = params.node.data.updatedOn;
+    this.url = "/ticketdetails" + "/" + params.node.data.ticketId;
+    // this.ticketid = params.node.data.ticketId;
+    // this.title = params.node.data.title;
+    // this.raiseOn = params.node.data.addedOn;
+    // this.status = params.node.data.status;
+    // this.lastUpdatedOn = params.node.data.updatedOn;
   }
 
-  onClick() {
-    const modalRef = this.modalService.open(TicketDetailsComponent , {size : 'lg'});
-    modalRef.componentInstance.clickevent.subscribe(($e) => {
-      this.params.node.data.assignedTo = $e;
-      // this.ticketid = $e;
-      // console.log($e);
-    });
-    modalRef.componentInstance.ticketid = this.ticketid;
-    modalRef.componentInstance.title = this.title;
-    modalRef.componentInstance.raiseOn = this.raiseOn;
-    modalRef.componentInstance.status = this.status;
-    modalRef.componentInstance.lastUpdatedOn = this.lastUpdatedOn;
-  }
+  // onClick() {
+  //   const modalRef = this.modalService.open(TicketDetailsComponent , {size : 'lg'});
+  //   modalRef.componentInstance.clickevent.subscribe(($e) => {
+  //     this.params.node.data.assignedTo = $e;
+  //     // this.ticketid = $e;
+  //     // console.log($e);
+  //   });
+  //   modalRef.componentInstance.ticketid = this.ticketid;
+  //   modalRef.componentInstance.title = this.title;
+  //   modalRef.componentInstance.raiseOn = this.raiseOn;
+  //   modalRef.componentInstance.status = this.status;
+  //   modalRef.componentInstance.lastUpdatedOn = this.lastUpdatedOn;
+  // }
 
 }
+
 
 @Component({
   selector: 'status-edit-url',
@@ -162,7 +165,7 @@ export class MyTicketComponent implements OnInit {
 
   setColumnDefs(){
     this.columnDefs = [
-      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 100, suppressSizeToFit: true},
+      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 130, suppressSizeToFit: true},
       {headerName: "Raised On", field: 'addedOn' , width: 120, suppressSizeToFit: true},
       {headerName: "Status", field: 'status' ,cellRenderer: "editStatus", width: 130, suppressSizeToFit: true },
       {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true,valueParser: this.numberParser,

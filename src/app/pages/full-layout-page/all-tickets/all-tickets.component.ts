@@ -12,6 +12,7 @@ import {AssignedComponent} from '../../assigned/assigned/assigned.component';
 import {StatusComponent} from '../../status/status/status.component';
 import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticket-details.component';
 import { CreateTicketComponent } from 'app/pages/full-layout-page/create-ticket/create-ticket.component';
+
 // import {StatusDetailsComponent } from '../../status-details/status-details/status-details.component';
 
 @Component({
@@ -174,7 +175,7 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
 
   private setUrl(params) {
     this.ticketid = params.node.data.ticketId;
-    this.url = "/ticketdetails" + "/" + params.node.data.ticketId + "/" + params.node.data.updatedOn;
+    this.url = "/ticketdetails" + "/" + params.node.data.ticketId;
     // this.ticketid = params.node.data.ticketId;
     // this.title = params.node.data.title;
     // this.raiseOn = params.node.data.addedOn;
@@ -223,13 +224,15 @@ export class AllTicketsComponent implements OnInit {
     columnDefs : this.columnDefs,
     rowData : this.rowdata,
   };
-  
+  status : any = [];
+  users : any =[];
 
   constructor(private _formBuilder: FormBuilder,private _ticketService : TicketService) { 
     this.today = this.todayDate(this.date);
     console.log(this.today);
     this.priority = priorityLevel;
      this.problemType = problemType;
+     this.status = status;
      this.setColumnDefs();
     this.frameworkComponents = {
       editPriority: EditPriority,
@@ -242,15 +245,16 @@ export class AllTicketsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._OnInit();
+    // this._OnInit();
     this.getAllTickets();
+    // this.getUsers();
   }
 
   _OnInit(){
     this.allTicketForm = this._formBuilder.group({
       basicInformation : this._formBuilder.group({
-        fromDate : new FormControl(this.today,[Validators.required]),
-        toDate : new FormControl(this.today,[Validators.required]),
+        status : new FormControl(''),
+        assignTo : new FormControl(''),
       })
     });
   }
@@ -267,50 +271,71 @@ export class AllTicketsComponent implements OnInit {
       
       {headerName: "Raised On", field: 'addedOn' , width: 100, suppressSizeToFit: true, pinned: "left"},
       {headerName: "Subject", field: 'title' , width: 240, suppressSizeToFit: true,pinned: "left" },
-      {headerName: "Status", field: 'status' , width: 100, suppressSizeToFit: true,pinned: "left" ,valueParser: this.numberParser,
+      {headerName: 'Priority', field: 'priorityLevel', cellRenderer: "editPriority" , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
-        "rag-green": "x == 'Closed'",
-        "rag-red": "x == 'Yet To Start'"
+        "rag-green": "x =='Low'",
+        "rag-amber": "x == 'Moderate'",
+        // "rag-amber": "x == 'Medium'",
+        "rag-red": "x == 'High'"
       }},
+      {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
+      // {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
+      
+      {headerName: "Category", field: 'problemType' , width: 100, suppressSizeToFit: true},
+      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
+      {headerName : "Assisgn To" ,field:'assignedTo', cellRenderer: "editAssignto", width: 130, suppressSizeToFit: true },
+      // {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
+      // {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
+      // {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
       
       {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true, valueParser: this.numberParser,
       cellClassRules: {
         "rag-yellow": "x <'50'",
         "rag-red": "x >= '20'"
       }},
-      {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
-      {headerName: "Category", field: 'problemType' , width: 100, suppressSizeToFit: true},
-      {headerName: 'Priority', field: 'priorityLevel', cellRenderer: "editPriority" , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
+      {headerName: "Status", field: 'status' , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
-        "rag-green": "x =='Low'",
-        "rag-amber": "x == 'Medium'",
-        "rag-red": "x == 'High'"
+        "rag-green": "x == 'Closed'",
+        "rag-red": "x == 'Yet To Start'"
       }},
-      {headerName : "Assisgn To" ,field:'assignedTo', cellRenderer: "editAssignto", width: 130, suppressSizeToFit: true },
-      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
-      {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
-      {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
-      {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
+      {headerName: "Last Updated", field: 'updatedOn' , width: 130, suppressSizeToFit: true},
       {headerName: "Sub Ticket", field: '' , cellRenderer: "createSubTicket", width: 100, suppressSizeToFit: true },
-      
     ];
+
     this.defaultColDef = { width: 100 };
     // this.rowSelection = "multiple";
   }
 
   getAllTickets = async()=>{
-
-    // let toarray = this.allTicketForm.value.basicInformation.toDate.split("-"); //yyyy-MM-dd
-    // let fromarray = this.allTicketForm.value.basicInformation.fromDate .split("-");
-    // let toDate = toarray[1] + "/" + toarray[2] + "/" + toarray[0]; //MM/dd/yyyy
-    // let fromDate = fromarray[1] + "/" + fromarray[2] + "/" + fromarray[0];
-
-    // let report : any = {
-    //   todate : toDate,
-    //   fromdate : fromDate
-    // };
+    // let status = this.allTicketForm.value.basicInformation.status;
+    // let assignTo = this.allTicketForm.value.basicInformation.assignTo;
+    // if(status=='' && assignTo==''){
+    //   this.rowdata = await this._ticketService.getAllTickets();
+    // } 
+    // else{
+    //   if(status!='' && assignTo!=''){
+    //     let report : any = {
+    //       status : status,
+    //       assignTo : assignTo,
+    //     }
+    //     this.rowdata = await this._ticketService.getTicketsByStatusOrPerson(report);
+    //   }
+    //   else if(status!=''){
+    //     let report : any = {
+    //       status : status,
+    //     }
+    //     this.rowdata = await this._ticketService.getTicketsByStatusOrPerson(report);
+    //   }
+    //   else if(assignTo!=''){
+    //     let report : any = {
+    //       assignTo : assignTo,
+    //     }
+    //     this.rowdata = await this._ticketService.getTicketsByStatusOrPerson(report);
+    //   }
+    // }
+    this.rowdata = await this._ticketService.getAllTickets();
     let diff;
-     this.rowdata = await this._ticketService.getAllTickets();
+     
      this.rowdata.forEach((res , index) => {
        let addedOn = new Date(res['addedOn']).getTime();
        if(res['status']=='Closed'){
@@ -329,7 +354,17 @@ export class AllTicketsComponent implements OnInit {
        res['updatedOn'] = this.todayDate(res['updatedOn']);
      
     });
-
+    this.rowdata.sort(function(a, b) {
+      var nameA = a.ticketId; 
+      var nameB = b.ticketId; 
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
     
   }
 
@@ -371,6 +406,20 @@ export class AllTicketsComponent implements OnInit {
     };
     this.gridOptions.api.exportDataAsCsv(params);
   }
+
+  public getUsers = async () =>{
+    this.users = await this._ticketService.getAllUsers();
+     // console.log(data);
+   }
+
+   removeRestrictions(){
+    this.allTicketForm.patchValue({
+      basicInformation:{
+        status : '',
+        assignTo : ''
+    }
+  });
+}
 
 }
 

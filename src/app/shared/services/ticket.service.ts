@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEvent, HttpRequest } from '@angular/common/http';
 import { urls } from '../../app.config';
 import { catchError, map, tap } from 'rxjs/operators';
 import { SESSION_STORAGE, StorageService, LOCAL_STORAGE } from 'angular-webstorage-service';
 import { text } from '@angular/core/src/render3/instructions';
+import { Observable } from 'rxjs';
+
 
 
 @Injectable()
@@ -131,6 +133,9 @@ export class TicketService {
     return this._httpService.post(urls.BASE_URL + urls.subStage, data , this.httpOptions).toPromise() as any;
   }
 
+  public getTicketsByStatusOrPerson = async (data) : Promise<any[]> =>{
+    return this._httpService.post(urls.BASE_URL + urls.statusorperson, data, this.httpOptions).toPromise() as any;
+  }
   public createNewStage = async (data): Promise<any[]> => {
     return this._httpService.post(urls.BASE_URL + urls.stage, data , this.httpOptions).toPromise() as any;
   }
@@ -154,4 +159,31 @@ export class TicketService {
       }
     }).toPromise() as any;
   }
+
+  pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
+    const formdata: FormData = new FormData();
+    formdata.append('file', file);
+ 
+    const req = new HttpRequest('POST', urls.BASE_URL+urls.upload, formdata, {
+      reportProgress: true,
+      responseType: 'text'
+    });
+    return this._httpService.request(req);
+  }
+
+  public downloadReport(file): Observable<any> {
+    // Create url
+    let url = urls.BASE_URL + urls.download;
+    var body = { filename: file };
+
+    return this._httpService.post(url, body, {
+      responseType: "blob",
+      headers: new HttpHeaders().append("Content-Type", "application/json")
+    });
+  }
+
+  public getAllEmail = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.emailId).toPromise() as any;
+  }
+
 }

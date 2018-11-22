@@ -1,5 +1,5 @@
 <div class="modal-header" style="background-color: gainsboro ; color: black; font-weight: 500;">
-  <h5 class="modal-title">Change Status</h5>
+  <h5 class="modal-title">{{ticketId}}</h5>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -8,7 +8,7 @@
  <div class="px-3">
   <form  [formGroup]="StatusForm" (ngSubmit)="saveChangedStatus()" class="form form-horizontal striped-rows form-bordered" novalidate>
     <div class="form-body"  formGroupName="formInformation">
-      <div class="row">  
+      <div class="form-group row" *ngIf="enableStatus">  
           <label class="col-md-3 label-control">Status</label>
           <div class="col-md-9">
               <div class="input-group">
@@ -19,7 +19,7 @@
               </div>
           </div>
       </div>
-      <div class="row"  *ngIf="enableStage">
+      <div class="row form-group"  *ngIf="enableStage">
       <label class="col-md-3 label-control">Integration Stage</label>
         <div class="col-md-6">
         <div class="input-group">
@@ -33,7 +33,7 @@
       <button type="button" class="btn btn-raised btn-primary" (click)="createNewStage()">Create Stage</button>
       </div>
       </div>
-      <div class="row"  *ngIf="enableSubStage">
+      <div class="row form-group"  *ngIf="enableSubStage">
       <label class="col-md-3 label-control">Sub Stage</label>
         <div class="col-md-6">
         <div class="input-group">
@@ -47,22 +47,54 @@
         <button type="button" class="btn btn-raised btn-primary" (click)="createNewSubStage()">Create SubStage</button>
       </div>
       </div>
-      <div class="row">
+      <div class="form-group row">
       <label class="col-md-3 label-control">Remarks</label>
         <div class="col-md-9">
             <div class="input-group">
-              <textarea formControlName="remarks" rows="8" class="form-control" placeholder="Recent Update" name="remarks" required></textarea>
+              <!-- <textarea formControlName="remarks" rows="8" class="form-control" placeholder="Recent Update" name="remarks" required (keypress)='handleKeyboardEvent($event)'>
+              </textarea> -->
+              <textarea formControlName="remarks" rows="8" class="form-control" [mention]="users" [mentionConfig]="{triggerChar:'@',maxItems:50,labelKey:'email'}"></textarea>
+    
+                <!-- <span class="input-group" *ngIf="showContact" >
+                  <select formControlName="user" name="user"  class="form-control" (click)="updateRemarks()">
+                    <option value="" selected="" disabled="true">Select Member</option>
+                    <option *ngFor="let obj of users" [value]='obj.emailId'>{{obj.emailId}}</option>
+                  </select>
+                </span> -->
             </div>
+            <small> Please use '@' to tag a Person in Remarks.</small> 
+            <small class="form-text text-muted danger" *ngIf="!StatusForm.get('formInformation.remarks').valid && (StatusForm.get('formInformation.remarks').dirty || StatusForm.get('formInformation.remarks').touched) && 
+											StatusForm.get('formInformation.remarks').hasError('maxlength')">
+										Max Length cannot exceed 300 characters.
+						</small>
         </div>
       </div>
+      <div class="form-group row">
+        <label class="col-md-3 label-control" for="projectinput9">Add Files</label>
+        <div class="col-md-9">
+        
+          <input type="file" class="add-files-btn" placeholder="Choose Files" (change)="selectFile($event)"> 
+          <!-- <input type="file" name="photo" ng2FileSelect [uploader]="uploader" > -->
+          <button type="button" class="btn btn-raised btn-primary" (click)="upload()" [disabled]="!selectedFiles"> Attach</button><br>
+          <!-- <button type="button" class="btn btn-raised btn-primary" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length" >Upload an Image</button> -->
+
+          <div *ngIf="currentFileUpload" class="progress">
+              <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" attr.aria-valuenow="{{progress.percentage}}"
+                aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width:progress.percentage+'%'}">
+                {{progress.percentage}}%</div>
+              </div>
+
+        </div>
+      </div>
+
     </div>
   </form>
 </div>
 </div>
 
-<div class="modal-footer">
-    <div class="form-actions">
-      <button type="button" class="btn btn-raised btn-warning" (click)="activeModal.close('Close click')"> Close</button>
-      <button type="button" class="btn btn-raised btn-primary" [disabled]="!StatusForm.valid" (click)="saveChangedStatus()">Save</button>
+<!-- <div class="modal-footer"> -->
+    <div class="form-actions"  style="padding:20px;">
+      <button type="button" class="btn btn-raised btn-warning" (click)="activeModal.close('Close click')"  style="margin: 0 10px;"> Close</button>
+      <button type="button" class="btn btn-raised btn-primary" [disabled]="!StatusForm.valid" (click)="saveChangedStatus()"  style="margin: 0 10px;">Save</button>
     </div>
-  </div>
+  <!-- </div> -->

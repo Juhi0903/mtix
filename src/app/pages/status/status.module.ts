@@ -5,13 +5,16 @@ import { StatusComponent } from './status/status.component';
 import { TicketService} from "../../shared/services/ticket.service";
 import {StageSubstageModule } from '../stage-substage/stage-substage.module'
 import {StageComponent } from '../stage-substage/stage/stage.component'
+import { MentionModule } from 'angular-mentions/mention';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    StageSubstageModule
+    StageSubstageModule,
+    MentionModule
   ],
   declarations: [StatusComponent],
   entryComponents: [

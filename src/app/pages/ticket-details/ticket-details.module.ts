@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TicketDetailsComponent } from './ticket-details/ticket-details.component';
+import { TicketDetailsComponent , EditRemaks,DownloadFile} from './ticket-details/ticket-details.component';
 import { TicketService} from "../../shared/services/ticket.service";
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,21 +17,22 @@ import {StatusComponent} from '../status/status/status.component';
 import {AssignedComponent} from '../assigned/assigned/assigned.component';
 
 
+
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
     FormsModule,
-    AgGridModule.withComponents([]),
+    AgGridModule.withComponents([EditRemaks,DownloadFile]),
     AssignedModule,
     StatusModule,
-    RouterModule
+    RouterModule,
     
     
    ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA],
   entryComponents: [AssignedComponent, StatusComponent],
-  declarations: [TicketDetailsComponent],
+  declarations: [TicketDetailsComponent, EditRemaks,DownloadFile],
   providers: [
     TicketService
   ]
