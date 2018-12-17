@@ -15,6 +15,7 @@ import {AssignedModule} from '../assigned/assigned.module';
 import {StatusModule} from '../status/status.module';
 import {StatusComponent} from '../status/status/status.component';
 import {AssignedComponent} from '../assigned/assigned/assigned.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 
@@ -27,6 +28,7 @@ import {AssignedComponent} from '../assigned/assigned/assigned.component';
     AssignedModule,
     StatusModule,
     RouterModule,
+    NgxChartsModule
     
     
    ],

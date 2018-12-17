@@ -167,26 +167,34 @@ export class MyTicketComponent implements OnInit {
     this.columnDefs = [
       {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 130, suppressSizeToFit: true},
       {headerName: "Raised On", field: 'addedOn' , width: 120, suppressSizeToFit: true},
-      {headerName: "Status", field: 'status' ,cellRenderer: "editStatus", width: 130, suppressSizeToFit: true },
       {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
-        "rag-yellow": "x <'50'",
+        "rag-light": "x <'50'",
         "rag-red": "x >= '20'"
       }},
       {headerName: "Subject", field: 'title' , width: 240, suppressSizeToFit: true },
-      {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
+      {headerName: "Status", field: 'status' ,cellRenderer: "editStatus", width: 130, suppressSizeToFit: true,valueParser: this.numberParser,
+      cellClassRules: {
+        "rag-green": "x =='Closed'",
+        "rag-amber": "x == 'Integration'",
+        "rag-red": "x == 'Yet To Start'"
+      }},
+     
+      
+      // {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
       {headerName: "Category", field: 'problemType' , width: 130, suppressSizeToFit: true},
       {headerName: 'Priority', field: 'priorityLevel', width: 130, suppressSizeToFit: true, valueParser: this.numberParser,
       cellClassRules: {
         "rag-green": "x =='Low'",
-        "rag-amber": "x == 'Medium'",
-        "rag-red": "x == 'High'"
+        "rag-yellow": "x == 'Moderate'",
+        "rag-amber": "x == 'High'",
+        "rag-red" : "x== 'Immediate'"
       }},
-      {headerName : "Assisgn To" ,field:'assignedTo', width: 130, suppressSizeToFit: true },
-      {headerName: "Country", field: 'country' ,width: 130, suppressSizeToFit: true },
-      {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
-      {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
-      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
+      // {headerName : "Assisgn To" ,field:'assignedTo', width: 130, suppressSizeToFit: true },
+      // {headerName: "Country", field: 'country' ,width: 130, suppressSizeToFit: true },
+      // {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
+      // {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
+      {headerName: "Raised By", field: 'raisedBy', width: 180, suppressSizeToFit: true},
     ];
   }
 
@@ -205,7 +213,9 @@ export class MyTicketComponent implements OnInit {
         diff = todate - addedOn;
       }
       res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
-      res['addedOn'] = this.todayDate(res['addedOn']);
+      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
+       res['addedOn'] = new Date(time).toString().substring(4,16);
+      // res['addedOn'] = this.todayDate(res['addedOn']);
     
    });
   }
@@ -224,7 +234,9 @@ export class MyTicketComponent implements OnInit {
         diff = todate - addedOn;
       }
       res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
-      res['addedOn'] = this.todayDate(res['addedOn']);
+      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
+       res['addedOn'] = new Date(time).toString().substring(4,16);
+      // res['addedOn'] = this.todayDate(res['addedOn']);
     
    });
   }
@@ -243,7 +255,9 @@ export class MyTicketComponent implements OnInit {
         diff = todate - addedOn;
       }
       res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
-      res['addedOn'] = this.todayDate(res['addedOn']);
+      // res['addedOn'] = this.todayDate(res['addedOn']);
+      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
+       res['addedOn'] = new Date(time).toString().substring(4,16);
     
    });
   }

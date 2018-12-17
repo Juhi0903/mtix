@@ -19,10 +19,10 @@ export const ROUTES: RouteInfo[] = [
             // { path: '/ticket/open', title: 'Working', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
             { path: '/ticket/closed', title: 'Completed', icon: '', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
         ]
-    }
-    // {
-    //     path: '/changelog', title: 'ChangeLog', icon: 'ft-file', class: '', badge: '', badgeClass: '', isExternalLink: false, submenu: []
-    // },
+    },
+    {
+        path: '/ticket/notupdated', title: 'Parking', icon: 'ft-layout', class: '', badge: '', badgeClass: '', isExternalLink: false, submenu: []
+    },
     // { path: 'https://pixinvent.com/apex-angular-4-bootstrap-admin-template/documentation', title: 'Documentation', icon: 'ft-folder', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
     // { path: 'https://pixinvent.ticksy.com/', title: 'Support', icon: 'ft-life-buoy', class: '', badge: '', badgeClass: '', isExternalLink: true, submenu: [] },
 

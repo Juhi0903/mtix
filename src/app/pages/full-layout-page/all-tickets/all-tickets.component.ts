@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Input} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 // import {GridOptions} from 'ag-grid-angular/main';
 import {GridOptions} from 'ag-grid-community';
 import {ICellRendererAngularComp, ICellEditorAngularComp} from "ag-grid-angular";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute , Router} from '@angular/router';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TicketService} from "../../../shared/services/ticket.service";
-import {status, priorityLevel,problemType } from '../../../app.config';
+import {status, priorityLevel,problemType, statusCount } from '../../../app.config';
 import {PriorityComponent } from '../../priority/priority/priority.component';
 import {AssignedComponent} from '../../assigned/assigned/assigned.component';
 import {StatusComponent} from '../../status/status/status.component';
@@ -226,14 +226,21 @@ export class AllTicketsComponent implements OnInit {
   };
   status : any = [];
   users : any =[];
-
-  constructor(private _formBuilder: FormBuilder,private _ticketService : TicketService) { 
+  emailId : any;
+  stat : any;
+  statusCount = [];
+  statusList = [];
+  notupdated : any = null;
+  constructor(private _formBuilder: FormBuilder,private _ticketService : TicketService,private router: Router,private route: ActivatedRoute) { 
     this.today = this.todayDate(this.date);
-    console.log(this.today);
+    // console.log(this.today);
     this.priority = priorityLevel;
      this.problemType = problemType;
      this.status = status;
      this.setColumnDefs();
+     this.emailId= this.route.snapshot.paramMap.get('id');
+     this.stat= this.route.snapshot.paramMap.get('status');
+     this.notupdated=this.route.snapshot.routeConfig.path;
     this.frameworkComponents = {
       editPriority: EditPriority,
       editAssignto:EditAssignTo,
@@ -241,6 +248,7 @@ export class AllTicketsComponent implements OnInit {
       createSubTicket : CreateSubTicket
 
     };
+
 
   }
 
@@ -260,7 +268,7 @@ export class AllTicketsComponent implements OnInit {
   }
 
   todayDate(dateparam){
-    return dateparam.toString().substring(0,10);
+    return dateparam.toString().substring(4,16);
   }
  
 
@@ -274,9 +282,9 @@ export class AllTicketsComponent implements OnInit {
       {headerName: 'Priority', field: 'priorityLevel', cellRenderer: "editPriority" , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
         "rag-green": "x =='Low'",
-        "rag-amber": "x == 'Moderate'",
-        // "rag-amber": "x == 'Medium'",
-        "rag-red": "x == 'High'"
+        "rag-yellow": "x == 'Moderate'",
+        "rag-amber": "x == 'High'",
+        "rag-red" : "x== 'Immediate'"
       }},
       {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
       // {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
@@ -290,7 +298,7 @@ export class AllTicketsComponent implements OnInit {
       
       {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true, valueParser: this.numberParser,
       cellClassRules: {
-        "rag-yellow": "x <'50'",
+        "rag-light": "x <'50'",
         "rag-red": "x >= '20'"
       }},
       {headerName: "Status", field: 'status' , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
@@ -333,7 +341,19 @@ export class AllTicketsComponent implements OnInit {
     //     this.rowdata = await this._ticketService.getTicketsByStatusOrPerson(report);
     //   }
     // }
-    this.rowdata = await this._ticketService.getAllTickets();
+    if(this.emailId!= null && this.stat!= null){
+      let data = {
+        status : this.stat,
+        assignTo : this.emailId
+      }
+      this.rowdata = await this._ticketService.getTicketsByStatusAndPerson(data);
+    }
+    else if(this.notupdated=='ticket/notupdated'){
+      this.rowdata = await this._ticketService.getNotUpdatedTickets();
+    }
+     else{
+      this.rowdata = await this._ticketService.getAllTickets();
+    }
     let diff;
      
      this.rowdata.forEach((res , index) => {
@@ -350,21 +370,27 @@ export class AllTicketsComponent implements OnInit {
          res['parentTicket'] = res['ticketId'];
        }
        res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
-       res['addedOn'] = this.todayDate(res['addedOn']);
-       res['updatedOn'] = this.todayDate(res['updatedOn']);
+       let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
+       res['addedOn'] = new Date(time).toString().substring(4,16);
+       res['updatedOn'] = this.todayDate(new Date(res['updatedOn']));
      
     });
     this.rowdata.sort(function(a, b) {
-      var nameA = a.ticketId; 
-      var nameB = b.ticketId; 
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
+      var nameA = Number((a.ticketId).toString().split('_')[1]); 
+      var nameB = Number((b.ticketId).toString().split('_')[1]);
+        if (nameA > nameB) {
+          return -1;
+        }
+        if (nameA < nameB) {
+          return 1;
+        }
+        if(nameA = nameB){
+          return (a.id < b.id) ? -1 : 1;
+        }
+        return 0;
     });
+
+  //  this.getAnalysedData(this.rowdata);
     
   }
 
@@ -420,6 +446,8 @@ export class AllTicketsComponent implements OnInit {
     }
   });
 }
+
+  
 
 }
 

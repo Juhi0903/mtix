@@ -15,6 +15,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {ToastModule} from 'ng6-toastr/ng2-toastr';
 import {ToasterService} from "./shared/services/toaster.service";
 import { TicketService} from "./shared/services/ticket.service";
+import { CookieService } from 'ngx-cookie-service';
+
 
 
 
@@ -38,7 +40,8 @@ import { TicketService} from "./shared/services/ticket.service";
         AuthService,
         AuthGuard,
         ToasterService,
-        TicketService
+        TicketService,
+        CookieService
     ],
     bootstrap: [AppComponent]
 })

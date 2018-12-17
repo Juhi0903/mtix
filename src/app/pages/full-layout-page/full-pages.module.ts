@@ -24,6 +24,8 @@ import { StorageServiceModule } from 'angular-webstorage-service';
 import { ToastsManager } from 'ng6-toastr/ng2-toastr';
 // import {StatusDetailsModule} from '../status-details/status-details.module';
 // import {StatusDetailsComponent } from '../status-details/status-details/status-details.component';
+import { CookieService } from 'ngx-cookie-service';
+
  
 @NgModule({
   imports: [
@@ -61,7 +63,8 @@ import { ToastsManager } from 'ng6-toastr/ng2-toastr';
     ],
     providers: [
       TicketService,
-      ToasterService
+      ToasterService,
+      CookieService
     ]
 })
 export class FullPagesModule { }

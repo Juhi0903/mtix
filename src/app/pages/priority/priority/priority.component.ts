@@ -29,7 +29,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
             </div>
         </div>
         <div class="row">
-        <label class="col-md-3 label-control">Remarks</label>
+        <label class="col-md-3 label-control">Remarks<p style="color:red;">*</p></label>
           <div class="col-md-9">
               <div class="input-group">
                 <textarea rows="8" class="form-control" formControlName="remarks" placeholder="Changing Priority because" name="remarks" required></textarea>
@@ -84,10 +84,11 @@ export class PriorityComponent {
       ticketId : this.ticketId,
     
     }
+    this.activeModal.close('Close click');
     const d = await this._ticketService.updatePriority(data);
-    console.log(data);
-      this.clickevent.emit(this.priority);
-      this.activeModal.close('Close click');
+    // console.log(data);
+    this.clickevent.emit(this.PriorityForm.value.formInformation.priority,);
+      
   }
 
 }

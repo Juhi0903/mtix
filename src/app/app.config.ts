@@ -22,7 +22,9 @@ export const urls = {
     download : 'user/download',
     upload : 'user/upload',
     emailId : 'user/emailId',
-    statusorperson : 'ticket/statusorperson'
+    statusorperson : 'ticket/statusorperson',
+    graphData : 'ticket/graphdata',
+    notUpdated : 'ticket/notUpdatedTicket'
 }
 
 
@@ -68,7 +70,8 @@ export const status = [
     {id: 1004, name: 'Ginger'},
     {id: 1005, name: 'CMS'},
     {id: 1006, name: 'App'},
-    {id: 1007, name: 'Other'}
+    {id: 1007, name: 'Mtix'},
+    {id: 1008, name: 'Other'}
 
   ]
 
@@ -95,6 +98,11 @@ export const status = [
 
   export interface email{
     email : string
+  }
+
+  export interface statusCount{
+    status : string
+    count : number
   }
   export const details = [
     {id: 1001, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag

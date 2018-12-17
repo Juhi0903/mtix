@@ -126,11 +126,13 @@ export class StatusComponent  implements OnInit{
       data.status = 'Not Updated';
       data.id = this.id;
     }
+    this.activeModal.close('Close click');
     // console.log(data);
-      await this._ticketService.updateStatus(data);
-      this.clickevent.emit(this.status);
-      this.clickevent1.emit(this.StatusForm.value.formInformation.remarks);
-      this.activeModal.close('Close click');
+    await this._ticketService.updateStatus(data);
+    this.clickevent.emit(this.status);
+    this.clickevent1.emit(this.StatusForm.value.formInformation.remarks);
+    
+      
   }
 
   checkStatus= async() =>{

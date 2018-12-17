@@ -49,6 +49,20 @@ const routes: Routes = [
       title: 'Create Sub Ticket Page'
     },
   },
+  {
+    path: 'ticket/:id/:status',
+     component: AllTicketsComponent,
+    data: {
+      title: 'Ticket Page'
+    },
+  },
+  {
+    path: 'ticket/notupdated',
+     component: AllTicketsComponent,
+    data: {
+      title: 'Ticket Page'
+    },
+  },
 
 ];
 

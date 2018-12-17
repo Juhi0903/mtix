@@ -21,15 +21,24 @@
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
 .rag-red {
-    background-color: lightcoral;
+    background-color: rgb(247, 113, 113);
 }
 .rag-green {
     background-color: lightgreen;
 }
 .rag-amber {
-    background-color: lightsalmon;
+    background-color: rgb(231, 146, 137);
 }
 
 .rag-yellow {
-    background-color: rgb(255, 255, 128)
+    background-color: lightsalmon;
+}
+
+.rag-light {
+    background-color: rgb(149, 209, 236)
+}
+
+.btn.disabled, .btn:disabled {
+    cursor: not-allowed;
+
 }

@@ -133,7 +133,7 @@ export class TicketService {
     return this._httpService.post(urls.BASE_URL + urls.subStage, data , this.httpOptions).toPromise() as any;
   }
 
-  public getTicketsByStatusOrPerson = async (data) : Promise<any[]> =>{
+  public getTicketsByStatusAndPerson = async (data) : Promise<any[]> =>{
     return this._httpService.post(urls.BASE_URL + urls.statusorperson, data, this.httpOptions).toPromise() as any;
   }
   public createNewStage = async (data): Promise<any[]> => {
@@ -186,4 +186,11 @@ export class TicketService {
     return this._httpService.get(urls.BASE_URL + urls.emailId).toPromise() as any;
   }
 
+  public getGraphData = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.graphData).toPromise() as any;
+  }
+
+  public getNotUpdatedTickets = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.notUpdated).toPromise() as any;
+  }
 }

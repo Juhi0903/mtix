@@ -13,6 +13,7 @@ import {AssignedComponent} from '../../assigned/assigned/assigned.component';
 // import {EditAssignTo} from '../../full-layout-page/all-tickets/all-tickets.component';
 // import {EditStatus} from '../../ticket/my-ticket/my-ticket.component';
 import saveAs from 'file-saver';
+import * as chartsData from '../../../shared/config/ngx-charts.config';
 
 
 @Component({
@@ -142,22 +143,35 @@ export class TicketDetailsComponent {
   ticketDetails = [];
   showsubTable = false;
   columnDefs : any;
-  subcolumnDefs : any;
+  analysedcolumnDefs : any;
   showRemarks = false;
   showStatus = false;
   showAnalysis = false;
   showChart = false;
+  analyseddata : any = [];
   // gridOptions : any;
   gridOptions: GridOptions = {
     columnDefs : this.columnDefs,
     rowData : this.rowdata,
   };
+  analysedgridOptions: GridOptions = {
+    columnDefs : this.analysedcolumnDefs,
+    rowData : this.analyseddata,
+  };
   subTicketList : any = [];
   Open = 10000;
   @Output() clickevent = new EventEmitter<string>();
   frameworkComponents : any;
-   newdate: any;
+  newdate: any;
 
+  pieChartView: any = chartsData.pieChartView;
+
+  pieChartShowLabels = chartsData.pieChartShowLabels;
+  pieChartExplodeSlices = chartsData.pieChartExplodeSlices;
+  pieChartDoughnut = chartsData.pieChartDoughnut;
+  pieChartGradient = chartsData.pieChartGradient;
+  pieChartColorScheme = chartsData.pieChartColorScheme;
+  pieChartShowLegend = chartsData.pieChartShowLegend;
   constructor(private _ticketService : TicketService,private router: Router, private route: ActivatedRoute,private modalService: NgbModal) {
     this.ticketid= this.route.snapshot.paramMap.get('id');
     // this.lastUpdatedOn= this.route.snapshot.paramMap.get('date');
@@ -186,15 +200,10 @@ export class TicketDetailsComponent {
       {headerName: "Attachment", field: 'filename' , width: 180, cellRenderer: "downloadfile",suppressSizeToFit: true},
     ];
 
-    // this.subcolumnDefs = [
-    //   {headerName: "Sub Ticket", field: 'ticketId' , width: 130, suppressSizeToFit: true},
-    //   {headerName : "Date", field:'addedOn' , width: 100, suppressSizeToFit: true},
-    //   {headerName: "Subject", field: 'title' , width: 260, suppressSizeToFit: true},
-    //   {headerName: "Status", field: 'status' , width: 130, suppressSizeToFit: true},
-    //   {headerName: "Category", field: 'problemType' , width: 120, suppressSizeToFit: true},
-    //   {headerName: "Assigned", field: 'assignedTo' , width: 180, suppressSizeToFit: true},
-    //   {headerName: "Raised By", field: 'raisedBy' , width: 180, suppressSizeToFit: true},
-    //   ];
+    this.analysedcolumnDefs = [
+      {headerName: "Status", field: 'name' , width: 250, suppressSizeToFit: true},
+      {headerName: "Count", field: 'value' , width: 200, suppressSizeToFit: true},
+    ];
     
   }
 
@@ -213,9 +222,11 @@ export class TicketDetailsComponent {
     // console.log(day);
     this.details.forEach((res , index) => {
       this.detailsArray = {} as detailsArray;
-      let date = res['addedOn'].toString().substring(0,16);
+      // let date = res['addedOn'].toString().substring(0,16);
       // console.log(date);
-      this.detailsArray['addedOn'] = date.replace('T','-');
+      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
+      res['addedOn'] = new Date(time).toString().substring(4,21);
+      this.detailsArray['addedOn'] = res['addedOn'];
       this.detailsArray['remarks'] = res['remarks'];
       this.detailsArray['type'] =    this.ticketType;
       this.detailsArray['assignedTo'] = res['addedBy'];
@@ -228,7 +239,7 @@ export class TicketDetailsComponent {
       this.detailsArray['filepath'] = res['filePath'];
       if(res['status']==null)
       this.detailsArray['status'] = 'Not Updated';
-      finalMap.set(this.todayDate(res['addedOn']),this.detailsArray);
+      finalMap.set(new Date(time).toString().substring(4,16),this.detailsArray);
       this.rowdata.push(this.detailsArray);
       // console.log(finalMap);
      
@@ -238,20 +249,22 @@ export class TicketDetailsComponent {
       this.detailsArray = {} as detailsArray;
         let res = new Date(this.raiseOn)
         let added = new Date(res.setHours(res.getHours()+24*i)); // y +'-' +m +'-' +
+        // console.log(added);
+        let date= added.toString().substring(4,16)
 
-        let m =  new Date(added).getMonth()+1;
-        let y =  new Date(added).getFullYear();
-        let d =  new Date(added).getDate();
-        if(d<= 9)
-        this.newdate = y +'-' +m +'-0' + d;
-        else
-        this.newdate = y +'-' +m +'-' + d;
+        // let m =  new Date(added).getMonth()+1;
+        // let y =  new Date(added).getFullYear();
+        // let d =  new Date(added).getDate();
+        // if(d<= 9)
+        // this.newdate = y +'-' +m +'-0' + d;
+        // else
+        // this.newdate = y +'-' +m +'-' + d;
       
         // console.log(date);
        let closedDate = Number(new Date(this.lastUpdatedOn).getTime());
-       let lastedData = Number(new Date(this.newdate).getTime());
-       if(!finalMap.has(this.newdate)){
-        this.detailsArray['addedOn'] =this. newdate + '-00:00';
+       let lastedData = Number(new Date(added.getTime()));
+       if(!finalMap.has(date)){
+        this.detailsArray['addedOn'] = added.toString().substring(4,21);//this. newdate + '-00:00';
         this.detailsArray['status'] = 'Not Updated';
         this.detailsArray['assignedTo'] = 'System';
         this.detailsArray['type'] = this.ticketType;
@@ -259,21 +272,21 @@ export class TicketDetailsComponent {
         this.detailsArray['id'] = 0;
         if(this.status==='Closed'){
         if(closedDate >= lastedData){
-            console.log("if status closed");
-            finalMap.set(this.newdate,this.detailsArray);
+            // console.log("if status closed");
+            finalMap.set(added.toString().substring(4,16),this.detailsArray);
             this.rowdata.push(this.detailsArray);
         }
       }
         else if(this.status!='Closed'){
-          finalMap.set(this.newdate,this.detailsArray);
+          finalMap.set(added.toString().substring(4,16),this.detailsArray);
           this.rowdata.push(this.detailsArray);
         }
 
        }
      };
      this.rowdata.sort(function(a, b) {
-      var nameA = a.addedOn; 
-      var nameB = b.addedOn; 
+      var nameA = new Date(a.addedOn); 
+      var nameB = new Date(b.addedOn); 
       if (nameA < nameB) {
         return -1;
       }
@@ -285,8 +298,9 @@ export class TicketDetailsComponent {
      
   }
     this.showStatus = true;
-     this.showAnalysis = false;
-     this.showChart = false;
+    this.showAnalysis = false;
+    this.showChart = false;
+    // this.getAnalysedData(this.rowdata);
   }
 
   todayDate(dateparam){
@@ -312,9 +326,12 @@ export class TicketDetailsComponent {
     this.ticketDetails = await this._ticketService.getTicketDetails(this.ticketid);
     // console.log(this.ticketDetails);
     this.ticketDetails.forEach((res , index) => {
-      res['addedOn'] = this.todayDate(res['addedOn']);
+      // res['addedOn'] = this.todayDate(res['addedOn']);
       this.title = res['title'];
+      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 10);
+      res['addedOn'] = new Date(time).toString().substring(4,16);
       this.raiseOn = res['addedOn'];
+      console.log(this.raiseOn);
       this.lastUpdatedOn = res['updatedOn'];
       this.status = res['status'];
       this.ticketid = res['ticketId'];
@@ -339,16 +356,17 @@ export class TicketDetailsComponent {
 
   
   showAnalysisTab(){
+    this.getAnalysedData(this.rowdata);
     this.showStatus = false;
     this.showAnalysis = true;
     this.showChart = false;
     // console.log("showAnalysis");
   }
-  showChartTab(){
-    this.showStatus = false;
-    this.showAnalysis= false;
-    this.showChart = true;
-  }
+  // showChartTab(){
+  //   this.showStatus = false;
+  //   this.showAnalysis= false;
+  //   this.showChart = true;
+  // }
 
   isNumberKey(event){
     console.log(event);
@@ -360,6 +378,10 @@ export class TicketDetailsComponent {
       this.status = $e;
       this.getTicketRemarks();
     });
+    // modalRef.componentInstance.clickevent1.subscribe(($e) => {
+    //   this.remarks = $e;
+    //   this.getTicketRemarks();
+    // });
     modalRef.componentInstance.status = this.status;
     modalRef.componentInstance.ticketId = this.ticketid;
     modalRef.componentInstance.title = this.title;
@@ -428,5 +450,29 @@ export class TicketDetailsComponent {
     };
     this.gridOptions.api.exportDataAsCsv(params);
   }
+
+
+  getAnalysedData(rowdata){
+    let finalMap = new Map;
+    let temp =[];
+      rowdata.forEach((res , index) => {
+      if(finalMap.has(res['status'])){
+        let count = Number(finalMap.get(res['status'])) + 1;
+        finalMap.set(res['status'],count);
+      }
+      else{
+        finalMap.set(res['status'],1);
+      }
+    });
+
+    finalMap.forEach(function(val, key) {
+      temp.push({ name: key, value: val });
+    });
+    // console.log(temp);
+    this.analyseddata = temp;
 }
+
+}
+
+
 

@@ -86,10 +86,11 @@ export class AssignedComponent implements OnInit  {
       ticketId : this.ticketId,
       title : this.title,
     }
+    this.activeModal.close('Close click');
     // console.log(data);
       await this._ticketService.updateAssigned(data);
-      this.clickevent.emit(this.assignedTo);
-      this.activeModal.close('Close click');
+      this.clickevent.emit(this.AssignedForm.value.formInformation.assignedTo);
+      
   }
 
   getAllUsers = async() =>{

@@ -12,6 +12,7 @@ export var barChartShowXAxisLabel = true;
 export var barChartXAxisLabel = 'Team Member';
 export var barChartShowYAxisLabel = true;
 export var barChartYAxisLabel = 'Number Of Tickets';
+export var barChartShowDataLabel = true;
 
 export var barChartColorScheme = {
     domain: ['#009DA0', '#FF8D60', '#FF586B', '#AAAAAA']
@@ -25,13 +26,13 @@ export var pieChartView: any[] = [550, 400];
 export var pieChartShowLegend = false;
 
 export var pieChartColorScheme = {
-    domain: ['#009DA0', '#FF8D60', '#FF586B', '#AAAAAA']
+    domain: ['#009DA0', '#FF8D60', '#FF586B', '#AAAAAA','#FCFF33','#D433E1','#DAF7A6']
 };
 
 // pie
 export var pieChartShowLabels = true;
 export var pieChartExplodeSlices = false;
-export var pieChartDoughnut = true;
+export var pieChartDoughnut = false;
 export var pieChartGradient = false;
 
 export var pieChart1ExplodeSlices = true;

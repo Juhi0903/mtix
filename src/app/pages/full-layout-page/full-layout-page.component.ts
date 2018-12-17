@@ -5,6 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { barChartmulti} from '../../shared/data/ngxChart';
 import * as chartsData from '../../shared/config/ngx-charts.config';
 import { ActivatedRoute ,Router , Params } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -18,9 +19,11 @@ export class FullLayoutPageComponent implements OnInit {
   totalTickets: number = 0;
   pendingTickets: number = 0;
   completedTickets: number = 0;
+  showcard = false;
   // totalProfit: number = 0;
 
-  barChartmulti = barChartmulti;
+  barChartmulti ;
+graphdata = [];
 
  
     //Bar Charts
@@ -36,13 +39,20 @@ export class FullLayoutPageComponent implements OnInit {
     barChartShowYAxisLabel = chartsData.barChartShowYAxisLabel;
     barChartYAxisLabel = chartsData.barChartYAxisLabel;
     barChartColorScheme = chartsData.barChartColorScheme;
+    barChartShowDataLabel = chartsData.barChartShowDataLabel;
 
-  constructor(private _ticketService : TicketService,@Inject(LOCAL_STORAGE) private storage: StorageService, private router: Router, private route : ActivatedRoute) {
-    Object.assign(this, { barChartmulti });
+  constructor(private _ticketService : TicketService,@Inject(LOCAL_STORAGE) private storage: StorageService, 
+              private router: Router, private route : ActivatedRoute,private cookieService: CookieService) {
+    this.getGraphData();
+    // this.barChartmulti = this.graphdata;
+    // Object.assign(this, { barChartmulti });
     this.getStatusCount();
-    this.token = this.storage.get('token');
-    if(this.token===null){
+    // this.token = this.storage.get('token');
+    this.token = this.cookieService.check("MTIX");
+    console.log(this.token);
+    if(this.token== false){
     const token = this.route.snapshot.queryParamMap.get('auth');
+    this.cookieService.set("MTIX",token);
     const helper = new JwtHelperService();
     const decodedToken = helper.decodeToken(token);
     this.storage.set('token', decodedToken['jti']);
@@ -51,7 +61,8 @@ export class FullLayoutPageComponent implements OnInit {
 }
 
   ngOnInit() {
-    
+    this.getGraphData();
+    this.getStatusCount();
   }
 
   getStatusCount = async () => {
@@ -68,10 +79,19 @@ export class FullLayoutPageComponent implements OnInit {
       this.totalTickets = this.pendingTickets + this.completedTickets;
 
     });
-  }
-
-  onSelect (event?){
     
   }
 
+  getGraphData = async () =>{
+   await this._ticketService.getGraphData().then(data =>{
+      this.barChartmulti = data;
+      // console.log(data);
+    });
+  }
+
+  onSelect(event){
+    // console.log(event);
+    let url = "/ticket";
+    this.router.navigate([ '/' + url +'/' +event['series'] +'/' +event['name']], { relativeTo: this.route.parent }); 
+  }
 }

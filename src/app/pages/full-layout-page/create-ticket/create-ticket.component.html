@@ -100,7 +100,7 @@
 							
 							
 							
-							<div class="form-group row" *ngIf="showColumn">
+							<div class="form-group row">
 								<label class="col-md-3 label-control" for="projectinput7">Country</label>
 								<div class="col-md-9">
 									<div class="input-group">
@@ -187,7 +187,7 @@
 									<textarea formControlName="details" rows="3" class="form-control" name="details" placeholder="About Ticket"></textarea>
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.details').valid && (createTicketForm.get('ticketInformation.details').dirty || createTicketForm.get('ticketInformation.details').touched) && 
 											createTicketForm.get('ticketInformation.details').hasError('maxlength')">
-										Max Length cannot exceed 200 characters.
+										Max Length cannot exceed 500 characters.
 								</small>
 								</div>
 							</div>

@@ -78,7 +78,7 @@ export class CreateTicketComponent implements OnInit {
         subProblem : new FormControl(''),
         assignTo : new FormControl('',[Validators.required]),
         supervisor : new FormControl('',[Validators.required]),
-        details : new FormControl(null, [Validators.required,Validators.maxLength(200)]),
+        details : new FormControl(null, [Validators.required,Validators.maxLength(500)]),
 
       })
     });
@@ -113,14 +113,15 @@ export class CreateTicketComponent implements OnInit {
       details : this.createTicketForm.value.ticketInformation.details,
       status : 'Yet To Start', // need to change,
       assignTo : this.createTicketForm.value.ticketInformation.assignTo,
-      supervisor : this.createTicketForm.value.ticketInformation.supervisor
+      supervisor : this.createTicketForm.value.ticketInformation.supervisor,
+      country : this.createTicketForm.value.ticketInformation.country,
     }
     if(problemType==='Technical'){
       data.subProblem = subProblemType;
       data.platform = this.createTicketForm.value.ticketInformation.platform;
     }
     if(subProblemType==='Integration'){
-      data.country = this.createTicketForm.value.ticketInformation.country,
+      // data.country = this.createTicketForm.value.ticketInformation.country,
       data.operator = this.createTicketForm.value.ticketInformation.operator,
       data.biller = this.createTicketForm.value.ticketInformation.biller
     }
