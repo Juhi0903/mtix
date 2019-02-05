@@ -34,6 +34,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 15
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   },
@@ -51,6 +55,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 6
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   },
@@ -68,6 +76,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 13
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   },
@@ -85,6 +97,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 3
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   },
@@ -102,6 +118,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 2
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   },
@@ -119,6 +139,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 12
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   },
@@ -136,6 +160,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 16
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   },
@@ -153,6 +181,10 @@ export var barChartmulti = [
       {
         "name": "Done",
         "value": 5
+      },
+      {
+        "name": "Hold",
+        "value": 15
       }
     ]
   }

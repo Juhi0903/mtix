@@ -5,8 +5,8 @@ import { HttpModule } from '@angular/http';
 import { AgGridModule } from 'ag-grid-angular';
 import { FullPagesRoutingModule } from "./full-pages-routing.module";
 import { FullLayoutPageComponent } from './full-layout-page.component';
-import { CreateTicketComponent } from 'app/pages/full-layout-page/create-ticket/create-ticket.component';
-import { AllTicketsComponent, EditPriority, EditAssignTo, EditAndViewDetails, CreateSubTicket} from './all-tickets/all-tickets.component';
+// import { CreateTicketComponent } from 'app/pages/full-layout-page/create-ticket/create-ticket.component';
+// import { AllTicketsComponent, EditPriority, EditAssignTo, EditAndViewDetails, CreateSubTicket} from './all-tickets/all-tickets.component';
 import { TicketService} from "../../shared/services/ticket.service";
 import { ToasterService } from "../../shared/services/toaster.service";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -35,7 +35,7 @@ import { CookieService } from 'ngx-cookie-service';
     FullPagesRoutingModule,
     HttpModule,
     HttpClientModule,
-    AgGridModule.withComponents([EditPriority, EditAssignTo, EditAndViewDetails, CreateSubTicket]),
+    AgGridModule.withComponents([]),
     StatusModule,
     AssignedModule,
     PriorityModule,
@@ -54,12 +54,12 @@ import { CookieService } from 'ngx-cookie-service';
     schemas: [ CUSTOM_ELEMENTS_SCHEMA],
     declarations: [       
         FullLayoutPageComponent,
-        CreateTicketComponent,
-        AllTicketsComponent,
-        EditPriority,
-        EditAssignTo,
-        EditAndViewDetails,
-        CreateSubTicket,
+        // CreateTicketComponent,
+        // AllTicketsComponent,
+        // EditPriority,
+        // EditAssignTo,
+        // EditAndViewDetails,
+        // CreateSubTicket,
     ],
     providers: [
       TicketService,

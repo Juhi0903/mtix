@@ -190,7 +190,59 @@ export class TicketService {
     return this._httpService.get(urls.BASE_URL + urls.graphData).toPromise() as any;
   }
 
-  public getNotUpdatedTickets = async (): Promise<any[]> => {
-    return this._httpService.get(urls.BASE_URL + urls.notUpdated).toPromise() as any;
+  public getNotUpdatedTickets = async (date): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.notUpdated + "?date=" + date, this.httpOptions).toPromise() as any;
   }
+
+  public getIssueNotUpdatedTickets = async (date): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.issueNotUpdated + "?date=" + date, this.httpOptions).toPromise() as any;
+  }
+
+  public getTicketsRaisedByMe = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.all_raised,this.httpOptions).toPromise() as any;
+  }
+
+  public getPendingTicketsRaisedByMe = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.raised_pending,this.httpOptions).toPromise() as any;
+  }
+
+  public getClosedTicketsRaisedByMe = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.raised_closed,this.httpOptions).toPromise() as any;
+  }
+
+  public updateReview = async (data): Promise<any[]> => {
+
+    let parameterList = "?" + Object.keys(data).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    }).join('&');
+
+
+    const result = await this._httpService.post(urls.BASE_URL + urls.updatereview, data, this.httpOptions).toPromise() as any;
+    return result;
+  }
+
+  public approveTicket(id) {
+    return this._httpService.post(urls.BASE_URL + urls.approveTicket + "?ticketId=" + id, {
+      headers: {
+        'Authorization': this.storage.get('token')
+      }
+    }).toPromise() as any;
+  }
+
+  public getCountry = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.country,this.httpOptions).toPromise() as any;
+  }
+
+  public getReviewerTicket = async (): Promise<any[]> => {
+    return this._httpService.get(urls.BASE_URL + urls.review,this.httpOptions).toPromise() as any;
+  }
+
+  public getTicketByStatus(status) {
+    return this._httpService.get(urls.BASE_URL + urls.status + "?status=" + status, {
+      headers: {
+        'Authorization': this.storage.get('token')
+      }
+    }).toPromise() as any;
+  }
+
 }

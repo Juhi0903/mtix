@@ -65,7 +65,7 @@
 										<!-- <input formControlName="problemType" type="text" class="form-control" placeholder="Problem Type" name="problemType" required> -->
 										<select  formControlName="problemType" name="problemType"  class="form-control" (change) ="CheckProblemType()">
 											<option value="" selected="" disabled="true">Select Category </option>
-											<option *ngFor="let problem of problemType" [value]='problem.name'>{{problem.name}}</option>
+											<option *ngFor="let problem of problemType" [value]='problem.id'>{{problem.name}}</option>
 										</select>
 									
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.problemType').valid && (createTicketForm.get('ticketInformation.problemType').dirty || createTicketForm.get('ticketInformation.problemType').touched)">
@@ -85,7 +85,7 @@
 									</small>
 								</div>
 							</div>
-							<div class="form-group row" *ngIf="showPlatform">
+							<div class="form-group row" *ngIf="showSubCategory">
 								<label class="col-md-3 label-control" for="projectinput7">Sub Category</label>
 								<div class="col-md-9">
 									<select  formControlName="subProblem" name="subProblem"  class="form-control" (change) ="CheckSubProblemType($event)" >
@@ -103,9 +103,22 @@
 							<div class="form-group row">
 								<label class="col-md-3 label-control" for="projectinput7">Country</label>
 								<div class="col-md-9">
-									<div class="input-group">
-										<input formControlName="country" type="text" class="form-control" placeholder="Enter Country Name" name="country" >
-									</div>
+									<!-- <div> -->
+										<!-- <input formControlName="country" type="text" class="form-control" placeholder="Enter Country Name" name="country" > -->
+										<angular2-multiselect [data]="countrydata"  formControlName="country" [settings]="dropdownCountrySettings" [(ngModel)]="selectedCountry">
+										<c-badge>
+											<ng-template let-item="item">
+											  <label style="background: #0079FE;color: #fff;margin: 0px;">{{item.name}}</label>
+											</ng-template>
+										  </c-badge>
+										  <c-item>
+											<ng-template let-item="item">
+											  <label>{{item.name}}</label>
+											</ng-template>
+										  </c-item>
+										</angular2-multiselect>
+							
+									<!-- </div> -->
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.country').valid && (createTicketForm.get('ticketInformation.country').dirty || createTicketForm.get('ticketInformation.country').touched)">
 										Country Name is required!
 									</small>
@@ -144,7 +157,7 @@
 									</div> -->
 									<select  formControlName="priorityLevel" name="priorityLevel"  class="form-control"  >
 										<option value="" selected="" disabled="true">Select Priority</option>
-										<option *ngFor="let obj of priority" [value]='obj.name'>{{obj.name}}</option>
+										<option *ngFor="let obj of priority" [value]='obj.id'>{{obj.name}}</option>
 									</select>
 									<small class="form-text text-muted danger" *ngIf="!createTicketForm.get('ticketInformation.priorityLevel').valid && (createTicketForm.get('ticketInformation.priorityLevel').dirty || createTicketForm.get('ticketInformation.priorityLevel').touched)">
 										Priority Level is required!
@@ -221,3 +234,14 @@
 		</div>
 	</div>
 </div>
+
+
+
+											
+
+
+											
+
+
+
+											  

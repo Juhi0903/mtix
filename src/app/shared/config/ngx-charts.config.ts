@@ -15,7 +15,7 @@ export var barChartYAxisLabel = 'Number Of Tickets';
 export var barChartShowDataLabel = true;
 
 export var barChartColorScheme = {
-    domain: ['#009DA0', '#FF8D60', '#FF586B', '#AAAAAA']
+    domain: ['#3399ff', '#FF8D60', '#FF586B', '#009933','#ffff33','#009933','#DAF7A6']
 };
 
 //Pie CHart

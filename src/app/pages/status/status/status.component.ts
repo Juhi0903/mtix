@@ -1,10 +1,12 @@
-import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output,Inject} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TicketService} from "../../../shared/services/ticket.service";
-import {status,email} from "../../../app.config";
+import {status,email,headstatus} from "../../../app.config";
 import {StageComponent } from '../../stage-substage/stage/stage.component';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { HttpResponse, HttpEventType, HttpClient} from '@angular/common/http';
+import { SESSION_STORAGE, StorageService ,LOCAL_STORAGE } from 'angular-webstorage-service';
+
 
 
 @Component({
@@ -23,6 +25,7 @@ export class StatusComponent  implements OnInit{
   @Input() addedOn ;
   @Input() id ;
   @Input() title;
+  assignedTo;
   date = new Date();
   StatusForm : FormGroup;
   statusList : any =[];
@@ -32,7 +35,7 @@ export class StatusComponent  implements OnInit{
   stageList = [];
   substageList = [];
   users : any = [];
-  // showContact = false;
+  ticketDetails = [];
   to : any;
   cc: any;
   selectedFiles : any;
@@ -45,15 +48,22 @@ export class StatusComponent  implements OnInit{
   @Output() clickevent = new EventEmitter<string>();
   @Output() clickevent1 = new EventEmitter<string>();
 
-  constructor(public activeModal: NgbActiveModal, private _ticketService: TicketService, private modalService: NgbModal,private _formBuilder: FormBuilder) { 
-    this.statusList = status;
+  constructor(public activeModal: NgbActiveModal, private _ticketService: TicketService, private modalService: NgbModal,private _formBuilder: FormBuilder,@Inject(LOCAL_STORAGE) private storage: StorageService) {
+    
     this.getUsers();
     // this.checkStatus();
     // this.checkStage();
   }
 
   ngOnInit() {
-    console.log(this.status);
+    this.getTicketInfo().then( data => {
+      // console.log(this.assignedTo);
+      if(this.storage.get('token')=== this.assignedTo)
+      this.statusList = headstatus;
+      else
+      this.statusList = status;
+    });;
+    
     this.StatusForm = this._formBuilder.group({
       formInformation : this._formBuilder.group({
         status : new FormControl(this.status,[Validators.required]),
@@ -63,13 +73,13 @@ export class StatusComponent  implements OnInit{
         user : new FormControl(''),
       })
   });
-  // console.log(this.status);
+
   if(this.status==='Integration'){
       this.enableStage = true;
       this.checkStatus();
       // this.checkStage();
   }
-  if(this.updateType=='remarks')
+  if(this.updateType=='remarks' || this.updateType=='Reviewed')
     this.enableStatus =false;
 }
 
@@ -126,9 +136,19 @@ export class StatusComponent  implements OnInit{
       data.status = 'Not Updated';
       data.id = this.id;
     }
-    this.activeModal.close('Close click');
+    if(this.updateType=='Reviewed'){
+      data.status = 'Reviewed';
+      data.reviewed = 1;
+      this.activeModal.close('Close click');
+      await this._ticketService.updateReview(data);
+    }
+    else{
     // console.log(data);
+    this.activeModal.close('Close click');
     await this._ticketService.updateStatus(data);
+    
+    }
+
     this.clickevent.emit(this.status);
     this.clickevent1.emit(this.StatusForm.value.formInformation.remarks);
     
@@ -241,6 +261,11 @@ upload(){
     });
  
     this.selectedFiles = undefined;
+  }
+
+  getTicketInfo = async () =>{
+    const data = await this._ticketService.getTicketDetails(this.ticketId);
+    this.assignedTo = data[0].assignedTo;
   }
    
 }

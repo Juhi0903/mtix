@@ -1,4 +1,4 @@
-import { Component, OnInit , Input,  EventEmitter, Output} from '@angular/core';
+import { Component, OnInit , Input,  EventEmitter, Output,Inject} from '@angular/core';
 // import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TicketService} from "../../../shared/services/ticket.service";
 import {detailsArray } from '../../../app.config';
@@ -7,13 +7,17 @@ import {GridOptions} from 'ag-grid-community';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import {ICellRendererAngularComp, ICellEditorAngularComp} from "ag-grid-angular";
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import {urls,status, priorityLevel,problemType , platform} from '../../../app.config';
+// import {urls,status, priorityLevel,problemType , platform} from '../../../app.config';
 import {StatusComponent} from '../../status/status/status.component';
 import {AssignedComponent} from '../../assigned/assigned/assigned.component';
 // import {EditAssignTo} from '../../full-layout-page/all-tickets/all-tickets.component';
 // import {EditStatus} from '../../ticket/my-ticket/my-ticket.component';
 import saveAs from 'file-saver';
 import * as chartsData from '../../../shared/config/ngx-charts.config';
+import { SESSION_STORAGE, StorageService ,LOCAL_STORAGE } from 'angular-webstorage-service';
+import { formatDate } from '@angular/common';
+
+
 
 
 @Component({
@@ -31,7 +35,7 @@ export class EditRemaks implements ICellRendererAngularComp {
   id : any;
   
 
-  constructor(private route: ActivatedRoute,private modalService: NgbModal) {
+  constructor(private route: ActivatedRoute,private modalService: NgbModal){
   }
   agInit(params: any): void {
     this.params = params;
@@ -149,6 +153,7 @@ export class TicketDetailsComponent {
   showAnalysis = false;
   showChart = false;
   analyseddata : any = [];
+  lead = false;
   // gridOptions : any;
   gridOptions: GridOptions = {
     columnDefs : this.columnDefs,
@@ -172,10 +177,14 @@ export class TicketDetailsComponent {
   pieChartGradient = chartsData.pieChartGradient;
   pieChartColorScheme = chartsData.pieChartColorScheme;
   pieChartShowLegend = chartsData.pieChartShowLegend;
-  constructor(private _ticketService : TicketService,private router: Router, private route: ActivatedRoute,private modalService: NgbModal) {
+
+  constructor(private _ticketService : TicketService,private router: Router, private route: ActivatedRoute,private modalService: NgbModal,@Inject(LOCAL_STORAGE) private storage: StorageService) {
+ 
     this.ticketid= this.route.snapshot.paramMap.get('id');
     // this.lastUpdatedOn= this.route.snapshot.paramMap.get('date');
-    console.log(this.ticketid);
+    if(this.storage.get('LEAD'))
+      this.lead = true;
+    // console.log(this.lead);
     this.getParentTicketInfo();
     this.getAllSubTickets();
     this.getTicketRemarks();
@@ -193,7 +202,12 @@ export class TicketDetailsComponent {
       {headerName : "Date", field:'addedOn' , width: 130, suppressSizeToFit: true},
       {headerName: "Ticket", field: 'type' , width: 100, suppressSizeToFit: true},
       {headerName: "SPOC", field: 'assignedTo' , width: 200, suppressSizeToFit: true},
-      {headerName: "Status", field: 'status' , width: 140, suppressSizeToFit: true},
+      {headerName: "Status", field: 'status' , width: 140, suppressSizeToFit: true, valueParser: this.numberParser,
+      cellClassRules: {
+        "rag-green": "x =='Closed'",
+        "rag-yellow": "x == 'Approved'",
+        "rag-red" : "x== 'Reviewed'"
+      }},
       {headerName: "Step", field: 'stage' , width: 120, suppressSizeToFit: true},
       {headerName: "Sub Step", field: 'subStage' , width: 120, suppressSizeToFit: true},
       {headerName: "Remarks", field: 'remarks' , cellRenderer: "editremaks" ,width: 450, suppressSizeToFit: true},
@@ -225,7 +239,7 @@ export class TicketDetailsComponent {
       // let date = res['addedOn'].toString().substring(0,16);
       // console.log(date);
       let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
-      res['addedOn'] = new Date(time).toString().substring(4,21);
+      res['addedOn'] = formatDate(time,'yyyy-MM-dd hh:mm','en-US') ; //new Date(time).toString().substring(4,21);
       this.detailsArray['addedOn'] = res['addedOn'];
       this.detailsArray['remarks'] = res['remarks'];
       this.detailsArray['type'] =    this.ticketType;
@@ -260,11 +274,11 @@ export class TicketDetailsComponent {
         // else
         // this.newdate = y +'-' +m +'-' + d;
       
-        // console.log(date);
+        // console.log(date +">>>>>>>>>>>>>>>>>>" ,new Date(date).getTime());
        let closedDate = Number(new Date(this.lastUpdatedOn).getTime());
        let lastedData = Number(new Date(added.getTime()));
-       if(!finalMap.has(date)){
-        this.detailsArray['addedOn'] = added.toString().substring(4,21);//this. newdate + '-00:00';
+       if(!finalMap.has(date) && new Date(date).getTime()<=1548354600000){
+        this.detailsArray['addedOn'] = res['addedOn'] = formatDate(added,'yyyy-MM-dd hh:mm','en-US') ; //added.toString().substring(4,21);//this. newdate + '-00:00'; res['addedOn'] = formatDate(time,'yyyy-MM-dd','en-US') ;
         this.detailsArray['status'] = 'Not Updated';
         this.detailsArray['assignedTo'] = 'System';
         this.detailsArray['type'] = this.ticketType;
@@ -276,6 +290,7 @@ export class TicketDetailsComponent {
             finalMap.set(added.toString().substring(4,16),this.detailsArray);
             this.rowdata.push(this.detailsArray);
         }
+
       }
         else if(this.status!='Closed'){
           finalMap.set(added.toString().substring(4,16),this.detailsArray);
@@ -344,6 +359,9 @@ export class TicketDetailsComponent {
       this.ticketType= 'Main Ticket';
       
    });
+   if(this.storage.get("LEAD") && this.status=='Closed')
+          this.lead = true;
+  
   }
 
   getAllSubTickets =  async() =>{
@@ -362,15 +380,6 @@ export class TicketDetailsComponent {
     this.showChart = false;
     // console.log("showAnalysis");
   }
-  // showChartTab(){
-  //   this.showStatus = false;
-  //   this.showAnalysis= false;
-  //   this.showChart = true;
-  // }
-
-  isNumberKey(event){
-    console.log(event);
-  }
 
   changeStatus(){
     const modalRef = this.modalService.open(StatusComponent, {size:'lg'});
@@ -385,6 +394,7 @@ export class TicketDetailsComponent {
     modalRef.componentInstance.status = this.status;
     modalRef.componentInstance.ticketId = this.ticketid;
     modalRef.componentInstance.title = this.title;
+    modalRef.componentInstance.assignedTo = this.assignedTo;
     // console.log(this.status ,">>>>>>>>" , this.ticketid);
   }
 
@@ -399,8 +409,6 @@ export class TicketDetailsComponent {
     modalRef.componentInstance.id = this.id;
     modalRef.componentInstance.ticketId = this.ticketid;
     modalRef.componentInstance.title = this.title;
-
-    // console.log(this.assignedTo ,">>>>>>>>" , this.ticketid ,  ">>>>>>>" , this.id , ">>>>>>>>", this.title);
   }
 
   expandDetails(id, index){
@@ -408,12 +416,10 @@ export class TicketDetailsComponent {
     this.Open= 1000;
     else
     this.Open = index;
-    // console.log(id ," >>>>>>>>>>>" , index);
-   
   }
 
   createSubTicket(){
-     let url = "subticket" + "/" + this.ticketid;
+     let url = "/ticket/subticket" + "/" + this.ticketid;
      this.router.navigate([ '/' + url], { relativeTo: this.route.parent });
   }
 
@@ -470,6 +476,41 @@ export class TicketDetailsComponent {
     });
     // console.log(temp);
     this.analyseddata = temp;
+}
+
+addReview(){
+  const modalRef = this.modalService.open(StatusComponent, {size:'lg'});
+    modalRef.componentInstance.clickevent.subscribe(($e) => {
+      this.status = $e;
+      this.getTicketRemarks();
+    });
+    // modalRef.componentInstance.clickevent1.subscribe(($e) => {
+    //   this.remarks = $e;
+    //   this.getTicketRemarks();
+    // });
+    modalRef.componentInstance.status = 'Reviewed';
+    modalRef.componentInstance.ticketId = this.ticketid;
+    modalRef.componentInstance.title = this.title;
+    modalRef.componentInstance.updateType = 'Reviewed';
+
+}
+
+approveTicket = async() => {
+   this._ticketService.approveTicket(this.ticketid).then(data =>{
+    window.alert("Ticket Approved!")
+  });
+  
+}
+
+numberParser(params) {
+  var newValue = params.newValue;
+  var valueAsNumber;
+  if (newValue === null || newValue === undefined || newValue === "") {
+    valueAsNumber = null;
+  } else {
+    valueAsNumber = parseFloat(params.newValue);
+  }
+  return valueAsNumber;
 }
 
 }

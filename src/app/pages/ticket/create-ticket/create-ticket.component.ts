@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewContainerRef, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute ,Router , Params } from '@angular/router';
-import {urls,status, priorityLevel,problemType , platform, techSubProblem} from '../../../app.config';
+import {urls,status, priorityLevel,problemType , platform, techSubProblem,appSubProblem,fincSubProblem,markSubProblem,advSubProblem,contSubProblem} from '../../../app.config';
 import { TicketService} from "../../../shared/services/ticket.service";
 import { ToasterService } from "../../../shared/services/toaster.service";
 import { ToastsManager } from 'ng6-toastr/ng2-toastr';
@@ -25,6 +25,7 @@ export class CreateTicketComponent implements OnInit {
   ticketList : any = [];
   showPlatform : any = false;
   showColumn : any = false;
+  showSubCategory : any = false;
   ticketId : any;
   title : any;
   showIdCoulmn = false;
@@ -35,6 +36,9 @@ export class CreateTicketComponent implements OnInit {
   file = false;
   filename : any;
   progress: { percentage: number } = { percentage: 0 };
+  countrydata : any =[];
+  dropdownCountrySettings = {};
+  selectedCountry : any;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -56,12 +60,23 @@ export class CreateTicketComponent implements OnInit {
      this.platform = platform;
      this.subProblem = techSubProblem;
      this.toaster.setRootViewContainerRef(vcr);
+     this.getCountry();
     }
 
   ngOnInit() {
     this._initForm();
     this.getTickets();
     this.getUsers();
+
+    this.dropdownCountrySettings = {
+      singleSelection: false,
+      text:"Select Country",
+      enableSearchFilter: true,
+      primaryKey: "shortname",
+      limitSelection: 10,
+      labelKey: "shortname",
+      classes:"myclass custom-class"
+      };
   }
 
   _initForm = ():void => {
@@ -71,7 +86,7 @@ export class CreateTicketComponent implements OnInit {
         title : new FormControl(null),
         problemType : new FormControl('',[Validators.required]),
         priorityLevel : new FormControl('',[Validators.required]),
-        country : new FormControl(''),
+        country : new FormControl([]),
         operator : new FormControl(''),
         biller : new FormControl(''),
         platform : new FormControl(''),
@@ -85,7 +100,19 @@ export class CreateTicketComponent implements OnInit {
 
   }
 
+  OnItemDeSelect(item:any) {
+    console.log(item);
 
+  }
+
+  onItemSelect(item:any) {
+
+  }
+  public getCountry = async () =>{
+    this.countrydata = await this._ticketService.getCountry();
+    // console.log(data);
+  }
+ 
   public getTickets = async () =>{
     const data = await this._ticketService.getAllTickets();
     // console.log(data);
@@ -105,6 +132,8 @@ export class CreateTicketComponent implements OnInit {
     let problemType = this.createTicketForm.value.ticketInformation.problemType;
     let subProblemType = this.createTicketForm.value.ticketInformation.subProblem;
     console.log(problemType);
+
+    console.log(this.selectedCountry);
     
     let data : any = {
       title : this.createTicketForm.value.ticketInformation.title,
@@ -114,9 +143,9 @@ export class CreateTicketComponent implements OnInit {
       status : 'Yet To Start', // need to change,
       assignTo : this.createTicketForm.value.ticketInformation.assignTo,
       supervisor : this.createTicketForm.value.ticketInformation.supervisor,
-      country : this.createTicketForm.value.ticketInformation.country,
+      country :  this.convertToArraywithId(this.selectedCountry).toString(),
     }
-    if(problemType==='Technical'){
+    if(problemType==='TECH'){
       data.subProblem = subProblemType;
       data.platform = this.createTicketForm.value.ticketInformation.platform;
     }
@@ -139,21 +168,54 @@ export class CreateTicketComponent implements OnInit {
       data.parentTicket = 'Null'
       await this._ticketService.saveTicket(data);
      }
-     this.router.navigate([ '/' +  urls.ticket], { relativeTo: this.route.parent });
+     this.router.navigate([ '/ticket/' +  urls.ticket], { relativeTo: this.route.parent });
   }
 
   CheckProblemType = async() => {
     let problemType = this.createTicketForm.value.ticketInformation.problemType;
-    if(problemType==='Technical'){
+    if(problemType==='TECH'){
       this.createTicketForm.get('ticketInformation.subProblem').setValidators([Validators.required]);
       this.createTicketForm.get('ticketInformation.platform').setValidators([Validators.required]);
       this.showPlatform = true;
+      this.showSubCategory = true
+      this.subProblem = techSubProblem;
+    }
+    else if(problemType==='FINC'){
+      this.createTicketForm.get('ticketInformation.subProblem').setValidators([Validators.required]);
+      this.subProblem = fincSubProblem;
+      this.showSubCategory = true;
+      this.showPlatform = false;
+    }
+    else if(problemType==='MKTG'){
+      this.createTicketForm.get('ticketInformation.subProblem').setValidators([Validators.required]);
+      this.subProblem = markSubProblem;
+      this.showSubCategory = true;
+      this.showPlatform = false;
+    }
+    else if(problemType==='ADVR'){
+      this.createTicketForm.get('ticketInformation.subProblem').setValidators([Validators.required]);
+      this.subProblem = advSubProblem;
+      this.showSubCategory = true;
+      this.showPlatform = false;
+    }
+    else if(problemType==='APPL'){
+      this.createTicketForm.get('ticketInformation.subProblem').setValidators([Validators.required]);
+      this.subProblem = appSubProblem;
+      this.showSubCategory = true;
+      this.showPlatform = false;
+    }
+    else if(problemType==='CONT'){
+      this.createTicketForm.get('ticketInformation.subProblem').setValidators([Validators.required]);
+      this.subProblem = contSubProblem;
+      this.showSubCategory = true;
+      this.showPlatform = false;
     }
     else{
       this.createTicketForm.get('ticketInformation.subProblem').setValidators(null);
       this.createTicketForm.get('ticketInformation.platform').setValidators(null);
       this.showPlatform = false;
       this.showColumn = false;
+      this.showSubCategory = false;
     }
     this.createTicketForm.get('ticketInformation.subProblem').updateValueAndValidity();
     this.createTicketForm.get('ticketInformation.platform').updateValueAndValidity();
@@ -183,6 +245,7 @@ upload(){
 //     const fd = new FormData();
 //     fd.append('file',this.selectedFiles,this.selectedFiles.name);
 //     // console.log(fd);
+
 //     this._httpclient.post(path,fd).subscribe(res=>{
 //       console.log(res)
 //     });
@@ -224,6 +287,15 @@ upload(){
     
   }
 
-  
+  convertToArraywithId(array) {
+    if (array == null) {
+      return [];
+    }
+    let finalArray = [];
+    for(let i=0;i<array.length;i++) {
+      finalArray.push(array[i]['shortname']);
+    }
+    return finalArray;
+    }
 
 }

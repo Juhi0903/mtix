@@ -37,7 +37,6 @@ const appRoutes: Routes = [
       {
         path: '',
         loadChildren: './pages/full-layout-page/full-pages.module#FullPagesModule',
-        canActivate: [AuthGuard]
       },
       {
         path: 'ticket',

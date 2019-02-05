@@ -1,23 +1,23 @@
-import { Component, OnInit , Input} from '@angular/core';
+import { Component, OnInit , Input,Inject,LOCALE_ID} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 // import {GridOptions} from 'ag-grid-angular/main';
+import { formatDate } from '@angular/common';
 import {GridOptions} from 'ag-grid-community';
 import {ICellRendererAngularComp, ICellEditorAngularComp} from "ag-grid-angular";
 import { ActivatedRoute , Router} from '@angular/router';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TicketService} from "../../../shared/services/ticket.service";
-import {status, priorityLevel,problemType, statusCount } from '../../../app.config';
+import {status, priorityLevel,problemType, statusCount , raised_notupdated , issued_notupdated} from '../../../app.config';
 import {PriorityComponent } from '../../priority/priority/priority.component';
 import {AssignedComponent} from '../../assigned/assigned/assigned.component';
 import {StatusComponent} from '../../status/status/status.component';
 import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticket-details.component';
-import { CreateTicketComponent } from 'app/pages/full-layout-page/create-ticket/create-ticket.component';
+import { CreateTicketComponent } from '../create-ticket/create-ticket.component';
 
-// import {StatusDetailsComponent } from '../../status-details/status-details/status-details.component';
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a title="{{url}}" [routerLink]="url"><i class="ft-edit-2 info font-medium-1 mr-1"></i>create</a>'
+  template: '<a title="{{url}}" [routerLink]="url" target="_blank"><i class="ft-edit-2 info font-medium-1 mr-1"></i>create</a>'
 })
 
 export class CreateSubTicket implements ICellRendererAngularComp {
@@ -41,7 +41,7 @@ export class CreateSubTicket implements ICellRendererAngularComp {
   }
 
   private setUrl(params) {
-    this.url = "/subticket" + "/" + params.node.data.ticketId;
+    this.url = "/ticket/subticket" + "/" + params.node.data.ticketId;
   }
 }
 @Component({
@@ -136,7 +136,7 @@ export class EditAssignTo implements ICellRendererAngularComp {
       this.assignedTo = $e;
       // console.log($e);
     });
-    modalRef.componentInstance.assignedTo = this.assignedTo;
+    // modalRef.componentInstance.assignedTo = this.assignedTo;
     modalRef.componentInstance.id = this.id;
     modalRef.componentInstance.ticketId = this.ticketId;
     modalRef.componentInstance.title = this.title;
@@ -146,10 +146,10 @@ export class EditAssignTo implements ICellRendererAngularComp {
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a title="{{url}}" [routerLink]="url">{{ticketid}}</a>'
+  template: '<a title="{{url}}" [routerLink]="url" target="_blank">{{ticketid}}</a>'
 })
 
-export class EditAndViewDetails implements ICellRendererAngularComp {
+export class ViewDetails implements ICellRendererAngularComp {
   params: any;
   url: string;
   public orgDomain:string;
@@ -175,28 +175,8 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
 
   private setUrl(params) {
     this.ticketid = params.node.data.ticketId;
-    this.url = "/ticketdetails" + "/" + params.node.data.ticketId;
-    // this.ticketid = params.node.data.ticketId;
-    // this.title = params.node.data.title;
-    // this.raiseOn = params.node.data.addedOn;
-    // this.status = params.node.data.status;
-    // this.lastUpdatedOn = params.node.data.updatedOn;
+    this.url = "/ticket/ticketdetails" + "/" + params.node.data.ticketId;
   }
-
-  // onClick() {
-  //   const modalRef = this.modalService.open(TicketDetailsComponent , {size : 'lg'});
-  //   modalRef.componentInstance.clickevent.subscribe(($e) => {
-  //     this.params.node.data.assignedTo = $e;
-  //     // this.ticketid = $e;
-  //     // console.log($e);
-  //   });
-  //   modalRef.componentInstance.ticketid = this.ticketid;
-  //   modalRef.componentInstance.title = this.title;
-  //   modalRef.componentInstance.raiseOn = this.raiseOn;
-  //   modalRef.componentInstance.status = this.status;
-  //   modalRef.componentInstance.lastUpdatedOn = this.lastUpdatedOn;
-  // }
-
 }
 
 
@@ -209,6 +189,8 @@ export class AllTicketsComponent implements OnInit {
 
   allTicketForm : FormGroup;
   date : any = new Date();
+  // pipe = new DatePipe('en-US')
+  quickSearchValue : any;
   today : any;
   columnDefs : any;
   rowdata : any;
@@ -231,38 +213,54 @@ export class AllTicketsComponent implements OnInit {
   statusCount = [];
   statusList = [];
   notupdated : any = null;
+  url : any;
+  showForm : any = false;
+  showtable : any = false;
+  raised_notupdated : any;
+  issued_notupdated : any;
   constructor(private _formBuilder: FormBuilder,private _ticketService : TicketService,private router: Router,private route: ActivatedRoute) { 
     this.today = this.todayDate(this.date);
     // console.log(this.today);
     this.priority = priorityLevel;
-     this.problemType = problemType;
+    this.problemType = problemType;
+    this.raised_notupdated = raised_notupdated;
+    this.issued_notupdated = issued_notupdated;
      this.status = status;
      this.setColumnDefs();
      this.emailId= this.route.snapshot.paramMap.get('id');
      this.stat= this.route.snapshot.paramMap.get('status');
      this.notupdated=this.route.snapshot.routeConfig.path;
+    //  console.log(this.notupdated);
     this.frameworkComponents = {
       editPriority: EditPriority,
       editAssignto:EditAssignTo,
-      ticketdetails : EditAndViewDetails,
+      ticketdetails : ViewDetails,
       createSubTicket : CreateSubTicket
 
     };
+
+    this.url = router.url;
+    // console.log(this.url);
+    if(this.url==this.raised_notupdated || this.url==this.issued_notupdated)
+      this.showForm = true;
+    else{
+      this.showtable = true;
+      this.getAllTickets();
+    }
+      
 
 
   }
 
   ngOnInit() {
-    // this._OnInit();
-    this.getAllTickets();
-    // this.getUsers();
+    this._OnInit();
   }
 
   _OnInit(){
     this.allTicketForm = this._formBuilder.group({
       basicInformation : this._formBuilder.group({
-        status : new FormControl(''),
-        assignTo : new FormControl(''),
+        // status : new FormControl(''),
+        fromdate : new FormControl(new Date().toISOString().substring(0,10)),
       })
     });
   }
@@ -274,73 +272,55 @@ export class AllTicketsComponent implements OnInit {
 
   setColumnDefs(){
     this.columnDefs = [
-      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 120, suppressSizeToFit: true, pinned: "left"},
-      // {headerName: "Parent", field: 'parentTicket' , width: 90, suppressSizeToFit: true, pinned: "left"},
-      
-      {headerName: "Raised On", field: 'addedOn' , width: 100, suppressSizeToFit: true, pinned: "left"},
-      {headerName: "Subject", field: 'title' , width: 240, suppressSizeToFit: true,pinned: "left" },
-      {headerName: 'Priority', field: 'priorityLevel', cellRenderer: "editPriority" , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
+      {headerName : "Id", field:'ticketId' , cellRenderer: "ticketdetails",width: 90, suppressSizeToFit: true, pinned: "left"},
+      {headerName: "Date", field: 'addedOn' , width: 90, suppressSizeToFit: true, pinned: "left"},
+      {headerName: "Subject", field: 'title' , width: 200, suppressSizeToFit: true,pinned: "left" },
+      {headerName: 'Priority', field: 'priorityLevel' , width: 80, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
         "rag-green": "x =='Low'",
-        "rag-yellow": "x == 'Moderate'",
+        "rag-yellow": "x == 'Mode'",
         "rag-amber": "x == 'High'",
-        "rag-red" : "x== 'Immediate'"
+        "rag-red" : "x== 'Imme'"
       }},
-      {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
-      // {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
-      
-      {headerName: "Category", field: 'problemType' , width: 100, suppressSizeToFit: true},
-      {headerName: "Raised By", field: 'raisedBy', width: 100, suppressSizeToFit: true},
-      {headerName : "Assisgn To" ,field:'assignedTo', cellRenderer: "editAssignto", width: 130, suppressSizeToFit: true },
-      // {headerName: "Country", field: 'country' ,width: 100, suppressSizeToFit: true },
-      // {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
-      // {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
-      
-      {headerName: "Days", field: 'days', width: 80, suppressSizeToFit: true, valueParser: this.numberParser,
+      {headerName: "Category", field: 'problemType' , width: 80, suppressSizeToFit: true},
+      {headerName: "Sub Category", field: 'subProblemType' ,  width: 100, suppressSizeToFit: true },
+      {headerName: "Geo", field: 'country' ,width: 70, suppressSizeToFit: true },
+      {headerName: "Operator", field: 'operator' ,width: 80, suppressSizeToFit: true },
+      {headerName: "Biller", field: 'billerName' ,width: 80, suppressSizeToFit: true },
+      {headerName: "Raised", field: 'raisedBy', width: 90, suppressSizeToFit: true},
+      {headerName : "Assisgn" ,field:'assignedTo', width: 90, suppressSizeToFit: true },
+      {headerName: "Days", field: 'days', width: 70, suppressSizeToFit: true, valueParser: this.numberParser,
       cellClassRules: {
         "rag-light": "x <'50'",
         "rag-red": "x >= '20'"
       }},
-      {headerName: "Status", field: 'status' , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
+      {headerName: "Status", field: 'status' , width: 80, suppressSizeToFit: true,valueParser: this.numberParser,
       cellClassRules: {
         "rag-green": "x == 'Closed'",
         "rag-red": "x == 'Yet To Start'"
       }},
-      {headerName: "Last Updated", field: 'updatedOn' , width: 130, suppressSizeToFit: true},
-      {headerName: "Sub Ticket", field: '' , cellRenderer: "createSubTicket", width: 100, suppressSizeToFit: true },
-    ];
+      {headerName: "Reviewer", field: 'reviewer' , width: 100, suppressSizeToFit: true},
+      {headerName: "Reviewed", field: 'reviewed' , width: 100, suppressSizeToFit: true,valueParser: this.numberParser,
+      cellClassRules: {
+        "rag-green": "x =='Reviewed'",
+        "rag-red" : "x== 'Not Reviewed'"
+      }},
+      {headerName: "Updated", field: 'updatedOn' , width: 90, suppressSizeToFit: true},
 
+      // {headerName: "Approved", field: 'approved' , width: 130, suppressSizeToFit: true,valueParser: this.numberParser,
+      // cellClassRules: {
+      //   "rag-green": "x =='Approved'",
+      //   "rag-red" : "x== 'Not Approved'"
+      // }},
+
+
+
+    ];
     this.defaultColDef = { width: 100 };
     // this.rowSelection = "multiple";
   }
 
   getAllTickets = async()=>{
-    // let status = this.allTicketForm.value.basicInformation.status;
-    // let assignTo = this.allTicketForm.value.basicInformation.assignTo;
-    // if(status=='' && assignTo==''){
-    //   this.rowdata = await this._ticketService.getAllTickets();
-    // } 
-    // else{
-    //   if(status!='' && assignTo!=''){
-    //     let report : any = {
-    //       status : status,
-    //       assignTo : assignTo,
-    //     }
-    //     this.rowdata = await this._ticketService.getTicketsByStatusOrPerson(report);
-    //   }
-    //   else if(status!=''){
-    //     let report : any = {
-    //       status : status,
-    //     }
-    //     this.rowdata = await this._ticketService.getTicketsByStatusOrPerson(report);
-    //   }
-    //   else if(assignTo!=''){
-    //     let report : any = {
-    //       assignTo : assignTo,
-    //     }
-    //     this.rowdata = await this._ticketService.getTicketsByStatusOrPerson(report);
-    //   }
-    // }
     if(this.emailId!= null && this.stat!= null){
       let data = {
         status : this.stat,
@@ -348,8 +328,26 @@ export class AllTicketsComponent implements OnInit {
       }
       this.rowdata = await this._ticketService.getTicketsByStatusAndPerson(data);
     }
-    else if(this.notupdated=='ticket/notupdated'){
-      this.rowdata = await this._ticketService.getNotUpdatedTickets();
+    else if(this.emailId== null && this.stat!= null){
+      let Status;
+      if(this.stat==="Pending")
+        Status = "Pending From Biller";
+      else if(this.stat==="Start")
+        Status = "Yet To Start";
+      else if(this.stat==="Closed")
+        Status = "Closed";
+      else if(this.stat==="Working")
+        Status = "Working";
+      else if(this.stat==="Hold")
+        Status = "Hold";
+      let data = {
+        status : Status
+      }
+      // console.log(Status);
+      if(this.stat==="Total")
+        this.rowdata = await this._ticketService.getAllTickets();
+      else
+      this.rowdata = await this._ticketService.getTicketByStatus(Status); 
     }
      else{
       this.rowdata = await this._ticketService.getAllTickets();
@@ -357,7 +355,7 @@ export class AllTicketsComponent implements OnInit {
     let diff;
      
      this.rowdata.forEach((res , index) => {
-       let addedOn = new Date(res['addedOn']).getTime();
+       let addedOn = new Date(res['addedOn']).getTime(); //MM/dd/yyyy
        if(res['status']=='Closed'){
          let closedOn = new Date(res['updatedOn']).getTime();
           diff = closedOn - addedOn;
@@ -371,13 +369,27 @@ export class AllTicketsComponent implements OnInit {
        }
        res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
        let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
-       res['addedOn'] = new Date(time).toString().substring(4,16);
-       res['updatedOn'] = this.todayDate(new Date(res['updatedOn']));
-     
-    });
+       res['addedOn'] = formatDate(time,'yyyy-MM-dd','en-US') ;  //new Date(time).
+       res['updatedOn'] = formatDate(new Date(res['updatedOn']),'yyyy-MM-dd','en-US'); //this.todayDate(new Date(res['updatedOn']));
+       if(res['reviewed']==1)
+        res['reviewed'] = 'Reviewed';
+       else if(res['status']!='Closed')
+        res['reviewed'] = '';
+       else
+       res['reviewed'] = 'Not Reviewed';
+       let tempRaised = (res['raisedBy'].toString().split('@')[0]);
+       res['raisedBy'] = this.toCamelCase(tempRaised);
+       let tempReviewer = (res['reviewer'].toString().split('@')[0]);
+       res['reviewer'] = this.toCamelCase(tempReviewer);
+       let tempAssigned = (res['assignedTo'].toString().split('@')[0]);
+       res['assignedTo'] = this.toCamelCase(tempAssigned);
+       res['problemType'] = (res['problemType'].toString().substring(0,4));
+       res['priorityLevel'] = (res['priorityLevel'].toString().substring(0,4));
+      });
     this.rowdata.sort(function(a, b) {
       var nameA = Number((a.ticketId).toString().split('_')[1]); 
       var nameB = Number((b.ticketId).toString().split('_')[1]);
+ 
         if (nameA > nameB) {
           return -1;
         }
@@ -389,9 +401,6 @@ export class AllTicketsComponent implements OnInit {
         }
         return 0;
     });
-
-  //  this.getAnalysedData(this.rowdata);
-    
   }
 
    numberParser(params) {
@@ -404,13 +413,6 @@ export class AllTicketsComponent implements OnInit {
     }
     return valueAsNumber;
   }
-  
-  // onGridReady(params) {
-  //   this.gridApi = params.api;
-  //   this.gridColumnApi = params.columnApi;
-  //   console.log(this.gridApi);
-  //   console.log(this.gridColumnApi);
-  // }
 
   exportToExcel(){
     let exportOnlySelected = false;
@@ -441,13 +443,71 @@ export class AllTicketsComponent implements OnInit {
    removeRestrictions(){
     this.allTicketForm.patchValue({
       basicInformation:{
-        status : '',
-        assignTo : ''
+        // status : '',
+        fromdate : ''
     }
   });
 }
 
+getNotUpdatedTickets = async() => {
   
+  if(this.url==this.raised_notupdated){
+    let date = this.allTicketForm.value.basicInformation.fromdate;
+    // console.log(date);
+    this.rowdata = await this._ticketService.getNotUpdatedTickets(date);
+    this.showtable = true;
+  }
+  else if(this.url==this.issued_notupdated){
+    let date = this.allTicketForm.value.basicInformation.fromdate;
+    // console.log(date);
+    this.rowdata = await this._ticketService.getIssueNotUpdatedTickets(date);
+    
+    this.showtable = true;
+  }
 
+  this.rowdata.forEach(res => {
+    let diff;
+    let addedOn = new Date(res['addedOn']).getTime();
+    if(res['status']=='Closed'){
+      let closedOn = new Date(res['updatedOn']).getTime();
+       diff = closedOn - addedOn;
+    }
+    else{
+    let todate = new Date().getTime();
+      diff = todate - addedOn;
+    }
+    if(res['parentTicket']==null){
+      res['parentTicket'] = res['ticketId'];
+    }
+    res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
+    let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
+    res['addedOn'] = new Date(time).toString().substring(4,16);
+    res['updatedOn'] = this.todayDate(new Date(res['updatedOn']));
+    if(res['reviewed']==1)
+    res['reviewed'] = 'Reviewed';
+    else if(res['status']!='Closed')
+    res['reviewed'] = '';
+      else
+    res['reviewed'] = 'Not Reviewed';
+    let tempRaised = (res['raisedBy'].toString().split('@')[0]);
+    res['raisedBy'] = this.toCamelCase(tempRaised);
+    let tempReviewer = (res['reviewer'].toString().split('@')[0]);
+    res['reviewer'] = this.toCamelCase(tempReviewer);
+    let tempAssigned = (res['assignedTo'].toString().split('@')[0]);
+    res['assignedTo'] = this.toCamelCase(tempAssigned);
+  });
+}
+  
+toCamelCase(param){
+  let firstchar = param.toString().charAt(0).toUpperCase();
+  let otherChar = param.toString().substring(1,param.length);
+
+  return firstchar.concat(otherChar);
+
+}
+
+private onQuickFilterChanged() {
+  this.gridOptions.api.setQuickFilter(this.quickSearchValue);
+}
 }
 

@@ -6,6 +6,8 @@ import { barChartmulti} from '../../shared/data/ngxChart';
 import * as chartsData from '../../shared/config/ngx-charts.config';
 import { ActivatedRoute ,Router , Params } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import {urls,techLeads} from '../../app.config';
+
 
 
 @Component({
@@ -18,8 +20,12 @@ export class FullLayoutPageComponent implements OnInit {
   token : any;
   totalTickets: number = 0;
   pendingTickets: number = 0;
-  completedTickets: number = 0;
+  startTickets: number = 0;
+  holdTickets: number = 0;
+  doneTickets: number = 0;
+  workingTickets: number = 0;
   showcard = false;
+  techLead = [];
   // totalProfit: number = 0;
 
   barChartmulti ;
@@ -47,17 +53,23 @@ graphdata = [];
     // this.barChartmulti = this.graphdata;
     // Object.assign(this, { barChartmulti });
     this.getStatusCount();
-    // this.token = this.storage.get('token');
-    this.token = this.cookieService.check("MTIX");
-    console.log(this.token);
-    if(this.token== false){
+    this.techLead = techLeads;
+    this.token = this.storage.get('token');
+    let encodedToken = this.cookieService.check("MTIX");
+    if(this.token===null || encodedToken == false){
     const token = this.route.snapshot.queryParamMap.get('auth');
     this.cookieService.set("MTIX",token);
     const helper = new JwtHelperService();
     const decodedToken = helper.decodeToken(token);
     this.storage.set('token', decodedToken['jti']);
-    }
+    this.techLead.forEach((res , index) => {
+      if(res['name']==decodedToken['jti']){
+        this.storage.set('LEAD', true);
+      }
+
+    });
      
+    }
 }
 
   ngOnInit() {
@@ -69,14 +81,22 @@ graphdata = [];
     let count = 0;
     await this._ticketService.getStatusCount().then (data =>{
       data.forEach((res,index)=>{
-        if(res['status']!='Closed')
-          count = count + res['count'];
-        else
-        this.completedTickets  = res['count'];
+        if(res['A']==='YET TO START')
+        this.startTickets = res['count'];
+        else if(res['A']==='DONE')
+        this.doneTickets = res['count'];
+        else if(res['A']==='HOLD')
+        this.holdTickets = res['count'];
+        else if(res['A']==='WORKING')
+        this.workingTickets = res['count'];
+        else if(res['A']==='PENDING FROM BILLER')
+        this.pendingTickets = res['count'];
+       
         
       });
-      this.pendingTickets = count;
-      this.totalTickets = this.pendingTickets + this.completedTickets;
+      // this.pendingTickets = count;
+      this.totalTickets = this.pendingTickets + this.startTickets+ this.holdTickets + this.doneTickets + this.workingTickets;
+      // console.log(data);
 
     });
     
@@ -90,8 +110,36 @@ graphdata = [];
   }
 
   onSelect(event){
-    // console.log(event);
-    let url = "/ticket";
-    this.router.navigate([ '/' + url +'/' +event['series'] +'/' +event['name']], { relativeTo: this.route.parent }); 
+    console.log(event);
+    let url = "/ticket/ticket";
+    this.router.navigate([ '/' + url  +'/' +event['series'] +'/' +event['name']], { relativeTo: this.route.parent }); 
+  }
+
+  getCompletedTicket(){
+    let url = "/ticket/ticket";
+    this.router.navigate([ '/' + url +'/Closed'], { relativeTo: this.route.parent });
+  }
+
+  getTotalTicket(){
+    let url = "/ticket/ticket";
+    this.router.navigate([ '/' + url +'/Total'], { relativeTo: this.route.parent });  
+  }
+
+  getToStartTicket(){
+    let url = "/ticket/ticket";
+    this.router.navigate([ '/' + url +'/Start'], { relativeTo: this.route.parent });  
+  }
+  getPendingTicket(){
+    let url = "/ticket/ticket";
+    this.router.navigate([ '/' + url +'/Pending'], { relativeTo: this.route.parent });
+  }
+
+  getHoldTicket(){
+    let url = "/ticket/ticket";
+    this.router.navigate([ '/' + url +'/Hold'], { relativeTo: this.route.parent });
+  }
+  getWorkingTickets(){
+    let url = "/ticket/ticket";
+    this.router.navigate([ '/' + url +'/Working'], { relativeTo: this.route.parent });
   }
 }

@@ -48,9 +48,12 @@
                                 </tr> -->
                                 <tr>
                                         <td class="hidden-phone col-md-04">{{obj.ticketId}}</td> 
-                                        <td class="hidden-phone col-md-04 head" (click)="changeAssignedTo()">{{obj.assignedTo}}
+                                        <td class="hidden-phone col-md-04" *ngIf="lead==false; else editAssignedTo">{{obj.assignedTo}}</td>
+                                        <ng-template #editAssignedTo>
+                                            <td class="hidden-phone col-md-04 head" (click)="changeAssignedTo()">{{obj.assignedTo}}
                                                 <i class="ft-edit-2 info font-medium-1 mr-1"></i>
-                                        </td>   
+                                            </td> 
+                                        </ng-template>
                                         <td class="hidden-phone col-md-04" >{{obj.addedOn}}</td>
                                         <td class="hidden-phone col-md-04">{{obj.status}}</td>
                                         <td class="hidden-phone col-md-04">{{obj.raisedBy}}</td>
@@ -113,7 +116,7 @@
                                     
                                 <!-- </tbody> -->
                                 <tr  *ngFor="let obj of subTicketList let i=index">
-                                        <td class="hidden-phone col-md-04 head"><a title="" [routerLink]="[ '/subticket/details/' + obj.ticketId]">{{obj.ticketId}}</a></td>
+                                        <td class="hidden-phone col-md-04 head"><a title="" [routerLink]="[ '/ticket/subticket/details/' + obj.ticketId]">{{obj.ticketId}}</a></td>
                                         <td class="hidden-phone col-md-04">{{obj.assignedTo}}</td>   
                                         <td class="hidden-phone col-md-04" >{{obj.addedOn}}</td>
                                         <td class="hidden-phone col-md-04">{{obj.status}}</td>
@@ -180,6 +183,16 @@
             <div class="form-actions" style="padding-bottom:10px;">
                 <button type="submit" class="btn btn-raised btn-primary" (click)="changeStatus()" style="margin: 0 10px;">Add New Log</button>
                 <button type="submit" class="btn btn-raised btn-primary" (click)="createSubTicket()" style="margin:0 10px;">Create SubTicket</button>
+                <button  *ngIf="lead" type="submit" class="btn btn-raised btn-primary" (click)="approveTicket()" style="margin:0 10px; float:right">Approve</button>
+                <!-- <div ngbDropdown>
+                    <button class="btn btn-primary btn-raised mr-1" id="dropdownRaised1" ngbDropdownToggle style="margin:0 10px; float:right">Approve</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownRaised1">
+                        <button class="dropdown-item">Approve</button>
+                        <button class="dropdown-item">Approve Temporary</button>
+                        <button class="dropdown-item">Something else is here</button>
+                    </div> -->
+                <button  *ngIf="lead" type="submit" class="btn btn-raised btn-warning" (click)="addReview()" style="margin:0 10px; float:right">Review</button>
+
             </div>
             <!-- <form class="form form-horizontal striped-rows form-bordered">
                 <div class="col-md-12" style="padding-top:10px;">

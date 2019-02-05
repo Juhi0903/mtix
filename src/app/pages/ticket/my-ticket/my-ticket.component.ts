@@ -3,16 +3,17 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import {ICellRendererAngularComp, ICellEditorAngularComp} from "ag-grid-angular";
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { pending_url, personal_url, closed_url, priorityLevel,problemType } from "../../../app.config"
+import { pending_url, personal_url, closed_url, priorityLevel,problemType, raised_closed_url, raised_all_url, raised_working_url,review_ticket_url } from "../../../app.config"
 import { TicketService } from "../../../shared/services/ticket.service";
 import { SESSION_STORAGE, StorageService , LOCAL_STORAGE } from 'angular-webstorage-service';
 import {StatusComponent} from '../../status/status/status.component';
 import { TicketDetailsComponent} from '../../ticket-details/ticket-details/ticket-details.component';
+import { formatDate } from '@angular/common';
 
 
 @Component({
   selector: 'status-edit-url',
-  template: '<a title="{{url}}" [routerLink]="url">{{ticketid}}</a>'
+  template: '<a title="{{url}}" [routerLink]="url" target="_blank">{{ticketid}}</a>'
 })
 
 export class EditAndViewDetails implements ICellRendererAngularComp {
@@ -41,28 +42,8 @@ export class EditAndViewDetails implements ICellRendererAngularComp {
 
   private setUrl(params) {
     this.ticketid = params.node.data.ticketId;
-    this.url = "/ticketdetails" + "/" + params.node.data.ticketId;
-    // this.ticketid = params.node.data.ticketId;
-    // this.title = params.node.data.title;
-    // this.raiseOn = params.node.data.addedOn;
-    // this.status = params.node.data.status;
-    // this.lastUpdatedOn = params.node.data.updatedOn;
+    this.url = "/ticket/ticketdetails" + "/" + params.node.data.ticketId;
   }
-
-  // onClick() {
-  //   const modalRef = this.modalService.open(TicketDetailsComponent , {size : 'lg'});
-  //   modalRef.componentInstance.clickevent.subscribe(($e) => {
-  //     this.params.node.data.assignedTo = $e;
-  //     // this.ticketid = $e;
-  //     // console.log($e);
-  //   });
-  //   modalRef.componentInstance.ticketid = this.ticketid;
-  //   modalRef.componentInstance.title = this.title;
-  //   modalRef.componentInstance.raiseOn = this.raiseOn;
-  //   modalRef.componentInstance.status = this.status;
-  //   modalRef.componentInstance.lastUpdatedOn = this.lastUpdatedOn;
-  // }
-
 }
 
 
@@ -76,6 +57,7 @@ export class EditStatus implements ICellRendererAngularComp {
   url: string;
   public ticketId: any;
   status : any;
+  assignedTo : any;
 
   constructor(private route: ActivatedRoute,private modalService: NgbModal) {
   }
@@ -94,6 +76,7 @@ export class EditStatus implements ICellRendererAngularComp {
     // this.url = "/" + this.orgDomain + "/" + urls.editOffer + "/" + params.node.data.offerId;
     this.status = params.node.data.status;
     this.ticketId = params.node.data.ticketId;
+    // this.assignedTo = params.node.data.assignedTo;
   }
 
   onClick() {
@@ -104,7 +87,7 @@ export class EditStatus implements ICellRendererAngularComp {
     });
     modalRef.componentInstance.status = this.status;
     modalRef.componentInstance.ticketId = this.ticketId;
-    // modalRef.componentInstance.randomValue = 1001;
+    // modalRef.componentInstance.assignedTo = this.assignedTo;
   }
 }
 
@@ -120,6 +103,10 @@ export class MyTicketComponent implements OnInit {
   closed_url: any;
   personal_url: any;
   pending_url: any;
+  raised_working_url : any;
+  raised_closed_url : any;
+  raised_all_url : any;
+  review_ticket_url : any;
   rowdata: any = [];
   columnDefs : any =[];
   priority : any = [];
@@ -143,6 +130,10 @@ export class MyTicketComponent implements OnInit {
     this.personal_url = personal_url;
     this.priority = priorityLevel;
     this.problemType = problemType;
+    this.raised_all_url = raised_all_url;
+    this.raised_closed_url = raised_closed_url;
+    this.raised_working_url = raised_working_url;
+    this.review_ticket_url = review_ticket_url;
     this.session = this.storage.get('token');
     this.frameworkComponents = {
       editStatus: EditStatus,
@@ -154,12 +145,21 @@ export class MyTicketComponent implements OnInit {
 
   ngOnInit() {
     this.setColumnDefs();
+    console.log(this.url);
     if (this.url === this.closed_url)
       this.getClosedTicktes();
-    if (this.url === this.pending_url)
+    else if (this.url === this.pending_url)
       this.getPendingTicktes();
-    if (this.url === this.personal_url)
+    else if (this.url === this.personal_url)
       this.getPersonalTicktes();
+    else if(this.url == this.raised_all_url)
+      this.getRaisedTicktes();
+    else if(this.url == this.raised_closed_url)
+      this.getRaisedClosedTicktes();
+    else if(this.url == this.raised_working_url)
+      this.getRaisedPendingTicktes();
+    else if(this.url = this.review_ticket_url)
+      this.getReviewTicket();
   }
 
 
@@ -179,9 +179,6 @@ export class MyTicketComponent implements OnInit {
         "rag-amber": "x == 'Integration'",
         "rag-red": "x == 'Yet To Start'"
       }},
-     
-      
-      // {headerName: "Platform", field: 'platform' , width: 100, suppressSizeToFit: true },
       {headerName: "Category", field: 'problemType' , width: 130, suppressSizeToFit: true},
       {headerName: 'Priority', field: 'priorityLevel', width: 130, suppressSizeToFit: true, valueParser: this.numberParser,
       cellClassRules: {
@@ -190,76 +187,43 @@ export class MyTicketComponent implements OnInit {
         "rag-amber": "x == 'High'",
         "rag-red" : "x== 'Immediate'"
       }},
-      // {headerName : "Assisgn To" ,field:'assignedTo', width: 130, suppressSizeToFit: true },
-      // {headerName: "Country", field: 'country' ,width: 130, suppressSizeToFit: true },
-      // {headerName: "Operator",field: 'operator' , width: 100, suppressSizeToFit: true},
-      // {headerName: "Biller",field: 'billerName' , width: 100, suppressSizeToFit: true},
       {headerName: "Raised By", field: 'raisedBy', width: 180, suppressSizeToFit: true},
+      {headerName: "Assigned To", field: 'assignedTo', width: 180, suppressSizeToFit: true},
     ];
   }
 
 
   getClosedTicktes = async () => {
     this.rowdata = await this._ticketService.getClosedTicktes();
-    let diff;
-    this.rowdata.forEach((res , index) => {
-      let addedOn = new Date(res['addedOn']).getTime();
-      if(res['status']=='Closed'){
-        let closedOn = new Date(res['updatedOn']).getTime();
-         diff = closedOn - addedOn;
-      }
-      else{
-      let todate = new Date().getTime();
-        diff = todate - addedOn;
-      }
-      res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
-      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
-       res['addedOn'] = new Date(time).toString().substring(4,16);
-      // res['addedOn'] = this.todayDate(res['addedOn']);
-    
-   });
+     this.formateDate();
   }
 
   getPendingTicktes = async () => {
     this.rowdata = await this._ticketService.getPendingTicktes();
-    let diff;
-    this.rowdata.forEach((res , index) => {
-      let addedOn = new Date(res['addedOn']).getTime();
-      if(res['status']=='Closed'){
-        let closedOn = new Date(res['updatedOn']).getTime();
-         diff = closedOn - addedOn;
-      }
-      else{
-      let todate = new Date().getTime();
-        diff = todate - addedOn;
-      }
-      res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
-      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
-       res['addedOn'] = new Date(time).toString().substring(4,16);
-      // res['addedOn'] = this.todayDate(res['addedOn']);
-    
-   });
+    this.formateDate();
   }
 
   getPersonalTicktes = async () => {
     this.rowdata = await this._ticketService.getPersonalTicktes();
-    let diff;
-    this.rowdata.forEach((res , index) => {
-      let addedOn = new Date(res['addedOn']).getTime();
-      if(res['status']=='Closed'){
-        let closedOn = new Date(res['updatedOn']).getTime();
-         diff = closedOn - addedOn;
-      }
-      else{
-      let todate = new Date().getTime();
-        diff = todate - addedOn;
-      }
-      res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
-      // res['addedOn'] = this.todayDate(res['addedOn']);
-      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
-       res['addedOn'] = new Date(time).toString().substring(4,16);
+    this.formateDate();
+  }
+
+  getRaisedTicktes = async () => {
+    this.rowdata = await this._ticketService.getTicketsRaisedByMe();
+    this.formateDate();
+  }
+  getRaisedPendingTicktes = async () => {
+    this.rowdata = await this._ticketService.getPendingTicketsRaisedByMe();
+    this.formateDate();
+  }
+  getRaisedClosedTicktes = async () => {
+    this.rowdata = await this._ticketService.getClosedTicketsRaisedByMe();
+    this.formateDate();
     
-   });
+  }
+  getReviewTicket = async () => {
+    this.rowdata = await this._ticketService.getReviewerTicket();
+     this.formateDate();
   }
 
   numberParser(params) {
@@ -276,6 +240,51 @@ export class MyTicketComponent implements OnInit {
   todayDate(dateparam){
     return dateparam.toString().substring(0,10);
   }
- 
+
+  formateDate(){
+    let diff;
+    this.rowdata.forEach((res , index) => {
+      let addedOn = new Date(res['addedOn']).getTime();
+      if(res['status']=='Closed'){
+        let closedOn = new Date(res['updatedOn']).getTime();
+         diff = closedOn - addedOn;
+      }
+      else{
+      let todate = new Date().getTime();
+        diff = todate - addedOn;
+      }
+      res['days'] = Math.round(Math.abs(diff/(1000*60*60*24)));
+      let time = new Date(res['addedOn']).setHours(new Date(res['addedOn']).getHours() + 5);
+      res['addedOn'] = formatDate(time,'yyyy-MM-dd','en-US')
+       let tempRaised = (res['raisedBy'].toString().split('@')[0]);
+      res['raisedBy'] = this.toCamelCase(tempRaised);
+      let tempAssigned = (res['assignedTo'].toString().split('@')[0]);
+      res['assignedTo'] = this.toCamelCase(tempAssigned);
+       
+    
+   });
+   this.rowdata.sort(function(a, b) {
+    var nameA = Number((a.ticketId).toString().split('_')[1]); 
+    var nameB = Number((b.ticketId).toString().split('_')[1]);
+      if (nameA > nameB) {
+        return -1;
+      }
+      if (nameA < nameB) {
+        return 1;
+      }
+      if(nameA = nameB){
+        return (a.id < b.id) ? -1 : 1;
+      }
+      return 0;
+  });
+  }
+  
+  toCamelCase(param){
+    let firstchar = param.toString().charAt(0).toUpperCase();
+    let otherChar = param.toString().substring(1,param.length);
+  
+    return firstchar.concat(otherChar);
+  
+  }
 
 }

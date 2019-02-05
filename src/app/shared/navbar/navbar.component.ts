@@ -44,6 +44,7 @@ export class NavbarComponent implements AfterViewChecked{
 
     Logout(){
         this.storage.remove('token');
+        this.storage.remove('LEAD');
         this.router.navigate(['/login']);
     }
 }

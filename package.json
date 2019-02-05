@@ -32,6 +32,7 @@
     "ag-grid-community": "^19.0.0",
     "angular-mentions": "^0.8.0",
     "angular-webstorage-service": "^1.0.2",
+    "angular2-multiselect-dropdown": "^4.2.1",
     "bootstrap": "4.0.0",
     "bourbon": "^5.0.0",
     "buffer": "^5.2.1",

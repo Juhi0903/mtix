@@ -24,11 +24,21 @@ export const urls = {
     emailId : 'user/emailId',
     statusorperson : 'ticket/statusorperson',
     graphData : 'ticket/graphdata',
-    notUpdated : 'ticket/notUpdatedTicket'
+    notUpdated : 'ticket/notUpdatedTicket',
+    all_raised : 'ticket/raised',
+    raised_pending : 'ticket/progress',
+    raised_closed : 'ticket/closed',
+    issueNotUpdated : 'ticket/issue/notUpdatedTicket',
+    updatereview : 'remarks/updatereview',
+    approveTicket : 'remarks/approveTicket',
+    country : 'ticket/country',
+    review : 'remarks/review',
+    status : 'ticket/status'
+
 }
 
 
-export const status = [
+export const headstatus = [
     {id: 1001, name: 'Yet To Start'},
     {id: 1002, name: 'Working'},
     {id: 1003, name: 'Reading Doc.'},
@@ -41,26 +51,47 @@ export const status = [
   
   ]
 
+  export const status = [
+    {id: 1001, name: 'Yet To Start'},
+    {id: 1002, name: 'Working'},
+    {id: 1003, name: 'Reading Doc.'},
+    {id: 1004, name: 'Integration'},
+    {id: 1005, name: 'Testing'},
+    {id: 1006, name: 'Hold'},
+    {id: 1008, name: 'Pending From Biller'},
+    {id: 1009, name: 'Re-Open'}
+  
+  ]
+
   export const priorityLevel = [
-    {id: 1001, name: 'Immediate'},
-    {id: 1002, name: 'High'},
-    {id: 1003, name: 'Moderate'},
-    {id: 1004, name: 'Low'},
-    {id: 1005, name: 'None'}
+    {id: 'Imme', name: 'Immediate'},
+    {id: 'High', name: 'High'},
+    {id: 'Mode', name: 'Moderate'},
+    {id: 'Low', name: 'Low'},
+    {id: 'None', name: 'None'}
   ]
 
   export const problemType = [
-    {id: 1001, name: 'Finance'},
-    {id: 1002, name: 'HR'},
-    {id: 1003, name: 'Marketing'},
-    {id: 1004, name: 'Technical'},
-    {id: 1005, name: 'Aliance'},
-    {id: 1006, name: 'Media Buying'},
-    {id: 1007, name: 'Advertising'}, 
-    {id: 1008, name: 'Billing'},
-    {id: 1008, name: 'Application'},
-    {id: 1008, name: 'Content'},
-    {id: 1009, name: 'Analytics'}
+    {id: 'FINC', name: 'Finance'},
+    {id: 'HR', name: 'HR'},
+    {id: 'MKTG', name: 'Marketing'}, 
+    {id: 'TECH', name: 'Technical'},
+    {id: 'MEDI', name: 'Media Buying'},
+    {id: 'ADVR', name: 'Advertising'}, 
+    {id: 'APPL', name: 'Application'},
+    {id: 'CONT', name: 'Content'},
+    {id: 'ANLY', name: 'Analytics'}
+  ]
+  export const techLeads = [
+    {id: 'FINC', name: 'rathindra@globocom.info'},
+    {id: 'MKTG', name: 'rv@globocom.info'},
+    {id: 'TECH', name: 'pankaj@globocom.info'},
+    {id: 'MEDI', name: 'rv@globocom.info'},
+    {id: 'ADVR', name:'rv@globocom.info'},
+    {id: 'CONT', name:'rv@globocom.info'},
+    {id: 'ANLY', name:'saji@globocom.info'},
+    {id: 'APPL', name: 'pankaj@globocom.info'},
+    {id: 'OTHR', name:'juhi.singh@globocom.info'}
   ]
 
   export const platform = [
@@ -77,10 +108,56 @@ export const status = [
 
   export const techSubProblem = [
     {id: 1001, name: 'Support'},
-    {id: 1002, name: 'Internal'},
+    {id: 1002, name: 'Existing Change'},
     {id: 1003, name: 'Integration'},
-    {id: 1004, name: 'Other'},
+    {id: 1004, name: 'New Development'},
+    {id: 1005, name: 'Issue'},
+    {id: 1006, name: 'Recurring Issue'},
+    {id: 1007, name: 'Optimization'},
+    {id: 1008, name: 'Other'}
   ]
+  
+  export const fincSubProblem = [
+    {id: 1001, name: 'Pay/Recv List'},
+    {id: 1002, name: 'Commercial'},
+    {id: 1003, name: 'Account'},
+    {id: 1004, name: 'Reporting'},
+    {id: 1005, name: 'Other'}
+  ]
+
+  export const appSubProblem = [
+    {id: 1001, name: 'Reporting'},
+    {id: 1002, name: 'New Request'},
+    {id: 1003, name: 'Existing change'},
+    {id: 1004, name: 'Issue Resolution'},
+    {id: 1005, name: 'Other'}
+  ]
+  export const contSubProblem = [
+    {id: 1001, name: 'New Portal'},
+    {id: 1002, name: 'Portal Issue'},
+    {id: 1003, name: 'New Creative'},
+    {id: 1004, name: 'Reporting'},
+    {id: 1005, name: 'Refreshment'},
+    {id: 1006, name: 'Content'},
+    {id: 1007, name: 'Issue'},
+    {id: 1008, name: 'Other'}
+  ]
+
+  export const advSubProblem = [
+    {id: 1001, name: 'New Request'},
+    {id: 1002, name: 'Other'}
+  ]
+
+  export const markSubProblem = [
+    {id: 1001, name: 'New Agreement'},
+    {id: 1002, name: 'Presentaion'},
+    {id: 1003, name: 'Review'},
+    {id: 1004, name: 'Reporting'},
+    {id: 1005, name: 'Revenue Projection'},
+    {id: 1006, name: 'Other'}
+  ]
+
+
 
   export interface detailsArray {
     addedOn : string,
@@ -104,22 +181,13 @@ export const status = [
     status : string
     count : number
   }
-  export const details = [
-    {id: 1001, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag
-    We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag.`},
-    {id: 1002, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag.
-    We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag. `},
-    {id: 1003, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag.
-    We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag.  `},
-    {id: 1004, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag.
-    We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag. `},
-    // {id: 1005, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag.
-    // We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag.`},
-    // {id: 1006, name: `We can make the text bold using the <b> tag. The tag uses both opening and closing tag. The text that needs to be made bold must be within <b> and </b> tag.
-    // We can also use the <strong> tag to make the text strong, with added semantic importance. It also opens with <strong> and ends with </strong> tag.`},
-
-  ]
 
   export const pending_url = "/ticket/pending" ;
   export const personal_url = "/ticket/personal" ;
   export const closed_url = "/ticket/closed" ;
+  export const raised_closed_url = "/ticket/raised/closed" ;
+  export const raised_all_url = "/ticket/raised/all" ;
+  export const raised_working_url = "/ticket/raised/working" ;
+  export const raised_notupdated = "/ticket/raised/notupdated";
+  export const issued_notupdated = "/ticket/issued/notupdated";
+  export const review_ticket_url = "/ticket/review";

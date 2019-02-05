@@ -1,13 +1,32 @@
 <!-- <button type="button" class="btn btn-raised btn-warning mr-1" (click)="login()"> Login </button> -->
 <div class="row">
-    <div class="col-xl-4 col-lg-6 col-md-6 col-12">
-      <div class="card gradient-blackberry">
+    <div class="col-xl-2 col-lg-2 col-md-2 col-12">
+        <div class="card gradient-blackberry" (click)="getTotalTicket()" id="click">
+          <div class="card-body">
+            <div class="pb-0" style="padding:15px;">
+              <div class="media">
+                <div class="media-body white text-left">
+                  <h3 class="mb-0">{{totalTickets}}</h3>
+                  <span>Total</span>
+                </div>
+                <div class="media-right white text-right">
+                  <i class="icon-pie-chart font-large-1"></i>
+                </div>
+              </div>
+            </div>
+            <div class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="col-xl-2 col-lg-2 col-md-2 col-12">
+      <div class="card gradient-strawberry" (click)="getToStartTicket()" id="click">
         <div class="card-body">
           <div class="pb-0" style="padding:15px;">
             <div class="media">
               <div class="media-body white text-left">
-                <h3 class="mb-0">{{totalTickets}}</h3>
-                <span>Total Tickets</span>
+                <h3 class="mb-0">{{startTickets}}</h3>
+                <span>To Start</span>
               </div>
               <div class="media-right white text-right">
                 <i class="icon-pie-chart font-large-1"></i>
@@ -19,17 +38,17 @@
         </div>
       </div>
     </div>
-    <div class="col-xl-4 col-lg-6 col-md-6 col-12" >
-        <div class="card gradient-green-tea">
+    <div class="col-xl-2 col-lg-2 col-md-2 col-12" >
+        <div class="card gradient-green-tea" (click)="getPendingTicket()" id="click">
           <div class="card-body">
             <div class="pb-0" style="padding:15px;">
               <div class="media">
                 <div class="media-body white text-left">
                   <h3 class="mb-0">{{pendingTickets}}</h3>
-                  <span>Pending Tickets</span>
+                  <span>Pending</span>
                 </div>
                 <div class="media-right white text-right">
-                  <i class="icon-graph font-large-1"></i>
+                  <i class="icon-pie-chart font-large-1"></i>
                 </div>
               </div>
             </div>
@@ -41,14 +60,14 @@
           </div>
         </div>
       </div>
-      <div class="col-xl-4 col-lg-6 col-md-6 col-12">
-        <div class="card gradient-pomegranate">
+      <div class="col-xl-2 col-lg-2 col-md-2 col-12">
+        <div class="card gradient-pomegranate" (click)="getHoldTicket()" id="click">
           <div class="card-body">
             <div class="pb-0" style="padding:15px;">
               <div class="media">
                 <div class="media-body white text-left">
-                  <h3 class="mb-0">{{completedTickets}}</h3>
-                  <span>Completed</span>
+                  <h3 class="mb-0">{{holdTickets}}</h3>
+                  <span>Hold</span>
                 </div>
                 <div class="media-right white text-right">
                   <i class="icon-pie-chart font-large-1"></i>
@@ -63,12 +82,50 @@
           </div>
         </div>
       </div>
+      <div class="col-xl-2 col-lg-2 col-md-2 col-12">
+        <div class="card gradient-orange-amber"  (click)="getCompletedTicket()" id="click">
+          <div class="card-body">
+            <div class="pb-0" style="padding:15px;">
+              <div class="media">
+                <div class="media-body white text-left">
+                  <h3 class="mb-0">{{doneTickets}}</h3>
+                  <span>Done</span>
+                </div>
+                <div class="media-right white text-right">
+                  <i class="icon-pie-chart font-large-1"></i>
+                </div>
+              </div>
+            </div>
+            <div class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-2 col-md-2 col-12">
+        <div class="card gradient-purple-deep-purple" (click)="getWorkingTickets()" id="click">
+          <div class="card-body">
+            <div class="pb-0" style="padding:15px;">
+              <div class="media">
+                <div class="media-body white text-left">
+                  <h3 class="mb-0">{{workingTickets}}</h3>
+                  <span>Working</span>
+                </div>
+                <div class="media-right white text-right">
+                  <i class="icon-pie-chart font-large-1"></i>
+                </div>
+              </div>
+            </div>
+            <div class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   <div class="card">
     <div class="card-body">
         <div id="vartical-bar-chart" class="height-500">
-            <ngx-charts-bar-vertical-2d [scheme]="barChartColorScheme" [results]="barChartmulti" [gradient]="barChartGradient" [xAxis]="barChartShowXAxis" [barPadding]="5" [groupPadding]="10"
+            <ngx-charts-bar-vertical-2d [scheme]="barChartColorScheme" [results]="barChartmulti" [gradient]="barChartGradient" [xAxis]="barChartShowXAxis" [barPadding]="3" [groupPadding]="5"
             [yAxis]="barChartShowYAxis" [legend]="barChartShowLegend"  [xAxisLabel]="barChartXAxisLabel" [yAxisLabel]="barChartYAxisLabel" [showDataLabel]="barChartShowDataLabel" (select)="onSelect($event)">
         </ngx-charts-bar-vertical-2d>
     </div>
