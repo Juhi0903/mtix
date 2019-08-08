@@ -7,7 +7,7 @@ import { AllTicketsComponent } from './all-tickets/all-tickets.component';
 import { TicketDetailsComponent} from '../ticket-details/ticket-details/ticket-details.component';
 import { AuthGuard } from '../../shared/auth/auth-guard.service';
 import { AuthService } from '../../shared/auth/auth.service';
-
+import { TicketV2Component } from './ticket-v2/ticket-v2.component';
 
 
 const routes: Routes = [
@@ -125,6 +125,12 @@ const routes: Routes = [
     path: 'review',
     component: MyTicketComponent,
     data: { title: 'Ticket Page' }, 
+    canActivate: [AuthGuard]   
+  },
+  {
+    path: 'ticketv2',
+    component: TicketV2Component,
+    data: { title: 'Ticket Page V2' }, 
     canActivate: [AuthGuard]   
   },
 ];

@@ -9,6 +9,9 @@ export const ROUTES: RouteInfo[] = [
         path: '/ticket/ticket', title: 'Tickets', icon: 'ft-layout', class: '', badge: '', badgeClass: '', isExternalLink: false, submenu: []
     },
     {
+        path: '/ticket/ticketv2', title: 'Ticket V2', icon: 'ft-layout', class: '', badge: '', badgeClass: '', isExternalLink: false, submenu: []
+    },
+    {
         path: '/ticket/createticket', title: 'Create Ticket', icon: 'ft-layout', class: '', badge: '', badgeClass: '', isExternalLink: false, submenu: []
     },
     {

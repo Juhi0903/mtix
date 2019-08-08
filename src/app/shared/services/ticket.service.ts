@@ -245,4 +245,15 @@ export class TicketService {
     }).toPromise() as any;
   }
 
+  public getTicketV2 = async (data): Promise<any[]> => {
+
+    let parameterList = "?" + Object.keys(data).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    }).join('&');
+
+
+    const result = await this._httpService.post(urls.BASE_URL + urls.ticketV2, data, this.httpOptions).toPromise() as any;
+    return result;
+  }
+
 }

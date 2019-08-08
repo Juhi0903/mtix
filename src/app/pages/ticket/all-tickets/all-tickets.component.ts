@@ -305,16 +305,7 @@ export class AllTicketsComponent implements OnInit {
         "rag-green": "x =='Reviewed'",
         "rag-red" : "x== 'Not Reviewed'"
       }},
-      {headerName: "Updated", field: 'updatedOn' , width: 90, suppressSizeToFit: true},
-
-      // {headerName: "Approved", field: 'approved' , width: 130, suppressSizeToFit: true,valueParser: this.numberParser,
-      // cellClassRules: {
-      //   "rag-green": "x =='Approved'",
-      //   "rag-red" : "x== 'Not Approved'"
-      // }},
-
-
-
+      {headerName: "Updated", field: 'updatedOn' , width: 90, suppressSizeToFit: true}
     ];
     this.defaultColDef = { width: 100 };
     // this.rowSelection = "multiple";

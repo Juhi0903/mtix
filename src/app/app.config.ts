@@ -33,7 +33,8 @@ export const urls = {
     approveTicket : 'remarks/approveTicket',
     country : 'ticket/country',
     review : 'remarks/review',
-    status : 'ticket/status'
+    status : 'ticket/status',
+    ticketV2 : 'ticket/ticketv2'
 
 }
 

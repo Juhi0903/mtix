@@ -24,6 +24,7 @@ import {AssignedComponent} from '../assigned/assigned/assigned.component';
 import {StatusComponent} from '../status/status/status.component';
 import { TicketDetailsComponent} from '../ticket-details/ticket-details/ticket-details.component';
 import { TicketDetailsModule} from '../ticket-details/ticket-details.module';
+import { TicketV2Component,TicketDetails } from './ticket-v2/ticket-v2.component';
 
 
 
@@ -34,7 +35,7 @@ import { TicketDetailsModule} from '../ticket-details/ticket-details.module';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AgGridModule.withComponents([EditStatus, EditAndViewDetails,ViewDetails,EditAssignTo,EditPriority,CreateSubTicket]),
+    AgGridModule.withComponents([EditStatus, EditAndViewDetails,ViewDetails,EditAssignTo,EditPriority,CreateSubTicket,TicketDetails]),
     StorageServiceModule,
     StatusModule,
     NgbModule,
@@ -63,6 +64,8 @@ import { TicketDetailsModule} from '../ticket-details/ticket-details.module';
     EditAssignTo,
     ViewDetails,
     CreateSubTicket,
+    TicketV2Component,
+    TicketDetails
     
 
   ],
